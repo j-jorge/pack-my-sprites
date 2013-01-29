@@ -27,7 +27,7 @@ when using this option.
 The software relies upon the gimp-console(1) and xcfinfo(1) programs
 for the generation of the sprite sheets.
 
-== LICENCE ==
+== LICENSE ==
 
 Pack My Sprites is written by Julien Jorge <julien.jorge@gamned.org>.
 It is hereby licenced under the terms of the version 3 of the GNU
