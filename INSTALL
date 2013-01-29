@@ -1,0 +1,48 @@
+PACK MY SPRITES -- INSTALLATION NOTES
+
+== Dependencies ==
+
+In order to compile Pack My Sprite you will need the following
+libraries and tools:
+
+ - Claw >= 1.7.0
+   http://libclaw.sourceforge.net/
+
+ - Boost >= 1.42
+   http://www.boost.org/
+
+ - CMake >= 2.8
+   http://www.cmake.org/
+
+ - docbook-to-man >= 2.0.0
+   http://www.oasis-open.org/docbook/tools/dtm/
+
+You will also need a c++ compiler.
+
+== Compiling ==
+
+From the root directory, type
+
+  cmake . -DCMAKE_BUILD_TYPE=release
+  make
+
+== Installing ==
+
+From the root directory, type as root
+
+  make install
+
+== Options ==
+
+You can customize your installation by passing the following options
+to cmake:
+
+  CMAKE_INSTALL_PREFIX=<dir>
+    Directory in which the files will be installed (default is /usr/local)
+
+  CMAKE_BUILD_TYPE={debug|release}
+    Activates or deactivates code debugging.
+
+where :
+  {a|b} means either 'a' or 'b'
+  <dir> is a path to a directory.
