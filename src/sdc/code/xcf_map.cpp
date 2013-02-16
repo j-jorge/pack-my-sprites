@@ -33,7 +33,8 @@ sdc::xcf_map::xcf_map
 ( std::string xcf_directory, std::string xcfinfo_program )
   : m_xcf_directory( xcf_directory ), m_xcfinfo_program( xcfinfo_program )
 {
-
+  if ( m_xcf_directory.empty() )
+    m_xcf_directory = '.';
 } // xcf_map::xcf_map()
 
 /*----------------------------------------------------------------------------*/

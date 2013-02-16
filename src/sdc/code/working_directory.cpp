@@ -35,6 +35,10 @@ sdc::working_directory::working_directory( std::string input_file_name )
   const boost::filesystem::path input_directory( input_path.parent_path() );
 
   m_input_directory = input_directory.string();
+
+  if ( m_input_directory.empty() )
+    m_input_directory = '.';
+
   m_output_directory = m_input_directory;
 } // working_directory::working_directory()
 
