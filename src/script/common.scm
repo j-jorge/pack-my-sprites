@@ -38,6 +38,61 @@
     ) ; lambda
   ) ; define
 
+; function returning a list of items corresponding to a list of names
+(define get-items-by-name
+  (lambda (img items)
+    (if (null? items)
+        '()
+        ( cons (car (gimp-image-get-layer-by-name img (car items) ))
+               (get-items-by-name img (cdr items)) )
+        ) ; if
+    ) ; lambda
+  ) ; define
+
+; function showing a set of layers. This function turns the groups visible if a
+; provided layer is in a group.
+(define show-branch
+  (lambda (layers)
+    (unless (null? layers)
+            (let ( (item (car layers)) )
+              (show-branch (cdr layers))
+              (gimp-item-set-visible item TRUE)
+
+              (let ( (parent (gimp-item-get-parent item)) )
+                (if (<> -1 (car parent))
+                    (show-branch (gimp-item-get-parent item))
+                    ) ; if
+                ) ; if
+              ) ; let
+            ) ; unless
+    ) ; lambda
+  ) ; define
+
+; function turning off the visibility of a set of items and their chidren.
+; the argument is a list whose first item is the number of items and the second
+; one is an array of items to hide.
+(define hide-branch
+  (lambda (layers)
+    (let ( (count (car layers))
+           (layer_array (cadr layers))
+           )
+      (let loop ((i 0))
+        (unless (= i count)
+                (let ( (item (aref layer_array i)) )
+                  (if ( = TRUE (car (gimp-item-is-group item)) )
+                      ( hide-branch (gimp-item-get-children item) )
+                      ) ; if
+
+                  ( gimp-item-set-visible item FALSE )
+
+                  (loop (+ i 1))
+                  ) ; let
+                ) ; unless
+        ) ; let
+      ) ; let
+    ) ; lambda
+  ) ; define
+
 ; function showing a set of layer, and hide the others
 (define show-layers
   (lambda (img layers)
@@ -214,6 +269,16 @@
     ; select the visible layers
     (show-layers img layers)
     (create-layer-from-image img x y w h the_image)
+    ) ; lambda
+  ) ; define
+
+; create the scaled sprite of an item
+(define create-layer-crop-with-groups
+  (lambda (img layers sx sy sw sh x y w h the_image mask)
+    ; select the visible layers
+    (hide-branch (gimp-image-get-layers img))
+    (show-branch (get-items-by-name img layers))
+    (create-layer-crop-current img sx sy sw sh x y w h the_image mask)
     ) ; lambda
   ) ; define
 

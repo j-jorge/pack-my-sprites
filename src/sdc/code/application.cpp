@@ -27,7 +27,6 @@
 #include "makefile_generator.hpp"
 #include "parser.hpp"
 #include "version.hpp"
-#include "xcf_map.hpp"
 
 #include <boost/filesystem/convenience.hpp>
 #include <boost/algorithm/string/join.hpp>
@@ -162,7 +161,7 @@ void sdc::application::process_files()
  * \brief Process a file.
  * \param name The name of the file to process.
  */
-sdc::application::spritedesc_collection
+sdc::spritedesc_collection
 sdc::application::process_file( std::string name ) const
 {
   const boost::filesystem::path file_path( name, boost::filesystem::native );
@@ -170,21 +169,27 @@ sdc::application::process_file( std::string name ) const
   xcf_map xcf( file_directory.string(), m_xcfinfo_program );
 
   parser p;
-  spritedesc_collection desc;
+  std::list<spritedesc> desc;
 
   if ( !p.run( xcf, desc, name ) )
     std::cerr << "Failed to process file '" << name << "'" << std::endl;
 
-  spritedesc_collection result;
+  spritedesc_collection result( xcf );
 
   if ( m_target.empty() )
-    result = desc;
+    result.sprite_sheet = desc;
   else
-    for ( spritedesc_collection::const_iterator it = desc.begin();
-          it != desc.end(); ++it )
-      if ( std::find( m_target.begin(), m_target.end(), it->output_name )
-           != m_target.end() )
-        result.push_back( *it );
+    {
+      typedef
+        spritedesc_collection::spritedesc_list_type::const_iterator
+        iterator_type;
+
+      for ( iterator_type it = desc.begin();
+            it != desc.end(); ++it )
+        if ( std::find( m_target.begin(), m_target.end(), it->output_name )
+             != m_target.end() )
+          result.sprite_sheet.push_back( *it );
+    }
 
   return result;
 } // application::process_file()

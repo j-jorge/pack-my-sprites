@@ -11,6 +11,8 @@ set( SDC_SOURCE_FILES
   code/makefile_generator.cpp
   code/parser.cpp
   code/spritedesc.cpp
+  code/spritedesc_collection.cpp
+  code/xcf_info.cpp
   code/xcf_map.cpp
   code/working_directory.cpp
 

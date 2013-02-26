@@ -40,6 +40,7 @@ namespace sdc
     typedef std::map<std::string, xcf_info> name_to_info_type;
 
   public:
+    xcf_map();
     xcf_map( std::string xcf_directory, std::string xcfinfo_program );
 
     void load( std::string name );

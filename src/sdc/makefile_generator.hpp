@@ -22,7 +22,7 @@
 #ifndef __SDC_MAKEFILE_GENERATOR_HPP__
 #define __SDC_MAKEFILE_GENERATOR_HPP__
 
-#include "spritedesc.hpp"
+#include "spritedesc_collection.hpp"
 #include "working_directory.hpp"
 
 #include <iostream>
@@ -38,7 +38,6 @@ namespace sdc
   class makefile_generator
   {
   public:
-    typedef std::list<spritedesc> spritedesc_collection;
     typedef std::map<std::string, spritedesc_collection> file_to_spritedesc_map;
 
     typedef std::list<std::string> path_list_type;

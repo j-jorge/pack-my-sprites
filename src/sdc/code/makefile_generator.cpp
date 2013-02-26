@@ -99,9 +99,11 @@ std::vector<std::string> sdc::makefile_generator::get_all_output_files
 ( working_directory dir, spritedesc_collection desc ) const
 {
   std::vector<std::string> result;
+  typedef
+    spritedesc_collection::spritedesc_list_type::const_iterator iterator_type;
 
-  for ( spritedesc_collection::const_iterator it = desc.begin();
-        it != desc.end();
+  for ( iterator_type it = desc.sprite_sheet.begin();
+        it != desc.sprite_sheet.end();
         ++it )
     result.push_back( dir.get_output_image_path( it->output_name ) );
 
@@ -119,7 +121,8 @@ void sdc::makefile_generator::generate_makefile_rules
 {
   for ( file_to_spritedesc_map::const_iterator it=file.begin();
         it!=file.end(); ++it )
-    generate_makefile_rule( output, working_directory(it->first), it->second );
+    generate_makefile_rule
+      ( output, working_directory(it->first), it->second.sprite_sheet );
 } // makefile_generator::generate_makefile_rules()
 
 /*----------------------------------------------------------------------------*/

@@ -15,7 +15,7 @@
  */
 /**
  * \file
- * \brief The main class.
+ * \brief The description of a sprite sheet.
  * \author Julien Jorge
  */
 #ifndef __SDC_SPRITEDESC_HPP__

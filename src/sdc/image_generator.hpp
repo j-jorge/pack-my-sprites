@@ -22,7 +22,7 @@
 #ifndef __SDC_IMAGE_GENERATOR_HPP__
 #define __SDC_IMAGE_GENERATOR_HPP__
 
-#include "spritedesc.hpp"
+#include "spritedesc_collection.hpp"
 #include "working_directory.hpp"
 
 namespace sdc
@@ -64,7 +64,6 @@ namespace sdc
     typedef claw::math::rectangle<std::size_t> rectangle_type;
 
   public:
-    typedef std::list<spritedesc> spritedesc_collection;
     typedef std::map<std::string, spritedesc_collection> file_to_spritedesc_map;
 
     typedef std::list<std::string> path_list_type;
@@ -82,16 +81,18 @@ namespace sdc
 
     void execute_gimp_scheme_process( std::string script ) const;
 
-    void generate_output( working_directory dir, spritedesc desc ) const;
+    void generate_output
+    ( working_directory dir, xcf_map xcf, spritedesc desc ) const;
     void generate_spritepos( std::ostream& os, const spritedesc& desc ) const;
 
     std::string get_scheme_path( std::string filename ) const;
     
     void generate_scm
-    ( std::ostream& os, working_directory dir, spritedesc desc ) const;
+    ( std::ostream& os, working_directory dir, xcf_map xcf,
+      spritedesc desc ) const;
 
     void generate_scm
-    ( std::ostream& os, const spritedesc::sprite& s,
+    ( std::ostream& os, const xcf_info& xcf, const spritedesc::sprite& s,
       const std::string& target_id ) const;
 
     std::string make_image_varname( const std::string& id ) const;

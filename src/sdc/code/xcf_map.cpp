@@ -25,6 +25,16 @@
 
 /*----------------------------------------------------------------------------*/
 /**
+ * \brief Default constructor.
+ */
+sdc::xcf_map::xcf_map()
+  : m_xcf_directory( "." )
+{
+
+} // xcf_map::xcf_map()
+
+/*----------------------------------------------------------------------------*/
+/**
  * \brief Constructor.
  * \param xcf_directory The directory where the xcf files are taken.
  * \param xcfinfo_program The path to the xcfinfo program.
@@ -128,7 +138,8 @@ void sdc::xcf_map::parse_xcf_info_header
   char dummy_char;
 
   iss >> dummy_string /* Version */
-      >> dummy_string /* version number and comma */
+      >> info.version
+      >> dummy_string /* the comma after the version */
       >> info.width
       >> dummy_char /* the x in the size */
       >> info.height

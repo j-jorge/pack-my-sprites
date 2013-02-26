@@ -31,13 +31,21 @@ namespace sdc
    * \brief The informations of a xcf file.
    * \author Julien Jorge
    */
-  struct xcf_info
+  class xcf_info
   {
+  public:
     /**
      * \brief The map containing the informations about the layers. The key is
      *        the name of the layer.
      */
     typedef std::map<std::string, layer_info> layer_map;
+
+  public:
+    std::string get_layer_name( std::size_t index ) const;
+
+  public:
+    /** \brief The version of the file format. */
+    int version;
 
     /** \brief The width of the image. */
     std::size_t width;

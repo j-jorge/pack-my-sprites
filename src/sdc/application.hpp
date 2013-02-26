@@ -21,7 +21,7 @@
 #ifndef __SDC_APPLICATION_HPP__
 #define __SDC_APPLICATION_HPP__
 
-#include "spritedesc.hpp"
+#include "spritedesc_collection.hpp"
 
 #include <claw/application.hpp>
 
@@ -37,7 +37,6 @@ namespace sdc
     public claw::application
   {
   private:
-    typedef std::list<spritedesc> spritedesc_collection;
     typedef std::map<std::string, spritedesc_collection> file_to_spritedesc_map;
 
     typedef std::list<std::string> path_list_type;

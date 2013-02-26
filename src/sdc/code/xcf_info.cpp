@@ -15,20 +15,21 @@
  */
 /**
  * \file
- * \brief Version of the tool.
+ * \brief The implementation of the sdc::xcf_info class.
  * \author Julien Jorge
  */
-#ifndef __SDC_VERSION_HPP__
-#define __SDC_VERSION_HPP__
+#include "xcf_info.hpp"
 
-#define SDC_TO_STR_BIS(v) # v
-#define SDC_TO_STR(v) SDC_TO_STR_BIS(v)
+/**
+ * \brief Finds the name of the layer with the given index, or an empty string
+ *        if there is no layer with such index.
+ * \param index The index of the layer.
+ */
+std::string sdc::xcf_info::get_layer_name( std::size_t index ) const
+{
+  for( layer_map::const_iterator it=layers.begin(); it!=layers.end(); ++it )
+    if ( it->second.index == index )
+      return it->first;
 
-#define SDC_MAJOR_VERSION 1
-#define SDC_MINOR_VERSION 0
-#define SDC_RELEASE_NUMBER 2
-#define SDC_VERSION_STRING "Pack My Sprites, "                          \
-  SDC_TO_STR(SDC_MAJOR_VERSION) "." SDC_TO_STR(SDC_MINOR_VERSION)       \
-  "." SDC_TO_STR(SDC_RELEASE_NUMBER)
-
-#endif // __SDC_VERSION_HPP__
+  return std::string();
+} // xcf_info::get_layer_name()

@@ -104,15 +104,17 @@ void sdc::image_generator::process_spritedesc
 ( std::string source, spritedesc_collection desc ) const
 {
   const working_directory dir( source );
+  typedef spritedesc_collection::spritedesc_list_type::iterator iterator_type;
 
-  for ( spritedesc_collection::iterator it=desc.begin(); it!=desc.end(); ++it )
+  for ( iterator_type it=desc.sprite_sheet.begin();
+        it!=desc.sprite_sheet.end(); ++it )
     {
       claw::logger << claw::log_verbose
                    << "Processing sprite sheet '" << it->output_name << "'"
                    << std::endl;
 
       set_sprite_position( *it );
-      generate_output( dir, *it );
+      generate_output( dir, desc.xcf, *it );
     }
 } // image_generator::process_spritedesc()
 
@@ -143,13 +145,14 @@ sdc::image_generator::execute_gimp_scheme_process( std::string script ) const
 /**
  * \brief Generate a sprite sheets.
  * \param dir The directories where the files are searched and written.
+ * \param xcf The details of the images to use in the generation.
  * \param desc The sprite sheet to generate.
  */
 void sdc::image_generator::generate_output
-( working_directory dir, spritedesc desc ) const
+( working_directory dir, xcf_map xcf, spritedesc desc ) const
 {
   std::ostringstream oss;
-  generate_scm( oss, dir, desc );
+  generate_scm( oss, dir, xcf, desc );
   execute_gimp_scheme_process( oss.str() );
 
   if ( m_generate_spritepos )
@@ -210,10 +213,11 @@ std::string sdc::image_generator::get_scheme_path( std::string filename ) const
  *        spritedesc.
  * \param os The stream in which the script is generated.
  * \param dir The directories where the files are searched and written.
+ * \param xcf The details of the images to use in the generation.
  * \param desc The sprites to generate.
  */
 void sdc::image_generator::generate_scm
-( std::ostream& os, working_directory dir, spritedesc desc ) const
+( std::ostream& os, working_directory dir, xcf_map xcf, spritedesc desc ) const
 {
   os << "(load \"" << get_scheme_path( "common.scm" ) << "\")\n";
 
@@ -236,7 +240,8 @@ void sdc::image_generator::generate_scm
 
   for ( spritedesc::const_sprite_iterator it = desc.sprite_begin();
         it != desc.sprite_end(); ++it )
-    generate_scm( os, *it, desc.output_name );
+    generate_scm
+      ( os, xcf.get_info( desc.xcf[it->xcf_id] ), *it, desc.output_name );
 
   os << "(save-frames \""
      << dir.get_output_image_path(desc.output_name) << "\" "
@@ -251,19 +256,33 @@ void sdc::image_generator::generate_scm
 /**
  * \brief Generate the Scheme command that builds the given sprite.
  * \param os The stream in which the script is generated.
+ * \param xcf The details of the image to use in the generation.
  * \param s The sprite to generate.
  * \param target_id The identifier of the image receiving the sprite in the
  *         script.
  */
 void sdc::image_generator::generate_scm
-( std::ostream& os, const spritedesc::sprite& s,
+( std::ostream& os, const xcf_info& xcf, const spritedesc::sprite& s,
   const std::string& target_id ) const
 {
-  os << "(create-layer-crop " << make_image_varname(s.xcf_id) << " '(";
+  // starting with version 3 of the format, the XCF files have layer groups.
+  if ( xcf.version >= 3 )
+    {
+      os << "(create-layer-crop-with-groups " << make_image_varname(s.xcf_id)
+         << " '(";
 
-  for ( std::list<layer_info>::const_iterator it=s.layers.begin();
-        it != s.layers.end(); ++it )
-    os << it->index << ' ';
+      for ( std::list<layer_info>::const_iterator it=s.layers.begin();
+            it != s.layers.end(); ++it )
+        os << '"' << xcf.get_layer_name( it->index ) << "\" ";
+    }
+  else
+    {
+      os << "(create-layer-crop " << make_image_varname(s.xcf_id) << " '(";
+
+      for ( std::list<layer_info>::const_iterator it=s.layers.begin();
+            it != s.layers.end(); ++it )
+        os << it->index << ' ';
+    }
 
   os << ") " << s.source_box.position.x << ' ' << s.source_box.position.y << ' '
      << s.source_box.width << ' ' << s.source_box.height << ' '
