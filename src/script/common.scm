@@ -66,7 +66,7 @@
               ) ; let
             ) ; unless
     ) ; lambda
-  ) ; define
+  ) ; show-branch
 
 ; function turning off the visibility of a set of items and their chidren.
 ; the argument is a list whose first item is the number of items and the second
@@ -91,18 +91,43 @@
         ) ; let
       ) ; let
     ) ; lambda
+  ) ; hide-branch
+
+; function showing a the children of a group
+; \param layers the layers to show. For the layer groups all children are shown.
+(define show-groups
+  (lambda (layers)
+    (unless (null? layers)
+            (let ( (item (car layers)) )
+              (show-groups (cdr layers))
+              (gimp-item-set-visible item TRUE)
+
+              (if ( = TRUE (car (gimp-item-is-group item)) )
+                  ( show-groups
+                    ( vector->list (cadr (gimp-item-get-children item)) ) )
+                  ) ; if
+              ) ; let
+            ) ; unless
+    ) ; lambda
   ) ; define
 
-; function showing a set of layer, and hide the others
-(define show-layers
-  (lambda (img layers)
-    (let ( (all_layers (gimp-image-get-layers img)) )
+; function turning off the visibility of a set of items and their chidren.
+; the argument is a list whose first item is the number of items and the second
+; one is an array of items to hide.
+(define hide-branch
+  (lambda (layers)
+    (let ( (count (car layers))
+           (layer_array (cadr layers))
+           )
       (let loop ((i 0))
-        (unless (= i (car all_layers))
-                (let ( (layer_i (aref (cadr all_layers) i)) )
-                  (if (in-list layers i)
-                      (gimp-drawable-set-visible layer_i TRUE)
-                      (gimp-drawable-set-visible layer_i FALSE))
+        (unless (= i count)
+                (let ( (item (aref layer_array i)) )
+                  (if ( = TRUE (car (gimp-item-is-group item)) )
+                      ( hide-branch (gimp-item-get-children item) )
+                      ) ; if
+
+                  ( gimp-item-set-visible item FALSE )
+
                   (loop (+ i 1))
                   ) ; let
                 ) ; unless
@@ -278,6 +303,7 @@
     ; select the visible layers
     (hide-branch (gimp-image-get-layers img))
     (show-branch (get-items-by-name img layers))
+    (show-groups (get-items-by-name img layers))
     (create-layer-crop-current img sx sy sw sh x y w h the_image mask)
     ) ; lambda
   ) ; define
