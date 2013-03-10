@@ -111,6 +111,24 @@
     ) ; lambda
   ) ; define
 
+; function showing a set of layer, and hide the others
+(define show-layers
+  (lambda (img layers)
+    (let ( (all_layers (gimp-image-get-layers img)) )
+      (let loop ((i 0))
+        (unless (= i (car all_layers))
+                (let ( (layer_i (aref (cadr all_layers) i)) )
+                  (if (in-list layers i)
+                      (gimp-drawable-set-visible layer_i TRUE)
+                      (gimp-drawable-set-visible layer_i FALSE))
+                  (loop (+ i 1))
+                  ) ; let
+                ) ; unless
+        ) ; let
+      ) ; let
+    ) ; lambda
+  ) ; define
+
 ; function turning off the visibility of a set of items and their chidren.
 ; the argument is a list whose first item is the number of items and the second
 ; one is an array of items to hide.
