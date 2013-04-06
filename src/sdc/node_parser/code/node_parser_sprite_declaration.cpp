@@ -210,7 +210,7 @@ void sdc::node_parser_sprite_declaration::add_layers
       tree_node layer_node;
       const bool has_properties
         ( (node.children.size() == 2)
-          && (node.children[0].value.id() == grammar::id_layer_properties) );
+          && (node.value.id() == grammar::id_layer_properties) );
 
       if ( has_properties )
         layer_node = node.children[1];
