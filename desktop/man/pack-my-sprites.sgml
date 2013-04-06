@@ -255,11 +255,13 @@ manpage.1: manpage.sgml
       &hellip;</programlisting>
 
     <para>Then come the sprites, defined by a name, a size, a source
-      image, a selection of layers and an optional mask:</para>
+      image, a selection of layers and an optional mask. The selection
+      of layers can be prefixed by some properties to apply to the
+      selected layers:</para>
 
     <programlisting>"name" reference_box * scale_factor with image_name
-      layer_selection_1
-      layer_selection_2
+      [layer_properties] layer_selection_1
+      [layer_properties] layer_selection_2
       &hellip;
       [mask "layer_name"]
       ;</programlisting>
@@ -281,7 +283,7 @@ manpage.1: manpage.sgml
       </varlistentry>
     </variablelist>
 
-    <para>The scale factor is a positive value that determine the size
+    <para>The scale factor is a positive value that determines the size
       of the sprite in the output. For example, a value of 0.5 will
       produce a sprite half the size of the reference box.</para>
 
@@ -336,12 +338,23 @@ manpage.1: manpage.sgml
       
     </variablelist>
 
+    <para>The layer name and the glob syntax can be prefixed by a list
+      of properties to change how the layers are used in the
+      image. The current only property is <quote>hollow</quote>; it
+      tells the program not to consider the size of the layer when
+      computing the size of the sprite. The properties are
+      optional and must be separated by spaces and put between
+      brackets, according to the following syntax:</para>
+
+    <programlisting>[ property_1 property_2 &hellip; ]</programlisting>
+
     <para>The optional <emphasis>mask</emphasis> command tells to use
       the layer with the given name as a mask in the resulting
       sprite. The white parts of the layer will be opaque in the
       resulting sprite, while the black parts will be fully
       transparent. Intermediate grey values will be partially
       transparent.</para>
+
   </refsect1>
 
   <refsect1>
@@ -366,13 +379,18 @@ manpage.1: manpage.sgml
       ;
 
       /*
-      This entry produces a sprite by merging two given layers. The
-      resulting sprite is cropped to the bounds of the merged
-      layers and reduced to one third of its size.
+      This entry produces a sprite by merging some layers and by
+      applying some properties on the layers. The resulting sprite
+      is cropped to the bounds of the merged layers, without
+      considering the size of layer named "lights" nor the layers
+      ending with "effect". Then the sprite is reduced to one third
+      of its size. The size of the 
       */
       "wave" autosize * 0.3 with logo
       &nbsp; "wave"
       &nbsp; "wave border"
+      &nbsp; [ hollow ] "lights"
+      &nbsp; [ hollow ] glob "*effect"
       ;
 
       /*
