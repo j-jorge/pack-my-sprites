@@ -168,7 +168,18 @@ sdc::grammar::definition<ScannerT>::definition( const grammar& self )
     >> m_layer_list;
     ;
 
-  m_layer_list = *(m_string | m_glob | m_exclude);
+  m_layer_list =
+    *m_layer_reference;
+
+  m_layer_reference =
+    ( !m_layer_properties >> (m_string | m_glob) )
+    | m_exclude;
+
+  m_layer_properties =
+    boost::spirit::classic::no_node_d[ boost::spirit::classic::ch_p('[') ]
+    >> *m_identifier
+    >> boost::spirit::classic::no_node_d[ boost::spirit::classic::ch_p(']') ]
+    ;
 
   m_glob =
     boost::spirit::classic::strlit<>("glob")

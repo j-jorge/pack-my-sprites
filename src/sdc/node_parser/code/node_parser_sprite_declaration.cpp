@@ -143,6 +143,7 @@ std::list<sdc::layer_info> sdc::node_parser_sprite_declaration::get_layers
   std::list<layer_info> result;
 
   if ( (layer_list_node.value.id() == grammar::id_string)
+       || (layer_list_node.value.id() == grammar::id_layer_properties)
        || (layer_list_node.value.id() == grammar::id_glob) )
     add_layers( image, result, layer_list_node );
   else
@@ -151,6 +152,45 @@ std::list<sdc::layer_info> sdc::node_parser_sprite_declaration::get_layers
 
   return result;
 } // node_parser_sprite_declaration::get_layers()
+
+/*----------------------------------------------------------------------------*/
+/**
+ * \brief Applies the properties listed in a property node to a collection of
+ *        layers.
+ * \param result The list at the end of which the layers are inserted.
+ * \param node The node describing the layers.
+ */
+void sdc::node_parser_sprite_declaration::apply_layer_properties
+( std::list<layer_info>& result, const tree_node& properties_node ) const
+{
+  std::vector<std::string> properties;
+
+  if ( properties_node.value.id() == grammar::id_layer_properties )
+    for ( std::size_t i(0); i != properties_node.children.size(); ++i )
+      {
+        const std::string p
+          ( properties_node.children[i].value.begin(),
+            properties_node.children[i].value.end() );
+
+        properties.push_back( p );
+      }
+  else
+    properties.push_back
+      ( std::string
+        ( properties_node.value.begin(), properties_node.value.end() ) );
+
+  for ( std::size_t i(0); i != properties.size(); ++i )
+    if ( properties[i] == "hollow" )
+      for ( std::list<layer_info>::iterator it=result.begin();
+            it != result.end(); ++it )
+        {
+          it->box.width = 0;
+          it->box.height = 0;
+        }
+    else
+      std::cerr << "Unknown layer property: '" << properties[i] << "'."
+                << std::endl;
+} // node_parser_sprite_declaration::apply_layer_properties()
 
 /*----------------------------------------------------------------------------*/
 /**
@@ -163,12 +203,32 @@ void sdc::node_parser_sprite_declaration::add_layers
 ( const xcf_info& image, std::list<layer_info>& result,
   const tree_node& node ) const
 {
-  if ( node.value.id() == grammar::id_glob )
-    add_layers_glob( image, result, node );
-  else if ( node.value.id() == grammar::id_exclude )
+  if ( node.value.id() == grammar::id_exclude )
     exclude_layers( image, result, node );
-  else // node.value.id() == grammar::id_string
-    add_single_layer( image, result, node );
+  else
+    {
+      tree_node layer_node;
+      const bool has_properties
+        ( (node.children.size() == 2)
+          && (node.children[0].value.id() == grammar::id_layer_properties) );
+
+      if ( has_properties )
+        layer_node = node.children[1];
+      else
+        layer_node = node;
+
+      std::list<layer_info> layers;
+  
+      if ( layer_node.value.id() == grammar::id_glob )
+        add_layers_glob( image, layers, layer_node );
+      else // layer_node.value.id() == grammar::id_string
+        add_single_layer( image, layers, layer_node );
+
+      if ( has_properties )
+        apply_layer_properties( layers, node.children[0] );
+
+      std::copy( layers.begin(), layers.end(), std::back_inserter(result) );
+    }
 } // node_parser_sprite_declaration::add_layers()
 
 /*----------------------------------------------------------------------------*/
@@ -184,10 +244,10 @@ void sdc::node_parser_sprite_declaration::add_layers_glob
   const tree_node& node ) const
 {
   CLAW_PRECOND( node.value.id() == grammar::id_glob );
-  CLAW_PRECOND( node.children.size() == 2 );
+  CLAW_PRECOND( (node.children.size() == 2) || (node.children.size() == 3));
 
   const std::string pattern
-    ( node.children[1].value.begin(), node.children[1].value.end() );
+      ( node.children.back().value.begin(), node.children.back().value.end() );
 
   xcf_info::layer_map::const_iterator it;
   bool found=false;
@@ -265,17 +325,28 @@ void sdc::node_parser_sprite_declaration::compute_source_box
 ( spritedesc::sprite& s ) const
 {
   // Compute the size of the sprite in the source image.
-  if ( s.layers.empty() )
-    std::cerr << "missing layers for sprite '"
-              << s.name << "'" << std::endl;
-  else
+  std::list<layer_info>::const_iterator it;
+  bool initialized( false );
+
+  for ( it = s.layers.begin(); !initialized && (it != s.layers.end()); ++it )
+    if ( it->box.area() != 0 )
+      {
+        s.source_box = it->box;
+        initialized = true;
+      }
+     
+  if ( !initialized )
     {
-      s.source_box = s.layers.front().box;
-      
-      for ( std::list<layer_info>::const_iterator it = s.layers.begin();
-            it != s.layers.end(); ++it )
-        s.source_box = s.source_box.join( it->box );
+      std::cerr << "Cannot compute the size of the sprite '"
+                << s.name << "' with " << s.layers.size() << " layer(s)."
+                << " Check that you have at least one layer without the "
+        "'hollow' property." << std::endl;
+      return;
     }
+
+  for ( ; it != s.layers.end(); ++it )
+    if ( it->box.area() != 0 )
+      s.source_box = s.source_box.join( it->box );
 } // node_parser_sprite_declaration::compute_source_box()
 
 /*----------------------------------------------------------------------------*/

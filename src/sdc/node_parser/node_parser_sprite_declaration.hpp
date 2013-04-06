@@ -47,6 +47,10 @@ namespace sdc
 
     std::list<layer_info> get_layers
     ( const xcf_info& image, const tree_node& layer_list_node ) const;
+
+    void apply_layer_properties
+    ( std::list<layer_info>& result, const tree_node& properties_node ) const;
+
     void add_layers
     ( const xcf_info& image, std::list<layer_info>& result,
       const tree_node& node ) const;

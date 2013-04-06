@@ -39,7 +39,8 @@ namespace sdc
     static const int id_xcf_declaration = 20;
     static const int id_sprite_declaration = 40;
     static const int id_layer_to_sprite = 41;
-    static const int id_layer = 45;
+    static const int id_layer_reference = 45;
+    static const int id_layer_properties = 45;
     static const int id_string = 50;
     static const int id_glob = 55;
     static const int id_exclude = 57;
@@ -148,16 +149,23 @@ namespace sdc
         boost::spirit::classic::parser_tag<id_layer_to_sprite> >
       m_layer_to_sprite;
 
-      /** \brief Rule matching the description of a layer. */
-      boost::spirit::classic::rule
-      < ScannerT,
-        boost::spirit::classic::parser_tag<id_layer> > m_layer;
-
       /** \brief Rule matching the mask of a sprite. */
       boost::spirit::classic::rule<ScannerT> m_mask;
 
       /** \brief Rule matching a list of layers. */
       boost::spirit::classic::rule<ScannerT> m_layer_list;
+
+      /** \brief Rule matching the identification of a layer. */
+      boost::spirit::classic::rule
+      < ScannerT,
+        boost::spirit::classic::parser_tag<id_layer_reference> >
+        m_layer_reference;
+
+      /** \brief Rule matching the properties assigned to a layer. */
+      boost::spirit::classic::rule
+      < ScannerT,
+        boost::spirit::classic::parser_tag<id_layer_properties> >
+        m_layer_properties;
 
       /** \brief Rule matching the size of a sprite. */
       boost::spirit::classic::rule<ScannerT> m_sprite_size;
