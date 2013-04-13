@@ -27,6 +27,21 @@
     )
   )
 
+; function merging two lists
+(define (merge l1 l2)
+  (if (null? l1)
+      l2
+      (if (null? l2)
+          l1
+          (cons (car l1)
+                (cons (car l2)
+                      (merge (cdr l1) (cdr l2))
+                      )
+                )
+          )
+      )
+  ) ; define
+
 ; function to modify the position of a layer
 (define set-layer-position
   (lambda (img layer x y)
@@ -45,6 +60,36 @@
         '()
         ( cons (car (gimp-image-get-layer-by-name img (car items) ))
                (get-items-by-name img (cdr items)) )
+        ) ; if
+    ) ; lambda
+  ) ; define
+
+; function returning the positions of a list of items and their parents.
+(define get-item-hierarchy-positions
+  (lambda (img items)
+    (if (null? items)
+        '()
+        (cons (car (gimp-image-get-item-position img (car items)) )
+              (let ( (parent (gimp-item-get-parent (car items))) )
+                (if (= -1 (car parent))
+                    ( get-item-hierarchy-positions img (cdr items) )
+                    ( get-item-hierarchy-positions img
+                                                   (merge (cdr items) parent) )
+                    ) ; if
+                ) ; let
+              )
+        ) ; if
+    ) ; lambda
+  ) ; define
+
+; function returning a list of positions corresponding to a list of item names
+(define get-item-positions
+  (lambda (img items)
+    (if (null? items)
+        '()
+        (cons (car (gimp-image-get-item-position img (car items)) )
+              (get-item-positions img (cdr items) )
+              )
         ) ; if
     ) ; lambda
   ) ; define
@@ -236,6 +281,25 @@
     ) ; lambda
   ) ; define shift-layers
 
+; copy the currently visible data and paste it as the mask of the active layer
+(define apply-visible-to-layer-mask
+  (lambda (src dest)
+    (gimp-edit-copy-visible src)
+
+    (let ( (the_layer (car (gimp-image-get-active-layer dest))) )
+      ( gimp-layer-add-mask
+        the_layer
+        (car (gimp-layer-create-mask the_layer 0)) )
+      (gimp-layer-set-apply-mask the_layer TRUE)
+      (gimp-layer-set-edit-mask the_layer TRUE)
+      (gimp-edit-paste (car (gimp-layer-get-mask the_layer)) 1)
+      (gimp-floating-sel-anchor (car (gimp-image-get-active-layer dest)))
+      (gimp-layer-set-edit-mask the_layer FALSE)
+      (gimp-layer-set-show-mask the_layer FALSE)
+      ) ; let
+    ) ; lambda
+  ) ; define
+
 ; use a layer of the source image as a mask for a layer of the destination
 (define set-layer-mask
   (lambda (src mask dest)
@@ -243,19 +307,23 @@
         ()
         (begin
           (show-layers src mask)
-          (gimp-edit-copy-visible src)
+          (apply-visible-to-layer-mask src dest)
+          ) ; begin
+        ) ; if
+    ) ; lambda
+  ) ; define
 
-          (let ( (the_layer (car (gimp-image-get-active-layer dest))) )
-            ( gimp-layer-add-mask
-              the_layer
-              (car (gimp-layer-create-mask the_layer 0)) )
-            (gimp-layer-set-apply-mask the_layer TRUE)
-            (gimp-layer-set-edit-mask the_layer TRUE)
-            (gimp-edit-paste (car (gimp-layer-get-mask the_layer)) 1)
-            (gimp-floating-sel-anchor (car (gimp-image-get-active-layer dest)))
-            (gimp-layer-set-edit-mask the_layer FALSE)
-            (gimp-layer-set-show-mask the_layer FALSE)
-            ) ; let
+; use a layer of the source image as a mask for a layer of the destination
+(define set-layer-mask-with-groups
+  (lambda (src mask dest)
+    (if (null? mask)
+        ()
+        (begin
+          (hide-branch (gimp-image-get-layers src))
+          (show-branch (get-items-by-name src mask))
+          (show-groups (get-items-by-name src mask))
+
+          (apply-visible-to-layer-mask src dest)
           ) ; begin
         ) ; if
     ) ; lambda
@@ -322,7 +390,9 @@
     (hide-branch (gimp-image-get-layers img))
     (show-branch (get-items-by-name img layers))
     (show-groups (get-items-by-name img layers))
-    (create-layer-crop-current img sx sy sw sh x y w h the_image mask)
+
+    ( create-layer-crop-current-with-groups
+      img sx sy sw sh x y w h the_image mask )
     ) ; lambda
   ) ; define
 
@@ -332,6 +402,33 @@
     ; select the visible layers
     (show-layers img layers)
     (create-layer-crop-current img sx sy sw sh x y w h the_image mask)
+    ) ; lambda
+  ) ; define
+
+; create the scaled sprite of an item with the currently visible layers
+(define crop-current-layer
+  (lambda (frame sx sy sw sh x y w h the_image)
+
+    ; get the sub part of the image
+    (gimp-image-crop frame sw sh sx sy)
+
+    ; create the resulting merged layer
+    (let ( (the_layer (car
+                       (gimp-layer-new-from-drawable
+                        (car (gimp-image-get-active-drawable frame))
+                        the_image
+                        ) ; gimp-layer-new-from-drawable
+                       ) ; car
+                      ) ) ; the_layer
+
+      (gimp-image-add-layer the_image the_layer -1)
+
+      ; resize the layer
+      (gimp-layer-scale-full the_layer w h TRUE INTERPOLATION-CUBIC)
+      (gimp-layer-set-offsets the_layer x y)
+
+      the_layer
+      ) ; let
     ) ; lambda
   ) ; define
 
@@ -349,25 +446,28 @@
       ; turn the mask on
       (set-layer-mask img mask frame)
 
-      ; get the sub part of the image
-      (gimp-image-crop frame sw sh sx sy)
-                                        ; create the resulting merged layer
-      (let ( (the_layer (car
-                         (gimp-layer-new-from-drawable
-                          (car (gimp-image-get-active-drawable frame))
-                          the_image
-                          ) ; gimp-layer-new-from-drawable
-                         ) ; car
-                        ) ) ; the_layer
+      (crop-current-layer frame sx sy sw sh x y w h the_image)
 
-        (gimp-image-add-layer the_image the_layer -1)
+      ) ; let
+    ) ; lambda
+  ) ; define
 
-                                        ; resize the layer
-        (gimp-layer-scale-full the_layer w h TRUE INTERPOLATION-CUBIC)
-        (gimp-layer-set-offsets the_layer x y)
+; create the scaled sprite of an item with the currently visible layers
+(define create-layer-crop-current-with-groups
+  (lambda (img sx sy sw sh x y w h the_image mask)
 
-	the_layer
-        ) ; let
+    (let ( (frame (car (begin
+                         (gimp-edit-copy-visible img)
+                         (gimp-edit-paste-as-new)
+                         ) ; begin
+                       ) ; car
+                  ) ) ; frame
+
+      ; turn the mask on
+      (set-layer-mask-with-groups img mask frame)
+
+      (crop-current-layer frame sx sy sw sh x y w h the_image)
+
       ) ; let
     ) ; lambda
   ) ; define

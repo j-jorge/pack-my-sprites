@@ -291,9 +291,18 @@ void sdc::image_generator::generate_scm
 
   os << ' ' << make_image_varname(target_id) << " '(";
 
-  for ( std::list<layer_info>::const_iterator it=s.mask.begin();
-        it != s.mask.end(); ++it )
-    os << it->index << ' ';
+  if ( xcf.version >= 3 )
+    {
+      for ( std::list<layer_info>::const_iterator it=s.mask.begin();
+            it != s.mask.end(); ++it )
+        os << '"' << xcf.get_layer_name( it->index ) << "\" ";
+    }
+  else
+    {
+      for ( std::list<layer_info>::const_iterator it=s.mask.begin();
+            it != s.mask.end(); ++it )
+        os << it->index << ' ';
+    }
 
   os << "))\n";
 } // image_generator::generate_scm()
