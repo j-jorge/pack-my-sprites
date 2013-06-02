@@ -6,6 +6,7 @@ set( SDC_EXECUTABLE_NAME pack-my-sprites )
 #-------------------------------------------------------------------------------
 set( SDC_SOURCE_FILES
   code/application.cpp
+  code/gimp_interface.cpp
   code/image_generator.cpp
   code/main.cpp
   code/makefile_generator.cpp
