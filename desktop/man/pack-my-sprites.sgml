@@ -74,7 +74,7 @@ manpage.1: manpage.sgml
     <title>DESCRIPTION</title>
 
     <para><command>&dhpackage;</command> is a program that generates
-      sprite sheets from a collection of images made with Gimp.</para>
+      sprite sheets from a collection of images made with GIMP.</para>
 
     <para>The purpose of the software is to reduce the time required
       to integrate graphic updates into the final product. In order to
@@ -105,11 +105,7 @@ manpage.1: manpage.sgml
       <citerefentry>
         <refentrytitle>gimp-console</refentrytitle>
         <manvolnum>1</manvolnum>
-      </citerefentry> and
-      <citerefentry>
-        <refentrytitle>xcfinfo</refentrytitle>
-        <manvolnum>1</manvolnum>
-      </citerefentry> programs for the generation of the sprite sheets.</para>
+      </citerefentry> program for the generation of the sprite sheets.</para>
   </refsect1>
 
   <refsect1>
@@ -190,7 +186,7 @@ manpage.1: manpage.sgml
         <term><option>-s=<replaceable>directory</replaceable></option>, <option>--scheme-directory=<replaceable>directory</replaceable></option></term>
         <listitem>
           <para>The directories where are searched the Scheme scripts used
-            in the scripts passed to Gimp. The default value is
+            in the scripts passed to GIMP. The default value is
             install_prefix/share/&dhpackage;/script.</para>
         </listitem>
       </varlistentry>
@@ -208,15 +204,6 @@ manpage.1: manpage.sgml
         <term><option>-v, --version</option></term>
         <listitem>
           <para>Print the version of the program and exit.</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
-        <term><option>-x=<replaceable>file</replaceable></option>, <option>--xcfinfo=<replaceable>file</replaceable></option></term>
-        <listitem>
-          <para>The path to the <command>xcfinfo</command> program. The
-            default is to run <command>xcfinfo</command> and let
-            the shell find it in the user's PATH.</para>
         </listitem>
       </varlistentry>
 
@@ -424,10 +411,6 @@ manpage.1: manpage.sgml
     <para>
       <citerefentry>
         <refentrytitle>gimp-console</refentrytitle>
-        <manvolnum>1</manvolnum>
-      </citerefentry>,
-      <citerefentry>
-        <refentrytitle>xcfinfo</refentrytitle>
         <manvolnum>1</manvolnum>
       </citerefentry></para>
   </refsect1>
