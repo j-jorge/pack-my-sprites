@@ -20,7 +20,6 @@
  */
 #include "xcf_map.hpp"
 
-#include <cstdio>
 #include <sstream>
 
 /*----------------------------------------------------------------------------*/
@@ -37,11 +36,11 @@ sdc::xcf_map::xcf_map()
 /**
  * \brief Constructor.
  * \param xcf_directory The directory where the xcf files are taken.
- * \param xcfinfo_program The path to the xcfinfo program.
+ * \param gimp The interface to use to execute the GIMP scripts.
  */
 sdc::xcf_map::xcf_map
-( std::string xcf_directory, std::string xcfinfo_program )
-  : m_xcf_directory( xcf_directory ), m_xcfinfo_program( xcfinfo_program )
+( std::string xcf_directory, gimp_interface gimp )
+  : m_xcf_directory( xcf_directory ), m_gimp( gimp )
 {
   if ( m_xcf_directory.empty() )
     m_xcf_directory = '.';
@@ -93,33 +92,27 @@ sdc::xcf_info sdc::xcf_map::get_info( std::string name ) const
 
 /*----------------------------------------------------------------------------*/
 /**
- * \brief Executes the xcfinfo program to retrieve the description of a XCF
- *        file.
+ * \brief Executes the script that extracts the informations of a XCF file.
  * \param filename The name of the xcf file.
  */
 std::string sdc::xcf_map::execute_xcfinfo_process( std::string filename ) const
 {
-  const std::string command
-    ( m_xcfinfo_program + " \"" + m_xcf_directory + '/' + filename + '"' );
-  FILE* process = popen( command.c_str(), "r" );
+  gimp_interface::path_list_type includes;
+  includes.push_back( "info.scm" );
 
-  if ( process == NULL )
-    {
-      std::cerr << "Failed to execute xcfinfo: '" << command << "'"
-                << std::endl;
-      return std::string();
-    }
+  const std::string script
+    ( "(xcfinfo \"" + m_xcf_directory + '/' + filename + "\")" );
+  std::istringstream iss( m_gimp.run( script, includes ) );
 
-  const std::size_t buffer_length( 512 );
-  char buffer[ buffer_length ];
-  std::ostringstream oss;
+  std::string line;
+  std::string result;
+  const std::string prefix( "|- " );
 
-  while( fgets( buffer, buffer_length, process ) != NULL )
-    oss << buffer;
+  while( std::getline( iss, line ) )
+    if ( line.find( prefix ) == 0 )
+      result += line.substr( prefix.length() ) + '\n';
 
-  pclose( process );
-
-  return oss.str();
+  return result;
 } // xcf_map::execute_xcfinfo_process()
 
 /*----------------------------------------------------------------------------*/
@@ -134,16 +127,17 @@ void sdc::xcf_map::parse_xcf_info_header
 {
   std::istringstream iss( header );
 
-  std::string dummy_string;
-  char dummy_char;
+  std::string version;
 
-  iss >> dummy_string /* Version */
-      >> info.version
-      >> dummy_string /* the comma after the version */
+  iss >> version
       >> info.width
-      >> dummy_char /* the x in the size */
       >> info.height
     ; // ignoring everything after the size.
+
+  if ( version.find( "2.6" ) )
+    info.version = 2;
+  else
+    info.version = 3;
 
   if ( !iss )
     std::cerr << "Failed to read info header: '" << header << "'" << std::endl;
@@ -161,23 +155,16 @@ void sdc::xcf_map::parse_xcf_info_layer
 {
   std::istringstream iss( layer );
 
-  std::string dummy_string;
-  char dummy_char;
-
   layer_info result;
   result.index = info.layers.size();
 
-  iss >> dummy_char /* the visibility */
-      >> result.box.width
-      >> dummy_char /* the x in the size */
+  iss >> result.box.width
       >> result.box.height
       >> result.box.position.x
       >> result.box.position.y
-      >> dummy_string /* the color mode */
-      >> dummy_string /* the layer mode */
     ;
 
-  /* skip the space that separates the layer mode and the layer name. */ 
+  /* skip the space that separates the offset and the layer name. */ 
   iss.ignore();
 
   if ( !iss )

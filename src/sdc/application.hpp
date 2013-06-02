@@ -74,9 +74,6 @@ namespace sdc
     /** \brief The path to gimp-console executable. */
     std::string m_gimp_console_program;
 
-    /** \brief The path to xcfinfo executable. */
-    std::string m_xcfinfo_program;
-
     /** \brief The name of the makefile to generate, if any. */
     std::string m_makefile;
 

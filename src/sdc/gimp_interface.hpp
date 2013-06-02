@@ -22,8 +22,8 @@
 #ifndef __SDC_GIMP_INTERFACE_HPP__
 #define __SDC_GIMP_INTERFACE_HPP__
 
-#include "spritedesc_collection.hpp"
-#include "working_directory.hpp"
+#include <string>
+#include <list>
 
 namespace sdc
 {
@@ -38,6 +38,7 @@ namespace sdc
     typedef std::list<std::string> path_list_type;
 
   public:
+    gimp_interface();
     gimp_interface
     ( path_list_type scheme_directory, std::string gimp_console_program );
 
@@ -45,6 +46,7 @@ namespace sdc
 
   private:
     std::string execute_gimp_scheme_process( std::string script ) const;
+    pid_t open_gimp_process( int& in_fd, int& out_fd ) const;
 
     std::string get_scheme_path( std::string filename ) const;
 

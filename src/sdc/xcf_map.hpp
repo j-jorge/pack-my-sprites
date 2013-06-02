@@ -21,6 +21,7 @@
 #ifndef __SDC_XCF_MAP_HPP__
 #define __SDC_XCF_MAP_HPP__
 
+#include "gimp_interface.hpp"
 #include "xcf_info.hpp"
 
 #include <string>
@@ -41,7 +42,7 @@ namespace sdc
 
   public:
     xcf_map();
-    xcf_map( std::string xcf_directory, std::string xcfinfo_program );
+    xcf_map( std::string xcf_directory, gimp_interface gimp );
 
     void load( std::string name );
 
@@ -62,8 +63,8 @@ namespace sdc
     /** \brief The directory where the xcf files are taken. */
     std::string m_xcf_directory;
 
-    /** \brief The path to the xcfinfo program. */
-    std::string m_xcfinfo_program;
+    /** \brief The interface to use to execute the GIMP scripts. */
+    gimp_interface m_gimp;
 
   }; // class xcf_map
 

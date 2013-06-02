@@ -44,15 +44,14 @@
 ; \param image The image.
 ;
 ; This function displays, on a single line, the version of GIMP, followed by the
-; dimensions of the image and the number of layers.
+; dimensions of the image.
 ;
 (define print-global-info
   (lambda (image)
 
     (output-line (list (car (gimp-version))
                        (car (gimp-drawable-width image))
-                       (car (gimp-drawable-height image))
-                       (car (gimp-image-get-layers image)) ) )
+                       (car (gimp-drawable-height image)) ) )
     ) ; lambda
   ) ; define print-global-info
 

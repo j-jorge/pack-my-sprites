@@ -40,7 +40,7 @@
  */
 sdc::application::application( int& argc, char** &argv )
   : claw::application(argc, argv), m_quit(false), m_generate_spritepos(true),
-    m_gimp_console_program( "gimp-console" ), m_xcfinfo_program( "xcfinfo" )
+    m_gimp_console_program( "gimp-console" )
 {
   check_arguments( argc, argv );
 } // application::application()
@@ -94,8 +94,6 @@ void sdc::application::check_arguments( int& argc, char** &argv )
   m_arguments.add
     ( "-t", "--target",
       "The name of the sprite sheet to generate from the input file.", true );
-  m_arguments.add
-    ( "-x", "--xcfinfo", "The path to the xcfinfo executable.", true );
   m_arguments.add_long
     ( "--no-spritepos", "Tells to not generate the spritepos file.", true );
   m_arguments.add_long
@@ -168,7 +166,9 @@ sdc::application::process_file( std::string name ) const
 {
   const boost::filesystem::path file_path( name, boost::filesystem::native );
   const boost::filesystem::path file_directory( file_path.parent_path() );
-  xcf_map xcf( file_directory.string(), m_xcfinfo_program );
+  xcf_map xcf
+    ( file_directory.string(),
+      gimp_interface( m_scheme_directory, m_gimp_console_program ) );
 
   parser p;
   std::list<spritedesc> desc;
@@ -206,8 +206,7 @@ std::string sdc::application::get_self_command() const
   std::ostringstream result;
 
   result << m_arguments.get_program_name() << ' '
-         << "--gimp-console=" << m_gimp_console_program << ' '
-         << "--xcfinfo=" << m_xcfinfo_program;
+         << "--gimp-console=" << m_gimp_console_program;
 
   if ( !m_generate_spritepos )
     result << " --no-spritepos";

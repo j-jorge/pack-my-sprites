@@ -21,17 +21,27 @@
 #include "gimp_interface.hpp"
 
 #include <sstream>
+#include <iostream>
 #include <cstdio>
+#include <csignal>
 
 #include <boost/filesystem/convenience.hpp>
 
 /*----------------------------------------------------------------------------*/
 /**
  * \brief Constructor.
- * \param gimp_console_program The path to the gimp-console executable.
- * \param xcfinfo_program The path to the xcfinfo executable.
+ */
+sdc::gimp_interface::gimp_interface()
+{
+
+} // gimp_interface::gimp_interface()
+
+/*----------------------------------------------------------------------------*/
+/**
+ * \brief Constructor.
  * \param scheme_directory The paths to the directories where the scheme scripts
  *        are searched.
+ * \param gimp_console_program The path to the gimp-console executable.
  */
 sdc::gimp_interface::gimp_interface
 ( path_list_type scheme_directory, std::string gimp_console_program )
@@ -71,30 +81,108 @@ std::string sdc::gimp_interface::run
 std::string
 sdc::gimp_interface::execute_gimp_scheme_process( std::string script ) const
 {
-  const std::string command
-    ( m_gimp_console_program + " --no-data --no-fonts --batch -" );
-  FILE* process = popen( command.c_str(), "w" );
+  int in_fd, out_fd;
 
-  if ( process == NULL )
+  const int pid = open_gimp_process( in_fd, out_fd );
+
+  if ( pid == -1 )
+    return std::string();
+
+  const char* script_data( script.c_str() );
+  std::size_t remaining( script.size() );
+  ssize_t written;
+
+  do
     {
-      std::cerr << "Failed to execute gimp console: '" << command << "'"
-                << std::endl;
-      return std::string();
-    }
+      written = write( in_fd, script_data, remaining );
 
-  fputs( script.c_str(), process );
+      if ( written > 0 )
+        {
+          script_data += written;
+          remaining -= written;
+        }
+    }
+  while ( (remaining != 0) && (written > 0) );
+
+  if ( close( in_fd ) != 0 )
+    std::cerr << "Error " << errno << " while closing GIMP's stdin."
+              << std::endl;
+
+  if ( remaining != 0 )
+    std::cerr << "The script could not be fully passed to GIMP." << std::endl;
 
   const std::size_t buffer_length( 512 );
   char buffer[ buffer_length ];
   std::ostringstream oss;
+  ssize_t read_count;
 
-  while( fgets( buffer, buffer_length, process ) != NULL )
-    oss << buffer;
+  while( ( read_count = read( out_fd, buffer, buffer_length ) ) > 0 )
+    oss << std::string(buffer, read_count);
 
-  pclose( process );
+  kill( pid, SIGTERM );
+  close( out_fd );
 
   return oss.str();
 } // gimp_interface::execute_gimp_scheme_process()
+
+/*----------------------------------------------------------------------------*/
+/**
+ * \brief Prepare gimp-console to read a script from its stdin.
+ * \param in_fd (out) The file descriptor associated with the standard input of
+ *        gimp-console.
+ * \param out_fd (out) The file descriptor associated with the standard output
+ *        of gimp-console.
+ * \return The identifier of the process.
+ */
+pid_t
+sdc::gimp_interface::open_gimp_process( int& in_fd, int& out_fd ) const
+{
+  int pipe_in[2];
+  int pipe_out[2];
+
+  if ( ( pipe( pipe_in ) != 0 ) || ( pipe( pipe_out ) != 0 ) )
+    {
+      std::cerr << "Call to pipe() has failed." << std::endl;
+      return -1;
+    }
+
+  const pid_t pid = fork();
+
+  if ( pid == -1 )
+    {
+      std::cerr << "Failed to fork process." << std::endl;
+      return -1;
+    }
+
+  const int pipe_read(0);
+  const int pipe_write(1);
+
+  if ( pid == 0 )
+    {
+      // This is executed in the child process.
+      close( pipe_in[ pipe_write ] );
+      dup2( pipe_in[ pipe_read ], STDIN_FILENO );
+      close( pipe_out[ pipe_read ] );
+      dup2( pipe_out[ pipe_write ], STDOUT_FILENO );
+      
+      const int e =
+        execlp
+        ( m_gimp_console_program.c_str(), m_gimp_console_program.c_str(),
+          "--no-data", "--no-fonts", "--batch", "-", (const char*)NULL );
+      
+      std::cerr << "Error " << errno << " when calling execl." << std::endl;
+
+      _Exit(1);
+    }
+
+  close( pipe_in[ pipe_read ] );
+  close( pipe_out[ pipe_write ] );
+
+  in_fd = pipe_in[ pipe_write ];
+  out_fd = pipe_out[ pipe_read ];
+
+  return pid;
+} // gimp_interface::open_gimp_process()
 
 /*----------------------------------------------------------------------------*/
 /**
