@@ -73,6 +73,15 @@
     ) ; lambda
   ) ; define
 
+; \brief Calls print-layers-info for a given array of layers.
+; \param l The layer array.
+;
+(define print-layer-array-info
+  (lambda (l)
+    (print-layers-info 0 (car l) (cadr l))
+    ) ; lambda
+  ) ; define
+
 ; \brief Calls print-layer-info for each layer of a given array starting from a
 ;        given index.
 ; \param i The index of the layer from which we start the calls.
@@ -82,8 +91,14 @@
 (define print-layers-info
   (lambda (i count layers)
     (unless (= i count)
-            (print-layer-info (aref layers i))
-            (print-layers-info (+ i 1) count layers)
+            (let ( (layer (aref layers i)) )
+              (print-layer-info layer)
+              (print-layers-info (+ i 1) count layers)
+
+              (if (= TRUE (car (gimp-item-is-group layer)))
+                  (print-layer-array-info (gimp-item-get-children layer))
+                  ) ; if
+              ) ; let
             ) ; unless
     ) ; lambda
   ) ; define
@@ -101,11 +116,7 @@
     (let ( (img (car (gimp-file-load 1 file_name file_name) ) ) )
 
       (print-global-info img)
-
-      (let ( (l (gimp-image-get-layers img) ) )
-
-        (print-layers-info 0 (car l) (cadr l))
-        ) ; let
+      (print-layer-array-info (gimp-image-get-layers img))
       ) ; let
     ) ; lambda
   ) ; define

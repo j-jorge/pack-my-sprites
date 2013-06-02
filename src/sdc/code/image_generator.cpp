@@ -127,7 +127,7 @@ void sdc::image_generator::generate_output
   includes.push_back( "common.scm" );
 
   m_gimp.run( oss.str(), includes );
-
+  
   if ( m_generate_spritepos )
     {
       const std::string filename

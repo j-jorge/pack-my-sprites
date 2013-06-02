@@ -134,7 +134,7 @@ void sdc::xcf_map::parse_xcf_info_header
       >> info.height
     ; // ignoring everything after the size.
 
-  if ( version.find( "2.6" ) )
+  if ( version.find( "2.6" ) == 0 )
     info.version = 2;
   else
     info.version = 3;
