@@ -23,6 +23,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "gimp_interface.hpp"
 #include "image_generator.hpp"
 #include "makefile_generator.hpp"
 #include "parser.hpp"
@@ -146,7 +147,8 @@ void sdc::application::process_files()
   if ( m_makefile.empty() )
     {
       image_generator g
-        ( m_generate_spritepos, m_scheme_directory, m_gimp_console_program );
+        ( m_generate_spritepos,
+          gimp_interface( m_scheme_directory, m_gimp_console_program ) );
       g.run( content );
     }
   else

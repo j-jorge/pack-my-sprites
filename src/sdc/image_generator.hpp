@@ -22,6 +22,7 @@
 #ifndef __SDC_IMAGE_GENERATOR_HPP__
 #define __SDC_IMAGE_GENERATOR_HPP__
 
+#include "gimp_interface.hpp"
 #include "spritedesc_collection.hpp"
 #include "working_directory.hpp"
 
@@ -66,12 +67,8 @@ namespace sdc
   public:
     typedef std::map<std::string, spritedesc_collection> file_to_spritedesc_map;
 
-    typedef std::list<std::string> path_list_type;
-
   public:
-    image_generator
-    ( bool generate_spritepos, path_list_type scheme_directory,
-      std::string gimp_console_program );
+    image_generator( bool generate_spritepos, gimp_interface gimp );
 
     void run( file_to_spritedesc_map files );
 
@@ -79,14 +76,10 @@ namespace sdc
     void process_spritedesc
     ( std::string source, spritedesc_collection desc ) const;
 
-    void execute_gimp_scheme_process( std::string script ) const;
-
     void generate_output
     ( working_directory dir, xcf_map xcf, spritedesc desc ) const;
     void generate_spritepos( std::ostream& os, const spritedesc& desc ) const;
 
-    std::string get_scheme_path( std::string filename ) const;
-    
     void generate_scm
     ( std::ostream& os, working_directory dir, xcf_map xcf,
       spritedesc desc ) const;
@@ -106,11 +99,8 @@ namespace sdc
     /** \brief Tells to generate the spritepos file. */
     bool m_generate_spritepos;
 
-    /** \brief The directories where the scheme scripts are searched. */
-    path_list_type m_scheme_directory;
-
-    /** \brief The path to gimp-console executable. */
-    std::string m_gimp_console_program;
+    /** \brief The interface to use to execute the GIMP scripts. */
+    gimp_interface m_gimp;
 
   }; // class image_generator
 } // namespace sdc

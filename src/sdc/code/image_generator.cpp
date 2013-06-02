@@ -22,13 +22,10 @@
 
 #include <fstream>
 #include <iostream>
-#include <cstdio>
 
 #include <limits>
 
 #include <claw/logger.hpp>
-
-#include <boost/filesystem/convenience.hpp>
 
 /*----------------------------------------------------------------------------*/
 /**
@@ -62,17 +59,12 @@ bool sdc::image_generator::sprite_height_comp::operator()
  * \brief Constructor.
  * \param generate_spritepos Tells if the .spritepos files must be generated
  *        too.
- * \param gimp_console_program The path to the gimp-console executable.
- * \param xcfinfo_program The path to the xcfinfo executable.
- * \param scheme_directory The paths to the directories where the scheme scripts
- *        are searched.
+ * \param gimp The interface to use to execute the GIMP scripts.
  */
 sdc::image_generator::image_generator
-( bool generate_spritepos, path_list_type scheme_directory,
-  std::string gimp_console_program )
+( bool generate_spritepos, gimp_interface gimp )
   : m_generate_spritepos(generate_spritepos),
-    m_scheme_directory( scheme_directory ),
-    m_gimp_console_program( gimp_console_program )
+    m_gimp( gimp )
 {
 
 } // image_generator::image_generator()
@@ -120,29 +112,6 @@ void sdc::image_generator::process_spritedesc
 
 /*----------------------------------------------------------------------------*/
 /**
- * \brief Executes gimp-console on a given Scheme script.
- * \param script The script to pass to gimp.
- */
-void
-sdc::image_generator::execute_gimp_scheme_process( std::string script ) const
-{
-  const std::string command( m_gimp_console_program + " --batch -" );
-  FILE* process = popen( command.c_str(), "w" );
-
-  if ( process == NULL )
-    {
-      std::cerr << "Failed to execute gimp console: '" << command << "'"
-                << std::endl;
-      return;
-    }
-
-  fputs( script.c_str(), process );
-
-  pclose( process );
-} // image_generator::execute_gimp_scheme_process()
-
-/*----------------------------------------------------------------------------*/
-/**
  * \brief Generate a sprite sheets.
  * \param dir The directories where the files are searched and written.
  * \param xcf The details of the images to use in the generation.
@@ -153,7 +122,11 @@ void sdc::image_generator::generate_output
 {
   std::ostringstream oss;
   generate_scm( oss, dir, xcf, desc );
-  execute_gimp_scheme_process( oss.str() );
+
+  gimp_interface::path_list_type includes;
+  includes.push_back( "common.scm" );
+
+  m_gimp.run( oss.str(), includes );
 
   if ( m_generate_spritepos )
     {
@@ -183,32 +156,6 @@ void sdc::image_generator::generate_spritepos
 
 /*----------------------------------------------------------------------------*/
 /**
- * \brief Gets the full path of a Scheme file.
- *
- * The file is searched in m_scheme_directory and the first match is returned.
- *
- * \param filename The name of the file to search.
- * \return The path to the first file found with the paths of m_scheme_directory
- *         or filename if the file was not found.
- */
-std::string sdc::image_generator::get_scheme_path( std::string filename ) const
-{
-  for ( path_list_type::const_iterator it=m_scheme_directory.begin();
-        it!=m_scheme_directory.end();
-        ++it )
-    {
-      boost::filesystem::path p( *it, boost::filesystem::native );
-      p /= filename;
-
-      if ( boost::filesystem::exists( p ) )
-        return p.string();
-    }
-
-  return filename;
-} // image_generator::get_scheme_path()
-
-/*----------------------------------------------------------------------------*/
-/**
  * \brief Generate the Scheme script that builds the sprites of a given
  *        spritedesc.
  * \param os The stream in which the script is generated.
@@ -219,8 +166,6 @@ std::string sdc::image_generator::get_scheme_path( std::string filename ) const
 void sdc::image_generator::generate_scm
 ( std::ostream& os, working_directory dir, xcf_map xcf, spritedesc desc ) const
 {
-  os << "(load \"" << get_scheme_path( "common.scm" ) << "\")\n";
-
   os << "(let ( ";
 
   for ( spritedesc::id_to_file_map::const_iterator it = desc.xcf.begin();
@@ -248,8 +193,6 @@ void sdc::image_generator::generate_scm
      << make_image_varname(desc.output_name) << ")\n";
 
   os << ")\n";
-
-  os << "(gimp-quit 1)";
 } // image_generator::generate_scm()
 
 /*----------------------------------------------------------------------------*/
