@@ -1,5 +1,5 @@
 Pack My Sprites is a program that generates sprite sheets from a
-collection of images made with Gimp.
+collection of images made with the GIMP.
 
 == DESCRIPTION ==
 
@@ -24,8 +24,8 @@ makefile whose rules build the sprite sheets, with dependencies on the
 XCF files and the input text file. No sprite sheet will be generated
 when using this option.
 
-The software relies upon the gimp-console(1) and xcfinfo(1) programs
-for the generation of the sprite sheets.
+The software relies upon the gimp-console(1) programs for the
+generation of the sprite sheets.
 
 == LICENSE ==
 
@@ -59,14 +59,15 @@ Following the header is a list of XCF files used to build the sprites:
   ...
 
 Then come the sprites, defined by a name, a size, a source image, a
-selection of layers and an optional mask:
+selection of layers and an optional mask. The selec tion of layers can
+be prefixed by some properties to apply to the selected layers:
 
   "name" reference_box * scale_factor with image_name
-    layer_selection_1
-    layer_selection_2
+    [layer_properties] layer_selection_1
+    [layer_properties] layer_selection_2
     ...
     [mask "layer_name"]
-  ;
+    ;
 
 The reference box can be the name of a layer from the source image, or
 one of the following special values:
@@ -104,6 +105,15 @@ The layer selection has different formats:
   - exclude glob ``pattern''
       Forces the layers whose name match the given pattern not to be
       selected.
+
+The layer name and the glob syntax can be prefixed by a list of
+properties to change how the layers are used in the image. The current
+only property is ``hollow''; it tells the program not to consider the
+size of the layer when computing the size of the sprite. The
+properties are optional and must be separated by spaces and put
+between brackets, according to the following syntax:
+
+  [ property_1 property_2 ... ]
 
 The optional mask command tells to use the layer with the given name
 as a mask in the resulting sprite. The white parts of the layer will
