@@ -20,6 +20,7 @@
  */
 #include "xcf_map.hpp"
 
+#include <claw/logger.hpp>
 #include <sstream>
 
 /*----------------------------------------------------------------------------*/
@@ -55,6 +56,8 @@ void sdc::xcf_map::load( std::string name )
 {
   if ( has_info(name) )
     return;
+
+  claw::logger << claw::log_verbose << "Loading '" << name << "'…" << std::endl;
 
   std::istringstream info( execute_xcfinfo_process( name ) );
 
@@ -140,7 +143,8 @@ void sdc::xcf_map::parse_xcf_info_header
     info.version = 3;
 
   if ( !iss )
-    std::cerr << "Failed to read info header: '" << header << "'" << std::endl;
+    std::cerr << "Failed to read info header: '" << header
+              << "'. Does the file exists?" << std::endl;
 } // xcf_map::parse_xcf_info_header()
 
 /*----------------------------------------------------------------------------*/
