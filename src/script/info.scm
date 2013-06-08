@@ -50,8 +50,8 @@
   (lambda (image)
 
     (output-line (list (car (gimp-version))
-                       (car (gimp-drawable-width image))
-                       (car (gimp-drawable-height image)) ) )
+                       (car (gimp-image-width image))
+                       (car (gimp-image-height image)) ) )
     ) ; lambda
   ) ; define print-global-info
 
@@ -114,7 +114,6 @@
     (display "\n")
 
     (let ( (img (car (gimp-file-load 1 file_name file_name) ) ) )
-
       (print-global-info img)
       (print-layer-array-info (gimp-image-get-layers img))
       ) ; let
