@@ -30,8 +30,7 @@
 sdc::working_directory::working_directory( std::string input_file_name )
   : m_input_file_name( input_file_name )
 {
-  const boost::filesystem::path input_path
-    ( m_input_file_name, boost::filesystem::native );
+  const boost::filesystem::path input_path( m_input_file_name );
   const boost::filesystem::path input_directory( input_path.parent_path() );
 
   m_input_directory = input_directory.string();

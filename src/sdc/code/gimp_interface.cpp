@@ -200,7 +200,7 @@ std::string sdc::gimp_interface::get_scheme_path( std::string filename ) const
         it!=m_scheme_directory.end();
         ++it )
     {
-      boost::filesystem::path p( *it, boost::filesystem::native );
+      boost::filesystem::path p( *it );
       p /= filename;
 
       if ( boost::filesystem::exists( p ) )
