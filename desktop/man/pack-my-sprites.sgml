@@ -66,6 +66,7 @@ manpage.1: manpage.sgml
       <arg rep="repeat"><option>-t=<replaceable>string</replaceable></option></arg>
       <arg><option>-x=<replaceable>file</replaceable></option></arg>
       <arg><option>--no-spritepos</option></arg>
+      <arg><option>--plist</option></arg>
       <arg><option>--version</option></arg>
    </cmdsynopsis>
   </refsynopsisdiv>
@@ -84,7 +85,7 @@ manpage.1: manpage.sgml
 
     <para>The default behavior of the program is to parse an input text
       file to generate some sprite sheets and a listing of the
-      localization of their sprites. The input file must describe each
+      placement of their sprites. The input file must describe each
       sprite with a unique name, the layers to show to build them, and
       their final size in the sprite sheet. The output is a PNG file
       containing each sprite and a text file associating the position
@@ -94,6 +95,11 @@ manpage.1: manpage.sgml
 
     <para>When invoked with the <option>--no-spritepos</option> argument, only
       the PNG file is generated.</para>
+
+    <para>When invoked with the <option>--plist</option> argument, an
+      XML file is generated for each sprite sheet described in each
+      input file. See <xref linkend="sect-plist"/> for details about
+      this format.</para>
 
     <para>When invoked with the <option>--makefile</option> argument, the
       program generates a makefile whose rules build the sprite
@@ -179,6 +185,16 @@ manpage.1: manpage.sgml
         <listitem>
           <para>Disables the generation of the files describing the
             position and the size of the sprites in the sprite sheet.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--plist</option></term>
+        <listitem>
+          <para>Enables the generation of the property list files
+          describing the position and the size of the sprites in the
+          sprite sheet. See <xref linkend="sect-plist"/> for details
+          about this format.</para>
         </listitem>
       </varlistentry>
 
@@ -396,12 +412,25 @@ manpage.1: manpage.sgml
     <para>The processing of this file will produce two outputs: an
     image named <filename>letters-1.png</filename> and a text file
     named <filename>letters-1.spritepos</filename>. The latter
-    contains the following localization of the sprites in the
+    contains the following placement of the sprites in the
     image:</para>
 
     <programlisting>wave: 0 0 1002 186
       andy's: 0 187 268 168
       par_K_: 269 187 120 118</programlisting>
+
+  </refsect1>
+
+  <refsect1 id="sect-plist">
+    <title>PROPERTY LIST</title>
+    <para>Property list files in general are used to store serialized
+      objects in various frameworks. They are typically XML files but
+      may ocasionnaly be found as binary files.</para>
+
+    <para>The files generated when the <option>--plist</option> argument
+      is present contain an XML structure describing the content of a
+      sprite sheet following the format used by Zwoptex. The generated
+      file can be immediately imported in Cocos2d projects.</para>
 
   </refsect1>
 
