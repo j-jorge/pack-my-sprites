@@ -68,17 +68,13 @@ namespace sdc
     typedef std::map<std::string, spritedesc_collection> file_to_spritedesc_map;
 
   public:
-    image_generator( bool generate_spritepos, gimp_interface gimp );
+    explicit image_generator( gimp_interface gimp );
 
-    void run( file_to_spritedesc_map files );
+    void generate( std::string source, spritedesc_collection desc ) const;
 
   private:
-    void process_spritedesc
-    ( std::string source, spritedesc_collection desc ) const;
-
     void generate_output
     ( working_directory dir, xcf_map xcf, spritedesc desc ) const;
-    void generate_spritepos( std::ostream& os, const spritedesc& desc ) const;
 
     void generate_scm
     ( std::ostream& os, working_directory dir, xcf_map xcf,
@@ -90,15 +86,7 @@ namespace sdc
 
     std::string make_image_varname( const std::string& id ) const;
 
-    void set_sprite_position( spritedesc& desc ) const;
-    bool find_place_for
-    ( std::list<rectangle_type>& empty_places, spritedesc::sprite& s,
-      std::size_t m ) const;
-
   private:
-    /** \brief Tells to generate the spritepos file. */
-    bool m_generate_spritepos;
-
     /** \brief The interface to use to execute the GIMP scripts. */
     gimp_interface m_gimp;
 

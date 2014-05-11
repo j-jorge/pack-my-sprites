@@ -57,34 +57,13 @@ bool sdc::image_generator::sprite_height_comp::operator()
 /*----------------------------------------------------------------------------*/
 /**
  * \brief Constructor.
- * \param generate_spritepos Tells if the .spritepos files must be generated
- *        too.
  * \param gimp The interface to use to execute the GIMP scripts.
  */
-sdc::image_generator::image_generator
-( bool generate_spritepos, gimp_interface gimp )
-  : m_generate_spritepos(generate_spritepos),
-    m_gimp( gimp )
+sdc::image_generator::image_generator( gimp_interface gimp )
+  : m_gimp( gimp )
 {
 
 } // image_generator::image_generator()
-
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Generates the images described in a given collection of spritedesc
- *        files.
- * \papam file The files to process.
- */
-void sdc::image_generator::run( file_to_spritedesc_map file )
-{
-  for ( file_to_spritedesc_map::const_iterator it=file.begin();
-        it!=file.end(); ++it )
-    {
-      claw::logger << claw::log_verbose
-                   << "Generating from file '" << it->first << "'" << std::endl;
-      process_spritedesc( it->first, it->second );
-    }
-} // image_generator::run()
 
 /*----------------------------------------------------------------------------*/
 /**
@@ -92,7 +71,7 @@ void sdc::image_generator::run( file_to_spritedesc_map file )
  * \param source The file from which the spritedesc was generated.
  * \param desc The spritedesc to process.
  */
-void sdc::image_generator::process_spritedesc
+void sdc::image_generator::generate
 ( std::string source, spritedesc_collection desc ) const
 {
   const working_directory dir( source );
@@ -102,13 +81,12 @@ void sdc::image_generator::process_spritedesc
         it!=desc.sprite_sheet.end(); ++it )
     {
       claw::logger << claw::log_verbose
-                   << "Processing sprite sheet '" << it->output_name << "'"
+                   << "Generating sprite sheet '" << it->output_name << "'"
                    << std::endl;
 
-      set_sprite_position( *it );
       generate_output( dir, desc.xcf, *it );
     }
-} // image_generator::process_spritedesc()
+} // image_generator::generate()
 
 /*----------------------------------------------------------------------------*/
 /**
@@ -127,32 +105,7 @@ void sdc::image_generator::generate_output
   includes.push_back( "common.scm" );
 
   m_gimp.run( oss.str(), includes );
-  
-  if ( m_generate_spritepos )
-    {
-      const std::string filename
-        ( dir.get_output_spritepos_path( desc.output_name ) );
-
-      std::ofstream f( filename.c_str() );
-      generate_spritepos( f, desc );
-    }
 } // image_generator::generate_output()
-
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Generate the spritepos file for the described sprites.
- * \param os The stream in which the spritepos is generated.
- * \param desc The sprites to generate.
- */
-void sdc::image_generator::generate_spritepos
-( std::ostream& os, const spritedesc& desc ) const
-{
-  for ( spritedesc::const_sprite_iterator it = desc.sprite_begin();
-        it != desc.sprite_end(); ++it )
-    os << it->name << ": " << it->result_box.position.x << ' '
-       << it->result_box.position.y << ' '
-       << it->result_box.width << ' ' << it->result_box.height << '\n';
-} // image_generator::generate_spritepos()
 
 /*----------------------------------------------------------------------------*/
 /**
@@ -261,120 +214,3 @@ sdc::image_generator::make_image_varname( const std::string& id ) const
 {
   return id + "_image";
 } // image_generator::make_image_varname()
-
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Set the position of the sprites in the target image.
- * \param desc The spritedesc whose sprites are going to be placed.
- */
-void sdc::image_generator::set_sprite_position( spritedesc& desc ) const
-{
-  switch( desc.order )
-    {
-    case decreasing_area:
-      desc.sort_sprites( sprite_area_comp() );
-      break;
-    case decreasing_height:
-      desc.sort_sprites( sprite_height_comp() );
-      break;
-    case declaration_order:
-      // nothing to do
-      break;
-    }
-  
-  std::list<rectangle_type> empty_places;
-  empty_places.push_back
-    ( rectangle_type(0, 0, desc.width, desc.height) );
-
-  rectangle_type final_size( 0, 0, 1, 1 );
-  spritedesc::sprite_iterator it=desc.sprite_begin();
-
-  while ( it != desc.sprite_end() )
-    {
-      if ( find_place_for( empty_places, *it, desc.margin ) )
-        {
-          final_size = final_size.join( it->result_box );
-          ++it;
-        }
-      else
-        {
-          const spritedesc::sprite_iterator prev( it );
-          ++it;
-          desc.erase_sprite( prev );
-        }
-    }
-
-  desc.width = final_size.width + desc.margin;
-  desc.height = final_size.height + desc.margin;
-} // image_generator::set_sprite_position()
-
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Find a place for a given sprite.
- * \param empty_places The empty rectangles where the sprite can be placed.
- * \param s The sprite to place.
- * \param m The margin around the sprites.
- */
-bool sdc::image_generator::find_place_for
-( std::list<rectangle_type>& empty_places, spritedesc::sprite& s,
-  std::size_t m ) const
-{
-  std::size_t area = std::numeric_limits<std::size_t>::max();
-  std::list<rectangle_type>::iterator selected = empty_places.end();
-  std::list<rectangle_type> failed;
-
-  const std::size_t w( s.result_box.width + m );
-  const std::size_t h( s.result_box.height + m );
-
-  for ( std::list<rectangle_type>::iterator it = empty_places.begin();
-        it != empty_places.end(); ++it )
-    if ( (it->width >= w) && (it->height >= h) )
-      {
-        if ( it->area() < area )
-          {
-            area = it->area();
-            selected = it;
-          }
-      }
-    else
-      failed.push_back(*it);
-
-  if ( selected == empty_places.end() )
-    {
-      std::cerr << "Can't find a place for sprite " << s.name 
-                << " (with a size equal to " << s.result_box.width << 'x'
-                << s.result_box.height << " and an initial size equal to "
-                << s.source_box.width << 'x' << s.source_box.height << ")."
-                << std::endl;
-
-      for ( std::list<rectangle_type>::iterator it = failed.begin();
-            it != failed.end(); ++it )
-        std::cerr << "\t(" << (int)(w - it->width) << ", "
-                  << (int)(h - it->height) << ')' << std::endl;
-
-      return false;
-    }
-  else
-    {
-      const rectangle_type r = *selected;
-      empty_places.erase(selected);
-
-      s.result_box.position = r.position;
-
-      const rectangle_type r_right
-        ( r.left() + w, r.top(), r.width - w, h );
-      const rectangle_type r_bottom
-        ( r.left(), r.top() + h, r.width, r.height - h );
-
-      CLAW_POSTCOND( r.includes( r_right ) );
-      CLAW_POSTCOND( r.includes( r_bottom ) );
-
-      if ( r_right.area() != 0 )
-        empty_places.push_back( r_right );
-
-      if ( r_bottom.area() != 0 )
-        empty_places.push_back( r_bottom );
-
-      return true;
-    }
-} // image_generator::find_place_for()

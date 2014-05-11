@@ -23,10 +23,14 @@
 #include <fstream>
 #include <iostream>
 
+#include <claw/logger.hpp>
+
 #include "gimp_interface.hpp"
 #include "image_generator.hpp"
 #include "makefile_generator.hpp"
 #include "parser.hpp"
+#include "sprite_sheet_builder.hpp"
+#include "spritepos_generator.hpp"
 #include "version.hpp"
 
 #include <boost/filesystem/convenience.hpp>
@@ -140,15 +144,10 @@ void sdc::application::process_files()
   file_to_spritedesc_map content;
 
   for ( std::size_t i=0; i!=m_input_file.size(); ++i )
-    content[ m_input_file[i] ] = process_file( m_input_file[i] );
+    content[ m_input_file[i] ] = read_spritedesc_file( m_input_file[i] );
 
   if ( m_makefile.empty() )
-    {
-      image_generator g
-        ( m_generate_spritepos,
-          gimp_interface( m_scheme_directory, m_gimp_console_program ) );
-      g.run( content );
-    }
+    generate_sprite_sheet_files( content );
   else
     {
       makefile_generator g( m_makefile, get_self_command() );
@@ -159,12 +158,12 @@ void sdc::application::process_files()
 /*----------------------------------------------------------------------------*/
 /**
  * \brief Process a file.
- * \param name The name of the file to process.
+ * \param file_name The name of the file to process.
  */
 sdc::spritedesc_collection
-sdc::application::process_file( std::string name ) const
+sdc::application::read_spritedesc_file( std::string file_name ) const
 {
-  const boost::filesystem::path file_path( name );
+  const boost::filesystem::path file_path( file_name );
   const boost::filesystem::path file_directory( file_path.parent_path() );
   xcf_map xcf
     ( file_directory.string(),
@@ -173,8 +172,8 @@ sdc::application::process_file( std::string name ) const
   parser p;
   std::list<spritedesc> desc;
 
-  if ( !p.run( xcf, desc, name ) )
-    std::cerr << "Failed to process file '" << name << "'" << std::endl;
+  if ( !p.run( xcf, desc, file_name ) )
+    std::cerr << "Failed to process file '" << file_name << "'" << std::endl;
 
   spritedesc_collection result( xcf );
 
@@ -195,6 +194,38 @@ sdc::application::process_file( std::string name ) const
 
   return result;
 } // application::process_file()
+
+void sdc::application::generate_sprite_sheet_files
+( file_to_spritedesc_map sprite_sheet_description ) const
+{
+  typedef file_to_spritedesc_map::const_iterator iterator_type;
+
+  for ( iterator_type it = sprite_sheet_description.begin();
+        it != sprite_sheet_description.end(); ++it )
+    {
+      claw::logger << claw::log_verbose
+                   << "Generating from file '" << it->first << "'"
+                   << std::endl;
+      generate_sprite_sheet_files( it->first, it->second );
+    }
+} // application::generate_sprite_sheet_files()
+
+void sdc::application::generate_sprite_sheet_files
+( std::string source_file_path, spritedesc_collection desc ) const
+{
+  sprite_sheet_builder builder;
+  desc = builder.build( desc );
+      
+  image_generator generator
+    ( gimp_interface( m_scheme_directory, m_gimp_console_program ) );
+  generator.generate( source_file_path, desc );
+
+  if ( m_generate_spritepos )
+    {
+      spritepos_generator spritepos;
+      spritepos.generate( source_file_path, desc );
+    }
+} // sdc::application::generate_sprite_sheet_files()
 
 /*----------------------------------------------------------------------------*/
 /**
