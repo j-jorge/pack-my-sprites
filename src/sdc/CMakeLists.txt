@@ -11,6 +11,7 @@ set( SDC_SOURCE_FILES
   code/main.cpp
   code/makefile_generator.cpp
   code/parser.cpp
+  code/plist_generator.cpp
   code/sprite_sheet_builder.cpp
   code/spritedesc.cpp
   code/spritedesc_collection.cpp

@@ -29,6 +29,7 @@
 #include "image_generator.hpp"
 #include "makefile_generator.hpp"
 #include "parser.hpp"
+#include "plist_generator.hpp"
 #include "sprite_sheet_builder.hpp"
 #include "spritepos_generator.hpp"
 #include "version.hpp"
@@ -225,6 +226,9 @@ void sdc::application::generate_sprite_sheet_files
       spritepos_generator spritepos;
       spritepos.generate( source_file_path, desc );
     }
+
+  plist_generator plist;
+  plist.generate( source_file_path, desc );
 } // sdc::application::generate_sprite_sheet_files()
 
 /*----------------------------------------------------------------------------*/

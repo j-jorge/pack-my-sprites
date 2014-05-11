@@ -41,7 +41,7 @@ void sdc::spritepos_generator::generate_spritepos
 ( working_directory dir, spritedesc desc ) const
 {
   const std::string filename
-    ( dir.get_output_spritepos_path( desc.output_name ) );
+    ( dir.get_output_file_path( desc.output_name, "spritepos" ) );
 
   std::ofstream f( filename.c_str() );
   generate_spritepos( f, desc );

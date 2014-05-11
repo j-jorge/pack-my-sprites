@@ -73,12 +73,13 @@ sdc::working_directory::get_output_image_path( std::string sheet_name ) const
 
 /*----------------------------------------------------------------------------*/
 /**
- * \brief Gets the path to spritepos file generated with the input file.
+ * \brief Gets the path to a file associated with a given sprite sheet.
  * \param sheet_name The name of the sprite sheet that generates the image.
+ * \param extension The extension of the file of which we want the path.
  */
 std::string
-sdc::working_directory::get_output_spritepos_path
-( std::string sheet_name ) const
+sdc::working_directory::get_output_file_path
+( std::string sheet_name, std::string extension ) const
 {
-  return m_output_directory + '/' + sheet_name + ".spritepos";
-} // working_directory::get_output_spritepos_path()
+  return m_output_directory + '/' + sheet_name + "." + extension;
+} // working_directory::get_output_file_path()
