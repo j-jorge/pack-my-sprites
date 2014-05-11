@@ -73,6 +73,9 @@ namespace sdc
     /** \brief Tells to generate the spritepos file. */
     bool m_generate_spritepos;
 
+    /** \brief Tells to generate the PList file. */
+    bool m_generate_plist;
+
     /** \brief The directories where the scheme scripts are searched. */
     path_list_type m_scheme_directory;
 

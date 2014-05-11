@@ -45,6 +45,7 @@
  */
 sdc::application::application( int& argc, char** &argv )
   : claw::application(argc, argv), m_quit(false), m_generate_spritepos(true),
+    m_generate_plist(false),
     m_gimp_console_program( "gimp-console" )
 {
   check_arguments( argc, argv );
@@ -102,6 +103,8 @@ void sdc::application::check_arguments( int& argc, char** &argv )
   m_arguments.add_long
     ( "--no-spritepos", "Tells to not generate the spritepos file.", true );
   m_arguments.add_long
+    ( "--plist", "Tells to not generate the PList file.", true );
+  m_arguments.add_long
     ( "--version", "Prints the version of the software.", true );
 
   m_arguments.parse( argc, argv );
@@ -128,6 +131,7 @@ void sdc::application::check_arguments( int& argc, char** &argv )
     m_scheme_directory = m_arguments.get_all_of_string("--scheme-directory");
 
   m_generate_spritepos = !m_arguments.get_bool("--no-spritepos");
+  m_generate_plist = m_arguments.get_bool("--plist");
 
   for ( int argi=0; argi!=argc; ++argi )
     m_input_file.push_back( argv[argi] );
@@ -227,8 +231,11 @@ void sdc::application::generate_sprite_sheet_files
       spritepos.generate( source_file_path, desc );
     }
 
-  plist_generator plist;
-  plist.generate( source_file_path, desc );
+  if ( m_generate_plist )
+    {
+      plist_generator plist;
+      plist.generate( source_file_path, desc );
+    }
 } // sdc::application::generate_sprite_sheet_files()
 
 /*----------------------------------------------------------------------------*/
@@ -245,6 +252,9 @@ std::string sdc::application::get_self_command() const
 
   if ( !m_generate_spritepos )
     result << " --no-spritepos";
+
+  if ( m_generate_plist )
+    result << " --plist";
 
   for ( path_list_type::const_iterator it = m_scheme_directory.begin();
         it != m_scheme_directory.end(); ++it )
