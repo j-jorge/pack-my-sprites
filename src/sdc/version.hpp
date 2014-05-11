@@ -26,7 +26,7 @@
 
 #define SDC_MAJOR_VERSION 1
 #define SDC_MINOR_VERSION 0
-#define SDC_RELEASE_NUMBER 2
+#define SDC_RELEASE_NUMBER 3
 #define SDC_VERSION_STRING "Pack My Sprites, "                          \
   SDC_TO_STR(SDC_MAJOR_VERSION) "." SDC_TO_STR(SDC_MINOR_VERSION)       \
   "." SDC_TO_STR(SDC_RELEASE_NUMBER)
