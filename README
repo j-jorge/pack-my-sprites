@@ -19,6 +19,10 @@ name. See INPUT FORMAT for details about the syntax of the input file.
 When invoked with the --no-spritepos argument, only the PNG file is
 generated.
 
+When invoked with the --plist argument, a property list XML file is
+generated for each sprite sheet described in each input file. The
+generated file can be immediately used in Cocos2d projects.
+
 When invoked with the --makefile argument, the program generates a
 makefile whose rules build the sprite sheets, with dependencies on the
 XCF files and the input text file. No sprite sheet will be generated
