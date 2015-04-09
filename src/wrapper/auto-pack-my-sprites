@@ -1,0 +1,106 @@
+#!/bin/sh
+
+ARGS=
+STRIP_PATHS=0
+FILES=
+SELF_SCRIPT_NAME="$0"
+FORCE=0
+OUTPUT=sprite-sheet.png
+SIZE="1024x1024"
+
+usage()
+{
+    printf "%s [ -p ] [ -h ] [ -o=output ] [ -f ] [ -z=WxH ] [ pms-arg... ] file...\n" \
+        "$SELF_SCRIPT_NAME"
+    printf "where:\n"
+    printf "\t-f, --force\t\tOverwrite the output file if it already exists.\n"
+    printf "\t-h, --help\t\tPrint this message and exit.\n"
+    printf "\t-o, --output\t\tSet the name of the output file. Default is %s\n" "$OUTPUT"
+    printf "\t-p, --strip-paths\tRemove the directories from the input file names when naming the sprites.\n"
+    printf "\t-z, --size\t\tSet the maximum size of the resulting sprite sheet to a width of W pixels and a height of H pixels. Default size is %s.\n" "$SIZE"
+    printf "\tpms-arg\t\t\tCommand line option to be passed to pack-my-sprites (see below).\n"
+    printf "\tfile\t\t\tAn image file to pack in a sprite sheet.\n"
+
+    printf "\n\nPack My Sprites' command line arguments are:\n\n"
+    pack-my-sprites --help
+}
+
+formatted_size()
+{
+    echo $SIZE | sed 's:x: x :'
+}
+
+name_input_files()
+{
+    I=1
+    for F in $FILES
+    do
+        printf 'img_%s "%s"\n' $I $F
+        I=$(( $I + 1 ))
+    done
+}
+
+generate_spritedesc_entries()
+{
+    I=1
+    for F in $FILES
+    do
+        if [ "$STRIP_PATHS" -eq 1 ]
+        then
+            F=$(basename "$F")
+        fi
+        
+        printf '"%s" image_size * 1 with img_%s\n' $F $I
+        printf '  glob "*"\n'
+        printf ';\n\n'
+
+        I=$(( $I + 1 ))
+    done
+}
+
+for ARG in "$@"
+do
+    case $ARG in
+        --force|-f)
+            FORCE=1
+            ;;
+        --help|-h)
+            usage
+            exit 0
+            ;;
+        --output=*|-o=*)
+            OUTPUT=$(echo $ARG | cut -d= -f2-)
+            ;;
+        --strip-paths|-p)
+            STRIP_PATHS=1
+            ;;
+        --size=*x*|-z=*x*)
+            SIZE=$(echo $ARG | cut -d= -f2-)
+            ;;
+        -*)
+            ARGS="$ARGS $ARG"
+            ;;
+        *)
+            FILES="$FILES $ARG"
+            ;;
+    esac
+done
+
+! [ -z "$FILES" ] || ( usage && exit 1 )
+
+if [ -f "$OUTPUT" ] && [ "$FORCE" -ne 1 ]
+then
+    printf "'%s' already exists. Overwrite? [y/N]\n" "$OUTPUT"
+
+    read OVERWRITE
+
+    [ "$OVERWRITE" = "y" ] || [ "$OVERWRITE" = "Y" ] || exit 0
+fi
+
+pack-my-sprites $ARGS <<EOF
+sprite_sheet "$(basename $OUTPUT .png)" $(formatted_size) order "height"
+
+$(name_input_files)
+
+$(generate_spritedesc_entries)
+EOF
