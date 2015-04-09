@@ -34,6 +34,8 @@ namespace sdc
   class working_directory
   {
   public:
+    static bool is_fully_qualified( std::string filename );
+
     explicit working_directory( std::string input_file_name );
 
     std::string get_input_file_name() const;

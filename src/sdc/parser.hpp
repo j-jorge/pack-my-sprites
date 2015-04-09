@@ -51,8 +51,7 @@ namespace sdc
     typedef boost::spirit::classic::scanner<iterator> scanner;
 
   public:
-    bool run
-    ( xcf_map& xcf, std::list<spritedesc>& desc, const std::string& path );
+    bool run( xcf_map& xcf, std::list<spritedesc>& desc, std::istream& in );
     bool run
       ( xcf_map& xcf, std::list<spritedesc>& desc, const char* file_data,
         unsigned int file_size );

@@ -22,6 +22,11 @@
 
 #include <boost/filesystem/convenience.hpp>
 
+bool sdc::working_directory::is_fully_qualified( std::string filename )
+{
+  return !filename.empty() && ( filename[ 0 ] == '/' );
+}
+
 /*----------------------------------------------------------------------------*/
 /**
  * \brief Constructor.
@@ -57,6 +62,9 @@ std::string sdc::working_directory::get_input_file_name() const
  */
 std::string sdc::working_directory::get_xcf_path( std::string xcf_name ) const
 {
+  if ( is_fully_qualified( xcf_name ) )
+    return xcf_name;
+
   return m_input_directory + '/' + xcf_name;
 } // working_directory::get_xcf_path()
 

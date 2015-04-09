@@ -36,25 +36,12 @@
  * \param path The path of the file to read.
  */
 bool sdc::parser::run
-( xcf_map& xcf, std::list<spritedesc>& desc, const std::string& path )
+( xcf_map& xcf, std::list<spritedesc>& desc, std::istream& in )
 {
   std::stringstream file_data;
-
-  bool ok;
-  std::ifstream f( path.c_str() );
-
-  if ( !f )
-    {
-      std::cerr << "Can't find file '" << path << "'." << std::endl;
-      ok = false;
-    }
-  else
-    {
-      file_data << f.rdbuf();
-      ok = run( xcf, desc, file_data.str().c_str(), file_data.str().size() );
-    }
-
-  return ok;
+  file_data << in.rdbuf();
+  
+  return run( xcf, desc, file_data.str().c_str(), file_data.str().size() );
 } // model_compiler::run()
 
 /*----------------------------------------------------------------------------*/

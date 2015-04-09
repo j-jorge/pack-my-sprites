@@ -20,6 +20,8 @@
  */
 #include "xcf_map.hpp"
 
+#include "working_directory.hpp"
+
 #include <claw/logger.hpp>
 #include <sstream>
 
@@ -103,8 +105,14 @@ std::string sdc::xcf_map::execute_xcfinfo_process( std::string filename ) const
   gimp_interface::path_list_type includes;
   includes.push_back( "info.scm" );
 
-  const std::string script
-    ( "(xcfinfo \"" + m_xcf_directory + '/' + filename + "\")" );
+  std::string file_path;
+
+  if ( working_directory::is_fully_qualified( filename ) )
+    file_path = filename;
+  else
+    file_path = m_xcf_directory + '/' + filename;
+
+  const std::string script( "(xcfinfo \"" + file_path + "\")" );
   std::istringstream iss( m_gimp.run( script, includes ) );
 
   std::string line;

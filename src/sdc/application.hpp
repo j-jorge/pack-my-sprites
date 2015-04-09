@@ -51,7 +51,10 @@ namespace sdc
     void check_arguments( int& argc, char** &argv );
 
     void process_files();
+    spritedesc_collection read_spritedesc_stdin() const;
     spritedesc_collection read_spritedesc_file( std::string file_name ) const;
+    spritedesc_collection read_spritedesc_file
+    ( std::string directory, std::istream& in ) const;
 
     void generate_sprite_sheet_files
     ( file_to_spritedesc_map sprite_sheet_description ) const;

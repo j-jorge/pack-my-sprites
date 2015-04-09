@@ -115,7 +115,7 @@ void sdc::application::check_arguments( int& argc, char** &argv )
       m_quit = true;
     }
 
-  if ( !m_quit && (m_arguments.get_bool("--help") || (argc == 0)) )
+  if ( !m_quit && m_arguments.get_bool("--help") )
     {
       help();
       m_quit = true;
@@ -148,8 +148,11 @@ void sdc::application::process_files()
 {
   file_to_spritedesc_map content;
 
-  for ( std::size_t i=0; i!=m_input_file.size(); ++i )
-    content[ m_input_file[i] ] = read_spritedesc_file( m_input_file[i] );
+  if ( m_input_file.empty() )
+    content[ "stdin" ] = read_spritedesc_stdin();
+  else
+    for ( std::size_t i=0; i!=m_input_file.size(); ++i )
+      content[ m_input_file[i] ] = read_spritedesc_file( m_input_file[i] );
 
   if ( m_makefile.empty() )
     generate_sprite_sheet_files( content );
@@ -160,25 +163,40 @@ void sdc::application::process_files()
     }
 } // application::process_files()
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Process a file.
- * \param file_name The name of the file to process.
- */
+sdc::spritedesc_collection
+sdc::application::read_spritedesc_stdin() const
+{
+  return read_spritedesc_file( ".", std::cin );
+}
+
 sdc::spritedesc_collection
 sdc::application::read_spritedesc_file( std::string file_name ) const
 {
   const boost::filesystem::path file_path( file_name );
+  std::ifstream f( file_path.string().c_str() );
+
+  if ( !f )
+    {
+      std::cerr << "Can't find file '" << file_name << "'." << std::endl;
+      return spritedesc_collection();
+    }
+
   const boost::filesystem::path file_directory( file_path.parent_path() );
+
+  return read_spritedesc_file( file_directory.string(), f );
+}
+
+sdc::spritedesc_collection
+sdc::application::read_spritedesc_file
+( std::string directory, std::istream& in ) const
+{
   xcf_map xcf
-    ( file_directory.string(),
-      gimp_interface( m_scheme_directory, m_gimp_console_program ) );
+    ( directory, gimp_interface( m_scheme_directory, m_gimp_console_program ) );
 
   parser p;
   std::list<spritedesc> desc;
 
-  if ( !p.run( xcf, desc, file_name ) )
-    std::cerr << "Failed to process file '" << file_name << "'" << std::endl;
+  p.run( xcf, desc, in );
 
   spritedesc_collection result( xcf );
 
@@ -198,7 +216,7 @@ sdc::application::read_spritedesc_file( std::string file_name ) const
     }
 
   return result;
-} // application::process_file()
+}
 
 void sdc::application::generate_sprite_sheet_files
 ( file_to_spritedesc_map sprite_sheet_description ) const
