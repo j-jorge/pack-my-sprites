@@ -13,11 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Compile the node of the "xcf_declaration" rule.
- * \author Julien Jorge
- */
 #ifndef __SDC_NODE_PARSER_XCF_ENTRY_HPP__
 #define __SDC_NODE_PARSER_XCF_ENTRY_HPP__
 
@@ -28,10 +23,6 @@ namespace sdc
   class spritedesc;
   class xcf_map;
 
-  /**
-   * \brief Compile the node of the "xcf_declaration" rule.
-   * \author Julien Jorge
-   */
   class node_parser_xcf_entry:
     public node_parser
   {
@@ -39,7 +30,7 @@ namespace sdc
     void parse_node
     ( xcf_map& xcf, spritedesc& desc, const tree_node& node ) const;
 
-  }; // class node_parser_xcf_entry
-} // namespace sdc
+  };
+}
 
-#endif // __SDC_NODE_PARSER_XCF_ENTRY_HPP__
+#endif

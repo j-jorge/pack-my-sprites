@@ -13,11 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Implementation of the sdc::xcf_map class.
- * \author Julien Jorge
- */
 #include "xcf_map.hpp"
 
 #include "working_directory.hpp"
@@ -25,35 +20,20 @@
 #include <claw/logger.hpp>
 #include <sstream>
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Default constructor.
- */
 sdc::xcf_map::xcf_map()
   : m_xcf_directory( "." )
 {
 
-} // xcf_map::xcf_map()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Constructor.
- * \param xcf_directory The directory where the xcf files are taken.
- * \param gimp The interface to use to execute the GIMP scripts.
- */
 sdc::xcf_map::xcf_map
 ( std::string xcf_directory, gimp_interface gimp )
   : m_xcf_directory( xcf_directory ), m_gimp( gimp )
 {
   if ( m_xcf_directory.empty() )
     m_xcf_directory = '.';
-} // xcf_map::xcf_map()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Loads the description of an xcf file.
- * \param name The name of the xcf file.
- */
 void sdc::xcf_map::load( std::string name )
 {
   if ( has_info(name) )
@@ -73,33 +53,18 @@ void sdc::xcf_map::load( std::string name )
     parse_xcf_info_layer( result, line );
 
   m_xcf_info[ name ] = result;
-} // xcf_map::load()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Tells if the map contains a given xcf file.
- * \param name The name of the xcf file.
- */
 bool sdc::xcf_map::has_info( std::string name ) const
 {
   return m_xcf_info.find( name ) != m_xcf_info.end();
-} // xcf_map::has_info()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Gets the informations of a given xcf file.
- * \param name The name of the xcf file.
- */
 sdc::xcf_info sdc::xcf_map::get_info( std::string name ) const
 {
   return m_xcf_info.find( name )->second;
-} // xcf_map::get_info()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Executes the script that extracts the informations of a XCF file.
- * \param filename The name of the xcf file.
- */
 std::string sdc::xcf_map::execute_xcfinfo_process( std::string filename ) const
 {
   gimp_interface::path_list_type includes;
@@ -124,15 +89,8 @@ std::string sdc::xcf_map::execute_xcfinfo_process( std::string filename ) const
       result += line.substr( prefix.length() ) + '\n';
 
   return result;
-} // xcf_map::execute_xcfinfo_process()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Parses the first line of the output of the xcfinfo program in order to
- *        extract the required informations about the xcf file.
- * \param info The structure that receives the result of the parsing.
- * \param header The first line of the output of the xcfinfo program.
- */
 void sdc::xcf_map::parse_xcf_info_header
 ( xcf_info& info, std::string header ) const
 {
@@ -153,15 +111,8 @@ void sdc::xcf_map::parse_xcf_info_header
   if ( !iss )
     std::cerr << "Failed to read info header: '" << header
               << "'. Does the file exists?" << std::endl;
-} // xcf_map::parse_xcf_info_header()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Parses a layer line of the output of the xcfinfo program in order to
- *        extract the required informations about the layer.
- * \param info The structure that receives the result of the parsing.
- * \param layer A layer line of the output of the xcfinfo program.
- */
 void sdc::xcf_map::parse_xcf_info_layer
 ( xcf_info& info, std::string layer ) const
 {
@@ -186,4 +137,4 @@ void sdc::xcf_map::parse_xcf_info_layer
   std::getline( iss, layer_name );
 
   info.layers[ layer_name ] = result;
-} // xcf_map::parse_xcf_info_layer()
+}

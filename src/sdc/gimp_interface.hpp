@@ -13,12 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief This class provides an interface to execute GIMP to process a given
- *        Scheme script.
- * \author Julien Jorge
- */
 #ifndef __SDC_GIMP_INTERFACE_HPP__
 #define __SDC_GIMP_INTERFACE_HPP__
 
@@ -27,11 +21,6 @@
 
 namespace sdc
 {
-  /**
-   * \brief This class provides an interface to execute GIMP to process a given
-   *        Scheme script.
-   * \author Julien Jorge
-   */
   class gimp_interface
   {
   public:
@@ -51,13 +40,10 @@ namespace sdc
     std::string get_scheme_path( std::string filename ) const;
 
   private:
-    /** \brief The directories where the scheme scripts are searched. */
     path_list_type m_scheme_directory;
-
-    /** \brief The path to gimp-console executable. */
     std::string m_gimp_console_program;
 
-  }; // class gimp_interface
-} // namespace sdc
+  };
+}
 
-#endif // __SDC_GIMP_INTERFACE_HPP__
+#endif

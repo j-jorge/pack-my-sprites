@@ -13,12 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief The paths to the directories where the files are searched and
- *        generated.
- * \author Julien Jorge
- */
 #ifndef __SDC_WORKING_DIRECTORY_HPP__
 #define __SDC_WORKING_DIRECTORY_HPP__
 
@@ -26,11 +20,6 @@
 
 namespace sdc
 {
-  /**
-   * \brief The paths to the directories where the files are searched and
-   *        generated.
-   * \author Julien Jorge
-   */
   class working_directory
   {
   public:
@@ -45,17 +34,12 @@ namespace sdc
     get_output_file_path( std::string sheet_name, std::string extension ) const;
 
   private:
-    /** \brief The file on which we work. */
     const std::string m_input_file_name;
-
-    /** The directory where the files are searched. */
     std::string m_input_directory;
-
-    /** The directory where the files are written. */
     std::string m_output_directory;
 
-  }; // working_directory()
+  };
 
-} // namespace sdc
+}
 
-#endif // __SDC_WORKING_DIRECTORY_HPP__
+#endif

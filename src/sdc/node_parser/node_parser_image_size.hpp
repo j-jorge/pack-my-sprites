@@ -13,11 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Compile the node of the "image_size" rule.
- * \author Julien Jorge
- */
 #ifndef __SDC_NODE_PARSER_IMAGE_SIZE_HPP__
 #define __SDC_NODE_PARSER_IMAGE_SIZE_HPP__
 
@@ -27,10 +22,6 @@
 
 namespace sdc
 {
-  /**
-   * \brief Compile the node of the "image_size" rule.
-   * \author Julien Jorge
-   */
   class node_parser_image_size:
     public node_parser
   {
@@ -38,7 +29,7 @@ namespace sdc
     void parse_node
     ( const xcf_info& xcf, spritedesc::sprite& s, const tree_node& node ) const;
 
-  }; // class node_parser_image_size
-} // namespace sdc
+  };
+}
 
-#endif // __SDC_NODE_PARSER_IMAGE_SIZE_HPP__
+#endif

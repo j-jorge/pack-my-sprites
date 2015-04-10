@@ -13,24 +13,12 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Implementation of the sdc::node_parser_sprite_declaration class.
- * \author Julien Jorge
- */
 #include "node_parser/node_parser_sprite_declaration.hpp"
 
 #include "grammar.hpp"
 
 #include <claw/string_algorithm.hpp>
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Parses node of type sprite_declaration.
- * \param xcf The description of the content of the xcf.
- * \param desc The structure receiving the result of the parsing.
- * \param node Node to parse.
- */
 void sdc::node_parser_sprite_declaration::parse_node
 ( const xcf_map& xcf, spritedesc& desc, const tree_node& node ) const
 {
@@ -58,14 +46,8 @@ void sdc::node_parser_sprite_declaration::parse_node
     s.mask = get_layers( image, node.children[4] );
 
   desc.add_sprite( s );
-} // node_parser_sprite_declaration::parse_node()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Processes the node representing the name of the sprite.
- * \param s The sprite that receives the name.
- * \param node Node to parse.
- */
 void sdc::node_parser_sprite_declaration::get_sprite_name
 ( spritedesc::sprite& s, const tree_node& node ) const
 {
@@ -73,29 +55,14 @@ void sdc::node_parser_sprite_declaration::get_sprite_name
 
   claw::text::c_escape
     ( name.begin(), name.end(), std::inserter( s.name, s.name.end() ) );
-} // node_parser_sprite_declaration::get_sprite_name()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Processes the node representing the identifier of the image to use for
- *        the sprite.
- * \param s The sprite that receives the id.
- * \param node Node to parse.
- */
 void sdc::node_parser_sprite_declaration::get_image_id
 ( spritedesc::sprite& s, const tree_node& node ) const
 {
   s.xcf_id = std::string( node.value.begin(), node.value.end() );
-} // node_parser_sprite_declaration::get_image_id()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Fill the layers of a sprite and set its size.
- * \param image The image where the sprites are taken.
- * \param s The sprite that receives the layers and the size.
- * \param size_node The node containing the informations about the size.
- * \param layer_list_node The node containing the list of the layers.
- */
 void sdc::node_parser_sprite_declaration::get_layers_and_size
 ( const xcf_info& image, spritedesc::sprite& s, const tree_node& size_node,
   const tree_node& layer_list_node ) const
@@ -129,14 +96,8 @@ void sdc::node_parser_sprite_declaration::get_layers_and_size
 
   crop_sprite_to_image_bounds( image, s );
   apply_result_box_ratio( s, ratio );
-} // node_parser_sprite_declaration::get_layers_and_size()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Processes a node describing a list of layers.
- * \param image The image from which the layers are taken.
- * \param layer_list_node The node listing the layers.
- */
 std::list<sdc::layer_info> sdc::node_parser_sprite_declaration::get_layers
 ( const xcf_info& image, const tree_node& layer_list_node ) const
 {
@@ -151,15 +112,8 @@ std::list<sdc::layer_info> sdc::node_parser_sprite_declaration::get_layers
       add_layers( image, result, layer_list_node.children[i] );
 
   return result;
-} // node_parser_sprite_declaration::get_layers()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Applies the properties listed in a property node to a collection of
- *        layers.
- * \param result The list at the end of which the layers are inserted.
- * \param node The node describing the layers.
- */
 void sdc::node_parser_sprite_declaration::apply_layer_properties
 ( std::list<layer_info>& result, const tree_node& properties_node ) const
 {
@@ -190,15 +144,8 @@ void sdc::node_parser_sprite_declaration::apply_layer_properties
     else
       std::cerr << "Unknown layer property: '" << properties[i] << "'."
                 << std::endl;
-} // node_parser_sprite_declaration::apply_layer_properties()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Processes a node describing a layer in a layer list.
- * \param image The image from which the layers are taken.
- * \param result The list at the end of which the layers are inserted.
- * \param node The node describing the layers.
- */
 void sdc::node_parser_sprite_declaration::add_layers
 ( const xcf_info& image, std::list<layer_info>& result,
   const tree_node& node ) const
@@ -229,16 +176,8 @@ void sdc::node_parser_sprite_declaration::add_layers
 
       std::copy( layers.begin(), layers.end(), std::back_inserter(result) );
     }
-} // node_parser_sprite_declaration::add_layers()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Processes a node describing a layer in a layer list with a globalized
- *        expression.
- * \param image The image from which the layers are taken.
- * \param result The list at the end of which the layers are inserted.
- * \param node The node describing the layers.
- */
 void sdc::node_parser_sprite_declaration::add_layers_glob
 ( const xcf_info& image, std::list<layer_info>& result,
   const tree_node& node ) const
@@ -261,16 +200,8 @@ void sdc::node_parser_sprite_declaration::add_layers_glob
 
   if ( !found )
     std::cerr << "Unmatched pattern '" << pattern << "'" << std::endl;
-} // node_parser_sprite_declaration::add_layers_glob()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Processes a node describing the exclusion of some layers from a layer
- *        list.
- * \param image The image from which the layers are taken.
- * \param result The list at the end of which the layers are inserted.
- * \param node The node describing the layers.
- */
 void sdc::node_parser_sprite_declaration::exclude_layers
 ( const xcf_info& image, std::list<layer_info>& result,
   const tree_node& node ) const
@@ -296,15 +227,8 @@ void sdc::node_parser_sprite_declaration::exclude_layers
         else
           ++candidate;
     }
-} // node_parser_sprite_declaration::exclude_layers()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Processes a node describing a layer by a string.
- * \param image The image from which the layers are taken.
- * \param result The list at the end of which the layers are inserted.
- * \param node The node describing the layer.
- */
 void sdc::node_parser_sprite_declaration::add_single_layer
 ( const xcf_info& image, std::list<layer_info>& result,
   const tree_node& node ) const
@@ -313,18 +237,11 @@ void sdc::node_parser_sprite_declaration::add_single_layer
         
   get_layer_info( image, info, node );
   result.push_back( info );
-} // node_parser_sprite_declaration::add_single_layer()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Computes the bounding box in the source image of the layers of which a
- *        sprite is made.
- * \param s The sprite whose source_box has to be computed.
- */
 void sdc::node_parser_sprite_declaration::compute_source_box
 ( spritedesc::sprite& s ) const
 {
-  // Compute the size of the sprite in the source image.
   std::list<layer_info>::const_iterator it;
   bool initialized( false );
 
@@ -347,15 +264,8 @@ void sdc::node_parser_sprite_declaration::compute_source_box
   for ( ; it != s.layers.end(); ++it )
     if ( it->box.area() != 0 )
       s.source_box = s.source_box.join( it->box );
-} // node_parser_sprite_declaration::compute_source_box()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Get the layer info associated to a given layer name in a given xcf.
- * \param xcf The description of the content of the xcf.
- * \param layer The structure receiving the result of the parsing.
- * \param node Node to parse.
- */
 void sdc::node_parser_sprite_declaration::get_layer_info
 ( const xcf_info& xcf, layer_info& layer, const tree_node& node ) const
 {
@@ -372,4 +282,4 @@ void sdc::node_parser_sprite_declaration::get_layer_info
     std::cerr << "Unknown layer '" << layer_name << "'" << std::endl;
   else
     layer = it_layer->second;
-} // node_parser_sprite_declaration::get_layer_info()
+}

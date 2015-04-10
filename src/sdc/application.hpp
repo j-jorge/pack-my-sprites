@@ -13,11 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief The main class.
- * \author Julien Jorge
- */
 #ifndef __SDC_APPLICATION_HPP__
 #define __SDC_APPLICATION_HPP__
 
@@ -29,10 +24,6 @@
 
 namespace sdc
 {
-  /**
-   * \brief The main class.
-   * \author Julien Jorge
-   */
   class application:
     public claw::application
   {
@@ -64,31 +55,16 @@ namespace sdc
     std::string get_self_command() const;
 
   private:
-    /** \brief Tells if we should quit immediatly. */
     bool m_quit;
-
-    /** \brief The sprite description file. */
     std::vector<std::string> m_input_file;
-
-    /** \brief The images to generate from the input files. */
     std::list<std::string> m_target;
-
-    /** \brief Tells to generate the spritepos file. */
     bool m_generate_spritepos;
-
-    /** \brief Tells to generate the PList file. */
     bool m_generate_plist;
-
-    /** \brief The directories where the scheme scripts are searched. */
     path_list_type m_scheme_directory;
-
-    /** \brief The path to gimp-console executable. */
     std::string m_gimp_console_program;
-
-    /** \brief The name of the makefile to generate, if any. */
     std::string m_makefile;
 
-  }; // class application
-} // namespace sdc
+  };
+}
 
-#endif // __SDC_APPLICATION_HPP__
+#endif

@@ -13,11 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Implementation of the sdc::node_parser_sprite_sheet class.
- * \author Julien Jorge
- */
 #include "node_parser/node_parser_sprite_sheet.hpp"
 
 #include "node_parser/node_parser_xcf_entry.hpp"
@@ -28,13 +23,6 @@
 
 #include "spritedesc.hpp"
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Parse a node describing a sprite sheet.
- * \param xcf The description of the content of the xcf.
- * \param desc The structure receiving the result of the parsing.
- * \param node Node to parse.
- */
 void sdc::node_parser_sprite_sheet::parse_node
 ( xcf_map& xcf, spritedesc& desc, const tree_node& node ) const
 {
@@ -77,53 +65,28 @@ void sdc::node_parser_sprite_sheet::parse_node
     }
 
   check_xcf_usage( desc );
-} // node_parser_sprite_sheet::parse_node()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Parse the name of the sprite sheet.
- * \param desc The structure receiving the result of the parsing.
- * \param node Node to parse.
- */
 void sdc::node_parser_sprite_sheet::parse_name
 ( spritedesc& desc, const tree_node& node ) const
 {
   desc.output_name = std::string( node.value.begin(), node.value.end() );
-} // node_parser_sprite_sheet::parse_name()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Parse the width of the sprite sheet.
- * \param desc The structure receiving the result of the parsing.
- * \param node Node to parse.
- */
 void sdc::node_parser_sprite_sheet::parse_width
 ( spritedesc& desc, const tree_node& node ) const
 {
   std::istringstream iss( std::string( node.value.begin(), node.value.end() ) );
   iss >> desc.width;
-} // node_parser_sprite_sheet::parse_width()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Parse the height of the sprite sheet.
- * \param desc The structure receiving the result of the parsing.
- * \param node Node to parse.
- */
 void sdc::node_parser_sprite_sheet::parse_height
 ( spritedesc& desc, const tree_node& node ) const
 {
   std::istringstream iss( std::string( node.value.begin(), node.value.end() ) );
   iss >> desc.height;
-} // node_parser_sprite_sheet::parse_height()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Parse the margin between the sprites.
- * \param desc The structure receiving the result of the parsing.
- * \param node Node to parse.
- * \return true if the margin has been read.
- */
 bool sdc::node_parser_sprite_sheet::parse_margin
 ( spritedesc& desc, const tree_node& node ) const
 {
@@ -139,15 +102,8 @@ bool sdc::node_parser_sprite_sheet::parse_margin
       desc.margin = 1;
       return false;
     }
-} // node_parser_sprite_sheet::parse_margin()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Parse the heuristic to use to place the sprites.
- * \param desc The structure receiving the result of the parsing.
- * \param node Node to parse.
- * \return true if the margin has been read.
- */
 bool sdc::node_parser_sprite_sheet::parse_order
 ( spritedesc& desc, const tree_node& node ) const
 {
@@ -171,14 +127,8 @@ bool sdc::node_parser_sprite_sheet::parse_order
     }
   else
     return false;
-} // node_parser_sprite_sheet::parse_order()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Displays a warning for each XCF file declared but not used in the
- *        sprite sheet.
- * \param desc The sprite sheet to check.
- */
 void sdc::node_parser_sprite_sheet::check_xcf_usage
 ( const spritedesc& desc ) const
 {
@@ -193,4 +143,4 @@ void sdc::node_parser_sprite_sheet::check_xcf_usage
     std::cerr << "warning: XCF file '" << it->second << "' identified as '"
               << it->first << "' is never used in sprite sheet '"
               << desc.output_name << "'." << std::endl;
-} // node_parser_sprite_sheet::check_xcf_usage()
+}

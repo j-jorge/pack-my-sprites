@@ -13,29 +13,15 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Implementation of the sdc::spritedesc_collection class.
- * \author Julien Jorge
- */
 #include "spritedesc_collection.hpp"
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Constructs a collection with a default xcf map.
- */
 sdc::spritedesc_collection::spritedesc_collection()
 {
 
-} // spritedesc_collection::spritedesc_collection()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Constructs a collection that will use a given xcf_map.
- * \param m The xcf_map to copy in this instance.
- */
 sdc::spritedesc_collection::spritedesc_collection( xcf_map m )
   : xcf( m )
 {
 
-} // spritedesc_collection::spritedesc_collection()
+}

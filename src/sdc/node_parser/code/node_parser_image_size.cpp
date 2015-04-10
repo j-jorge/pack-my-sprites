@@ -13,21 +13,10 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Implementation of the sdc::node_parser_image_size class.
- * \author Julien Jorge
- */
 #include "node_parser/node_parser_image_size.hpp"
 
 #include "spritedesc.hpp"
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Parse a node of type image_size.
- * \param s The structure receiving the result of the parsing.
- * \param node Node to parse.
- */
 void sdc::node_parser_image_size::parse_node
 ( spritedesc::sprite& s, const tree_node& node ) const
 {
@@ -43,4 +32,4 @@ void sdc::node_parser_image_size::parse_node
   else
     std::cerr << "invalid ratio '" << input
               << "' for sprite '" << s.name << "'" << std::endl;
-} // node_parser_image_size::parse_node()
+}

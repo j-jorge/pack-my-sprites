@@ -13,19 +13,9 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Implementation of the template methods of the sdc::spritedesc class.
- * \author Julien Jorge
- */
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Sorts the sprites with a given comparison function.
- * \param f The function to use to compare the sprites.
- */
 template<typename F>
 void sdc::spritedesc::sort_sprites( F f )
 {
   sprites.sort( f );
-} // spritedesc::sort_sprites()
+}

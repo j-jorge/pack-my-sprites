@@ -13,11 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Implementation of the sdc::gimp_interface class.
- * \author Julien Jorge
- */
 #include "gimp_interface.hpp"
 
 #include <sstream>
@@ -27,37 +22,19 @@
 
 #include <boost/filesystem/convenience.hpp>
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Constructor.
- */
 sdc::gimp_interface::gimp_interface()
 {
 
-} // gimp_interface::gimp_interface()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Constructor.
- * \param scheme_directory The paths to the directories where the scheme scripts
- *        are searched.
- * \param gimp_console_program The path to the gimp-console executable.
- */
 sdc::gimp_interface::gimp_interface
 ( path_list_type scheme_directory, std::string gimp_console_program )
   : m_scheme_directory( scheme_directory ),
     m_gimp_console_program( gimp_console_program )
 {
 
-} // gimp_interface::gimp_interface()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Executes a given Scheme script using the GIMP.
- * \papam script The script to execute.
- * \param includes The files to include before executing the script.
- * \return The output of the script.
- */
 std::string sdc::gimp_interface::run
 ( std::string script, path_list_type includes ) const
 {
@@ -71,13 +48,8 @@ std::string sdc::gimp_interface::run
   full_script += "\n(gimp-quit 1)\n";
 
   return execute_gimp_scheme_process( full_script );
-} // gimp_interface::run()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Executes gimp-console on a given Scheme script.
- * \param script The script to pass to gimp.
- */
 std::string
 sdc::gimp_interface::execute_gimp_scheme_process( std::string script ) const
 {
@@ -123,17 +95,8 @@ sdc::gimp_interface::execute_gimp_scheme_process( std::string script ) const
   close( out_fd );
 
   return oss.str();
-} // gimp_interface::execute_gimp_scheme_process()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Prepare gimp-console to read a script from its stdin.
- * \param in_fd (out) The file descriptor associated with the standard input of
- *        gimp-console.
- * \param out_fd (out) The file descriptor associated with the standard output
- *        of gimp-console.
- * \return The identifier of the process.
- */
 pid_t
 sdc::gimp_interface::open_gimp_process( int& in_fd, int& out_fd ) const
 {
@@ -182,18 +145,8 @@ sdc::gimp_interface::open_gimp_process( int& in_fd, int& out_fd ) const
   out_fd = pipe_out[ pipe_read ];
 
   return pid;
-} // gimp_interface::open_gimp_process()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Gets the full path of a Scheme file.
- *
- * The file is searched in m_scheme_directory and the first match is returned.
- *
- * \param filename The name of the file to search.
- * \return The path to the first file found with the paths of m_scheme_directory
- *         or filename if the file was not found.
- */
 std::string sdc::gimp_interface::get_scheme_path( std::string filename ) const
 {
   for ( path_list_type::const_iterator it=m_scheme_directory.begin();
@@ -208,4 +161,4 @@ std::string sdc::gimp_interface::get_scheme_path( std::string filename ) const
     }
 
   return filename;
-} // gimp_interface::get_scheme_path()
+}

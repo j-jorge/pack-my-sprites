@@ -13,11 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Main file.
- * \author Julien Jorge
- */
 #include "application.hpp"
 
 CLAW_APPLICATION_IMPLEMENT(sdc::application)

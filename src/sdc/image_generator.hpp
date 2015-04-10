@@ -13,12 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief The image generator generates the images described by some
- *        spritedesc files.
- * \author Julien Jorge
- */
 #ifndef __SDC_IMAGE_GENERATOR_HPP__
 #define __SDC_IMAGE_GENERATOR_HPP__
 
@@ -28,40 +22,25 @@
 
 namespace sdc
 {
-  /**
-   * \brief The image generator generates the images described by some
-   *        spritedesc files.
-   * \author Julien Jorge
-   */
   class image_generator
   {
   private:
-    /**
-     * \brief This function object is used to compare the sprites by decreasing
-     *        order of their areas.
-     */
     class sprite_area_comp
     {
     public:
       bool operator()
       ( const spritedesc::sprite& a, const spritedesc::sprite& b ) const;
 
-    }; // class sprite_area_comp
+    };
 
-    /**
-     * \brief This function object is used to compare the sprites by decreasing
-     *        order of their heights.
-     */
     class sprite_height_comp
     {
     public:
       bool operator()
       ( const spritedesc::sprite& a, const spritedesc::sprite& b ) const;
 
-    }; // class sprite_height_comp
+    };
 
-    /** \brief The structure that describes the rectangles when placing the
-        sprites. */
     typedef claw::math::rectangle<std::size_t> rectangle_type;
 
   public:
@@ -87,10 +66,9 @@ namespace sdc
     std::string make_image_varname( const std::string& id ) const;
 
   private:
-    /** \brief The interface to use to execute the GIMP scripts. */
     gimp_interface m_gimp;
 
-  }; // class image_generator
-} // namespace sdc
+  };
+}
 
-#endif // __SDC_IMAGE_GENERATOR_HPP__
+#endif

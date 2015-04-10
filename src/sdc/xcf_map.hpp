@@ -13,11 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief The map associating the name of the xcf with their descriptions.
- * \author Julien Jorge
- */
 #ifndef __SDC_XCF_MAP_HPP__
 #define __SDC_XCF_MAP_HPP__
 
@@ -29,15 +24,9 @@
 
 namespace sdc
 {
-  /**
-   * \brief The xcf_map class stores the informations of the xcf files.
-   * \author Julien Jorge
-   */
   class xcf_map
   {
   private:
-    /** \brief The map associating the name of the xcf with their
-        descriptions. */
     typedef std::map<std::string, xcf_info> name_to_info_type;
 
   public:
@@ -56,18 +45,12 @@ namespace sdc
     void parse_xcf_info_layer( xcf_info& info, std::string layer ) const;
 
   private:
-    /** \brief The map associating the name of the xcf with their
-        descriptions. */
     name_to_info_type m_xcf_info;
-
-    /** \brief The directory where the xcf files are taken. */
     std::string m_xcf_directory;
-
-    /** \brief The interface to use to execute the GIMP scripts. */
     gimp_interface m_gimp;
 
-  }; // class xcf_map
+  };
 
-} // namespace sdc
+}
 
-#endif // __SDC_XCF_MAP_HPP__
+#endif

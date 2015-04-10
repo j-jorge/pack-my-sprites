@@ -13,18 +13,8 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief The implementation of the sdc::xcf_info class.
- * \author Julien Jorge
- */
 #include "xcf_info.hpp"
 
-/**
- * \brief Finds the name of the layer with the given index, or an empty string
- *        if there is no layer with such index.
- * \param index The index of the layer.
- */
 std::string sdc::xcf_info::get_layer_name( std::size_t index ) const
 {
   for( layer_map::const_iterator it=layers.begin(); it!=layers.end(); ++it )
@@ -32,4 +22,4 @@ std::string sdc::xcf_info::get_layer_name( std::size_t index ) const
       return it->first;
 
   return std::string();
-} // xcf_info::get_layer_name()
+}

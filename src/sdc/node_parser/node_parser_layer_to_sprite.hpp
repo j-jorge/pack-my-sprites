@@ -13,11 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Compile the node of the "sprite_declaration" rule.
- * \author Julien Jorge
- */
 #ifndef __SDC_NODE_PARSER_LAYER_TO_SPRITE_HPP__
 #define __SDC_NODE_PARSER_LAYER_TO_SPRITE_HPP__
 
@@ -25,10 +20,6 @@
 
 namespace sdc
 {
-  /**
-   * \brief Compile the node of the "layer_to_sprite" rule.
-   * \author Julien Jorge
-   */
   class node_parser_layer_to_sprite:
     public node_parser_sprite_description_base
   {
@@ -36,7 +27,7 @@ namespace sdc
     void parse_node
     ( const xcf_map& xcf, spritedesc& s, const tree_node& node ) const;
 
-  }; // class node_parser_layer_to_sprite
-} // namespace sdc
+  };
+}
 
-#endif // __SDC_NODE_PARSER_LAYER_TO_SPRITE_HPP__
+#endif

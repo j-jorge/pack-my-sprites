@@ -13,11 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Implementation of the sdc::parser class.
- * \author Julien Jorge
- */
 #include "parser.hpp"
 
 #include "spritedesc.hpp"
@@ -28,13 +23,6 @@
 #include <fstream>
 #include <sstream>
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Parse the description of the sprites.
- * \param xcf The map associating the name of the xcf with their descriptions.
- * \param desc The result of the parsing.
- * \param path The path of the file to read.
- */
 bool sdc::parser::run
 ( xcf_map& xcf, std::list<spritedesc>& desc, std::istream& in )
 {
@@ -42,16 +30,8 @@ bool sdc::parser::run
   file_data << in.rdbuf();
   
   return run( xcf, desc, file_data.str().c_str(), file_data.str().size() );
-} // model_compiler::run()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Parse the description of the sprites.
- * \param xcf The map associating the name of the xcf with their descriptions.
- * \param desc The result of the parsing.
- * \param file_data The content of the file to compile.
- * \param file_size Size of the \a file_data buffer.
- */
 bool sdc::parser::run
 ( xcf_map& xcf, std::list<spritedesc>& desc, const char* file_data,
   unsigned int file_size )
@@ -72,19 +52,12 @@ bool sdc::parser::run
   scan_tree( xcf, desc, info.trees[0] );
 
   return ok;
-} // model_compiler::run()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Compile the tree of the file.
- * \param xcf The map associating the name of the xcf with their descriptions.
- * \param desc The result of the parsing.
- * \param node The root of the tree to compile.
- */
 void sdc::parser::scan_tree
 ( xcf_map& xcf, std::list<spritedesc>& desc, const tree_node& node ) const
 {
   node_parser_file file;
 
   file.parse_node( xcf, desc, node );
-} // parser::parse_tree()
+}

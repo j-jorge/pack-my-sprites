@@ -13,11 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Implementation of the sdc::application class.
- * \author Julien Jorge
- */
 #include "application.hpp"
 
 #include <fstream>
@@ -37,24 +32,14 @@
 #include <boost/filesystem/convenience.hpp>
 #include <boost/algorithm/string/join.hpp>
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Constructor.
- * \param argc Number of program arguments.
- * \param argv Program arguments.
- */
 sdc::application::application( int& argc, char** &argv )
   : claw::application(argc, argv), m_quit(false), m_generate_spritepos(true),
     m_generate_plist(false),
     m_gimp_console_program( "gimp-console" )
 {
   check_arguments( argc, argv );
-} // application::application()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Run the application : split the image.
- */
 int sdc::application::run()
 {
   if (!m_quit)
@@ -67,23 +52,13 @@ int sdc::application::run()
     }
 
   return 0;
-} // application::run()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Print program usage.
- */
 void sdc::application::help() const
 {
   m_arguments.help("file.spritedesc...");
-} // application::help()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Check program arguments.
- * \param argc Number of program arguments.
- * \param argv Program arguments.
- */
 void sdc::application::check_arguments( int& argc, char** &argv )
 {
   m_arguments.add( "-h", "--help", "Print this message and exit.", true );
@@ -138,12 +113,8 @@ void sdc::application::check_arguments( int& argc, char** &argv )
 
   if ( m_arguments.has_value( "--target" ) )
     m_target = m_arguments.get_all_of_string( "--target" );
-} // application::check_arguments()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Processes the spritedesc files.
- */
 void sdc::application::process_files()
 {
   file_to_spritedesc_map content;
@@ -161,7 +132,7 @@ void sdc::application::process_files()
       makefile_generator g( m_makefile, get_self_command() );
       g.run( content );
     }
-} // application::process_files()
+}
 
 sdc::spritedesc_collection
 sdc::application::read_spritedesc_stdin() const
@@ -231,7 +202,7 @@ void sdc::application::generate_sprite_sheet_files
                    << std::endl;
       generate_sprite_sheet_files( it->first, it->second );
     }
-} // application::generate_sprite_sheet_files()
+}
 
 void sdc::application::generate_sprite_sheet_files
 ( std::string source_file_path, spritedesc_collection desc ) const
@@ -254,13 +225,8 @@ void sdc::application::generate_sprite_sheet_files
       plist_generator plist;
       plist.generate( source_file_path, desc );
     }
-} // sdc::application::generate_sprite_sheet_files()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Get the command to pass to the makefile generator to execute this
- *        program.
- */
 std::string sdc::application::get_self_command() const
 {
   std::ostringstream result;
@@ -279,4 +245,4 @@ std::string sdc::application::get_self_command() const
     result << " --scheme-directory=" << *it;
 
   return result.str();
-} // application::get_self_command()
+}

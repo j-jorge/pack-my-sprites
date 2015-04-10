@@ -13,43 +13,23 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Implemenation of the sdc::grammar class.
- * \author Julien Jorge.
- */
-
 #include <boost/spirit/include/classic_ast.hpp>
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Default constructor.
- */
 template <typename ScannerT>
 sdc::grammar::definition<ScannerT>::
 error_report_parser::error_report_parser()
 {
-  // nothing to do.
-} // definition::error_report_parser::error_report_parser()
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Constructor.
- * \param msg A text explaining the error.
- */
+}
+
 template <typename ScannerT>
 sdc::grammar::definition<ScannerT>::
 error_report_parser::error_report_parser( const std::string msg )
   : m_msg(msg)
 {
 
-} // definition::error_report_parser::error_report_parser()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Print the message on standard error output.
- * \param scan The scanner detecting the error.
- */
 template <typename ScannerT>
 template <typename LocalScanner>
 int
@@ -63,47 +43,32 @@ error_report_parser::operator()
             << fpos.column << ": " << m_msg << std::endl;
 
   return -1;
-} // definition::operator()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Default constructor.
- */
 template <typename ScannerT>
 sdc::grammar::definition<ScannerT>::
 char_error_report_parser::char_error_report_parser()
 {
 
-} // definition::char_error_report_parser::char_error_report_parser()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Constructor.
- * \param c The missing character.
- */
 template <typename ScannerT>
 sdc::grammar::definition<ScannerT>::
 char_error_report_parser::char_error_report_parser( char c )
   : error_report_parser( std::string("Missing character '") + c + "'." )
 {
 
-} // definition::char_error_report_parser::char_error_report_parser()
+}
 
 
 
 
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Definition of the rules.
- * \param self The concerned sdc::grammar instance.
- */
 template<typename ScannerT>
 sdc::grammar::definition<ScannerT>::definition( const grammar& self )
 {
   initialize_error_parsers();
 
-  // Whole file
   m_file =
     *m_sprite_sheet;
 
@@ -229,12 +194,8 @@ sdc::grammar::definition<ScannerT>::definition( const grammar& self )
       >> boost::spirit::classic::no_node_d
       [ ( '"' | m_error_not_terminated_string ) ]
     ];
-} // grammar::definition::definition()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Initialize the error parsers
- */
 template<typename ScannerT>
 void sdc::grammar::definition<ScannerT>::initialize_error_parsers()
 {
@@ -249,4 +210,4 @@ void sdc::grammar::definition<ScannerT>::initialize_error_parsers()
   m_error_size = error_report_parser( "Size expected (width x height)." );
 
   m_error_semicolon = char_error_report_parser( ';' );
-} // grammar::definition::initialize_error_parsers()
+}

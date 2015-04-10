@@ -13,33 +13,19 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief The heuristic to use to place the sprites.
- * \author Julien Jorge
- */
 #ifndef __SDC_PLACEMENT_ORDER_HPP__
 #define __SDC_PLACEMENT_ORDER_HPP__
 
 namespace sdc
 {
-  /**
-   * \brief The heuristic to use to place the sprites.
-   * \author Julien Jorge
-   */
   enum placement_order
     {
-      /** \brief The sprites with the largest area are placed first. */
       decreasing_area,
-      
-      /** \brief The tallest sprites are placed first. */
       decreasing_height,
-
-      /** \brief The sprites are placed in the order they are defined. */
       declaration_order
       
-    }; // enum placement_order
+    };
 
-} // namespace sdc
+}
 
-#endif // __SDC_PLACEMENT_ORDER_HPP__
+#endif

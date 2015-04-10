@@ -13,11 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Implementation of the sdc::image_generator class.
- * \author Julien Jorge
- */
 #include "image_generator.hpp"
 
 #include <fstream>
@@ -27,50 +22,27 @@
 
 #include <claw/logger.hpp>
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Compare two sprites by decreasing order of their areas.
- * \param a The left operand.
- * \param b The right operand.
- */
 bool sdc::image_generator::sprite_area_comp::operator()
   ( const spritedesc::sprite& a, const spritedesc::sprite& b ) const
 {
   return a.result_box.area() > b.result_box.area();
-} // image_generator::sprite_area_comp::operator()()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Compare two sprites by decreasing order of their heights.
- * \param a The left operand.
- * \param b The right operand.
- */
 bool sdc::image_generator::sprite_height_comp::operator()
   ( const spritedesc::sprite& a, const spritedesc::sprite& b ) const
 {
   return a.result_box.height > b.result_box.height;
-} // image_generator::sprite_height_comp::operator()()
+}
 
 
 
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Constructor.
- * \param gimp The interface to use to execute the GIMP scripts.
- */
 sdc::image_generator::image_generator( gimp_interface gimp )
   : m_gimp( gimp )
 {
 
-} // image_generator::image_generator()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Generates the images of a given file.
- * \param source The file from which the spritedesc was generated.
- * \param desc The spritedesc to process.
- */
 void sdc::image_generator::generate
 ( std::string source, spritedesc_collection desc ) const
 {
@@ -86,15 +58,8 @@ void sdc::image_generator::generate
 
       generate_output( dir, desc.xcf, *it );
     }
-} // image_generator::generate()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Generate a sprite sheets.
- * \param dir The directories where the files are searched and written.
- * \param xcf The details of the images to use in the generation.
- * \param desc The sprite sheet to generate.
- */
 void sdc::image_generator::generate_output
 ( working_directory dir, xcf_map xcf, spritedesc desc ) const
 {
@@ -105,17 +70,8 @@ void sdc::image_generator::generate_output
   includes.push_back( "common.scm" );
 
   m_gimp.run( oss.str(), includes );
-} // image_generator::generate_output()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Generate the Scheme script that builds the sprites of a given
- *        spritedesc.
- * \param os The stream in which the script is generated.
- * \param dir The directories where the files are searched and written.
- * \param xcf The details of the images to use in the generation.
- * \param desc The sprites to generate.
- */
 void sdc::image_generator::generate_scm
 ( std::ostream& os, working_directory dir, xcf_map xcf, spritedesc desc ) const
 {
@@ -146,17 +102,8 @@ void sdc::image_generator::generate_scm
      << make_image_varname(desc.output_name) << ")\n";
 
   os << ")\n";
-} // image_generator::generate_scm()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Generate the Scheme command that builds the given sprite.
- * \param os The stream in which the script is generated.
- * \param xcf The details of the image to use in the generation.
- * \param s The sprite to generate.
- * \param target_id The identifier of the image receiving the sprite in the
- *         script.
- */
 void sdc::image_generator::generate_scm
 ( std::ostream& os, const xcf_info& xcf, const spritedesc::sprite& s,
   const std::string& target_id ) const
@@ -201,16 +148,10 @@ void sdc::image_generator::generate_scm
     }
 
   os << "))\n";
-} // image_generator::generate_scm()
+}
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Get the name of the variable representing the xcf file identified with
- *        a given id.
- * \param id The identifier of the xcf file.
- */
 std::string
 sdc::image_generator::make_image_varname( const std::string& id ) const
 {
   return id + "_image";
-} // image_generator::make_image_varname()
+}

@@ -13,11 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief The description of a layer in the xcf file.
- * \author Julien Jorge
- */
 #ifndef __SDC_LAYER_INFO_HPP__
 #define __SDC_LAYER_INFO_HPP__
 
@@ -25,21 +20,12 @@
 
 namespace sdc
 {
-  /**
-   * \brief The informations of a layer.
-   * \author Julien Jorge
-   */
   struct layer_info
   {
-    /** \brief The position and the size of the layer in the source image. */
     claw::math::rectangle<int> box;
-
-    /** \brief The index of the layer. */
     unsigned int index;
+  };
 
-    /** \brief */
-  }; // struct layer_info
+}
 
-} // namespace sdc
-
-#endif // __SDC_LAYER_INFO_HPP__
+#endif

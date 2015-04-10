@@ -13,12 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief The makefile generator generates a makefile that builds the images
- *        of the provided spritedesc files.
- * \author Julien Jorge
- */
 #ifndef __SDC_MAKEFILE_GENERATOR_HPP__
 #define __SDC_MAKEFILE_GENERATOR_HPP__
 
@@ -30,11 +24,6 @@
 
 namespace sdc
 {
-  /**
-   * \brief The makefile generator generates a makefile that builds the images
-   *        of the provided spritedesc files.
-   * \author Julien Jorge
-   */
   class makefile_generator
   {
   public:
@@ -66,14 +55,10 @@ namespace sdc
     ( std::ostream& output, working_directory dir, spritedesc desc ) const;
 
   private:
-    /** \brief The path to the makefile to generate. */
     std::string m_makefile;
-
-    /** \brief The command to use in the makefile to process a .spritedesc
-        file. */
     std::string m_command;
 
-  }; // class makefile_generator
-} // namespace sdc
+  };
+}
 
-#endif // __SDC_MAKEFILE_GENERATOR_HPP__
+#endif

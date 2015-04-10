@@ -13,12 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Several sprite sheets associated with the information about the xcf
- *        files used in the sprites.
- * \author Julien Jorge
- */
 #ifndef __SDC_SPRITEDESC_COLLECTION_HPP__
 #define __SDC_SPRITEDESC_COLLECTION_HPP__
 
@@ -29,15 +23,9 @@
 
 namespace sdc
 {
-  /**
-   * \brief Several sprite sheets associated with the information about the xcf
-   *        files used in the sprites.
-   * \author Julien Jorge
-   */
   class spritedesc_collection
   {
   public:
-    /** \brief The type of the collection used to store the sprite sheets. */
     typedef std::list<spritedesc> spritedesc_list_type;
 
   public:
@@ -45,13 +33,10 @@ namespace sdc
     explicit spritedesc_collection( xcf_map m );
 
   public:
-    /** \brief The sprite sheets of the collection. */
     spritedesc_list_type sprite_sheet;
-
-    /** \brief The details about the xcf files used in the sprites. */
     xcf_map xcf;
 
-  }; // struct spritedesc_collection
-} // namespace sdc
+  };
+}
 
-#endif // __SDC_SPRITEDESC_COLLECTION_HPP__
+#endif

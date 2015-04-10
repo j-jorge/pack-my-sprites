@@ -13,24 +13,12 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Implementation of the sdc::node_parser_layer_to_sprite class.
- * \author Julien Jorge
- */
 #include "node_parser/node_parser_layer_to_sprite.hpp"
 
 #include "grammar.hpp"
 
 #include <set>
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Parse a node of type layer_to_sprite.
- * \param xcf The description of the content of the xcf.
- * \param desc The structure receiving the result of the parsing.
- * \param node Node to parse.
- */
 void sdc::node_parser_layer_to_sprite::parse_node
 ( const xcf_map& xcf, spritedesc& desc, const tree_node& node ) const
 {
@@ -72,4 +60,4 @@ void sdc::node_parser_layer_to_sprite::parse_node
         apply_result_box_ratio( s, *size_node_it );
         desc.add_sprite( s );
       }      
-} // node_parser_layer_to_sprite::parse_node()
+}

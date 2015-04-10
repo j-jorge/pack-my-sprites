@@ -13,11 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Compile the node of the "file" rule.
- * \author Julien Jorge
- */
 #ifndef __SDC_NODE_PARSER_FILE_HPP__
 #define __SDC_NODE_PARSER_FILE_HPP__
 
@@ -29,10 +24,6 @@ namespace sdc
 {
   class xcf_map;
 
-  /**
-   * \brief Compile the node of the "file" rule.
-   * \author Julien Jorge
-   */
   class node_parser_file:
     public node_parser
   {
@@ -44,7 +35,7 @@ namespace sdc
     void process_sprite_sheet
     ( xcf_map& xcf, std::list<spritedesc>& desc, const tree_node& node ) const;
 
-  }; // class node_parser_file
-} // namespace sdc
+  };
+}
 
-#endif // __SDC_NODE_PARSER_FILE_HPP__
+#endif

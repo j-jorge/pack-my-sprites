@@ -13,20 +13,8 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Implementation of the bear::sdc::node_parser class.
- * \author Julien Jorge
- */
 #include "node_parser/node_parser.hpp"
 
-/*----------------------------------------------------------------------------*/
-/**
- * \brief Write an error on the log stream.
- * \param first Begining of the incorrect input.
- * \param last End of the incorrect input.
- * \param msg Informative message.
- */
 void sdc::node_parser::error
 ( data_iterator first, data_iterator last, const std::string& msg ) const
 {
@@ -34,4 +22,4 @@ void sdc::node_parser::error
 
   std::cerr << pos.file << ": " << pos.line << ": "
             << pos.column << ": " << msg << std::endl;
-} // node_parser::error()
+}

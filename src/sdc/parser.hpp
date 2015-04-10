@@ -13,11 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief The parser for the spritedesc files.
- * \author Julien Jorge
- */
 #ifndef __SDC_PARSER_HPP__
 #define __SDC_PARSER_HPP__
 
@@ -33,10 +28,6 @@ namespace sdc
 {
   class xcf_map;
 
-  /**
-   * \brief The parser for the .spritedesc files.
-   * \author Julien Jorge
-   */
   class parser
   {
   public:
@@ -60,8 +51,8 @@ namespace sdc
     void scan_tree
     ( xcf_map& xcf, std::list<spritedesc>& desc, const tree_node& node ) const;
 
-  }; // class parser
-} // namespace sdc
+  };
+}
 
-#endif // __SDC_PARSER_HPP__
+#endif
 

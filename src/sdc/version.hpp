@@ -13,11 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Version of the tool.
- * \author Julien Jorge
- */
 #ifndef __SDC_VERSION_HPP__
 #define __SDC_VERSION_HPP__
 
@@ -31,4 +26,4 @@
   SDC_TO_STR(SDC_MAJOR_VERSION) "." SDC_TO_STR(SDC_MINOR_VERSION)       \
   "." SDC_TO_STR(SDC_RELEASE_NUMBER)
 
-#endif // __SDC_VERSION_HPP__
+#endif

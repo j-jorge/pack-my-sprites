@@ -13,11 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Base class for node parsers.
- * \author Julien Jorge
- */
 #ifndef __SDC_NODE_PARSER_HPP__
 #define __SDC_NODE_PARSER_HPP__
 
@@ -29,14 +24,9 @@
 
 namespace sdc
 {
-  /**
-   * \brief Base class for node parsers.
-   * \author Julien Jorge
-   */
   class node_parser
   {
   public:
-    /** \brief The type of an iterator on the input data. */
     typedef
     boost::spirit::classic::position_iterator<const char*> data_iterator;
 
@@ -47,7 +37,6 @@ namespace sdc
     boost::spirit::classic::tree_match<data_iterator, node_factory>
     tree_match;
 
-    /** \brief The type of a node of the tree built by the compiler. */
     typedef tree_match::node_t tree_node;
 
     typedef std::vector<tree_node>::const_iterator node_children_iterator;
@@ -56,7 +45,7 @@ namespace sdc
     void error
     ( data_iterator first, data_iterator last, const std::string& msg ) const;
     
-  }; // class node_parser
-} // namespace sdc
+  };
+}
 
-#endif // __SDC_NODE_PARSER_HPP__
+#endif

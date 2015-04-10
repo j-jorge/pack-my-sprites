@@ -13,11 +13,6 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * \file
- * \brief Compile the node of the "file" rule.
- * \author Julien Jorge
- */
 #ifndef __SDC_NODE_PARSER_SPRITE_SHEET_HPP__
 #define __SDC_NODE_PARSER_SPRITE_SHEET_HPP__
 
@@ -28,10 +23,6 @@ namespace sdc
   class spritedesc;
   class xcf_map;
 
-  /**
-   * \brief Compile the node of the "sprite_sheet" rule.
-   * \author Julien Jorge
-   */
   class node_parser_sprite_sheet:
     public node_parser
   {
@@ -48,7 +39,7 @@ namespace sdc
 
     void check_xcf_usage( const spritedesc& desc ) const;
 
-  }; // class node_parser_sprite_sheet
-} // namespace sdc
+  };
+}
 
-#endif // __SDC_NODE_PARSER_SPRITE_SHEET_HPP__
+#endif
