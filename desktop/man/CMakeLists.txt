@@ -28,6 +28,6 @@ endmacro()
 
 #-------------------------------------------------------------------------------
 docbook_create_man(
-  sdc-man 1
+  pms-man 1
   pack-my-sprites.sgml
   )

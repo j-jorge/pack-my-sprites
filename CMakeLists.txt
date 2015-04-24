@@ -7,14 +7,14 @@ set( EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/bin" )
 
 #-------------------------------------------------------------------------------
 # where the programs are installed
-if( NOT SDC_INSTALL_EXECUTABLE_DIR )
-  set( SDC_INSTALL_EXECUTABLE_DIR bin )
-endif( NOT SDC_INSTALL_EXECUTABLE_DIR )
+if( NOT PMS_INSTALL_EXECUTABLE_DIR )
+  set( PMS_INSTALL_EXECUTABLE_DIR bin )
+endif( NOT PMS_INSTALL_EXECUTABLE_DIR )
 
 # where the resources are installed
-if( NOT SDC_INSTALL_RESOURCES_DIR )
-  set( SDC_INSTALL_RESOURCES_DIR share/pack-my-sprites )
-endif( NOT SDC_INSTALL_RESOURCES_DIR )
+if( NOT PMS_INSTALL_RESOURCES_DIR )
+  set( PMS_INSTALL_RESOURCES_DIR share/pack-my-sprites )
+endif( NOT PMS_INSTALL_RESOURCES_DIR )
 
 #-------------------------------------------------------------------------------
 subdirs(
