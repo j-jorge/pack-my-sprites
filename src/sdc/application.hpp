@@ -62,7 +62,6 @@ namespace sdc
     bool m_generate_plist;
     path_list_type m_scheme_directory;
     std::string m_gimp_console_program;
-    std::string m_makefile;
 
   };
 }

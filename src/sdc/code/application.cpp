@@ -22,7 +22,6 @@
 
 #include "gimp_interface.hpp"
 #include "image_generator.hpp"
-#include "makefile_generator.hpp"
 #include "parser.hpp"
 #include "plist_generator.hpp"
 #include "sprite_sheet_builder.hpp"
@@ -69,10 +68,6 @@ void sdc::application::check_arguments( int& argc, char** &argv )
     ( "-g", "--gimp-console",
       "The path to the gimp-console executable.", true );
   m_arguments.add
-    ( "-m", "--makefile",
-      "The name of the makefile to generate. "
-      "If this argument is set, the images are not generated.", true );
-  m_arguments.add
     ( "-t", "--target",
       "The name of the sprite sheet to generate from the input file.", true );
   m_arguments.add_long
@@ -99,9 +94,6 @@ void sdc::application::check_arguments( int& argc, char** &argv )
   if ( m_arguments.has_value("--gimp-console") )
     m_gimp_console_program = m_arguments.get_string("--gimp-console");
 
-  if ( m_arguments.has_value("--makefile") )
-    m_makefile = m_arguments.get_string("--makefile");
-
   if ( m_arguments.has_value("--scheme-directory") )
     m_scheme_directory = m_arguments.get_all_of_string("--scheme-directory");
 
@@ -125,13 +117,7 @@ void sdc::application::process_files()
     for ( std::size_t i=0; i!=m_input_file.size(); ++i )
       content[ m_input_file[i] ] = read_spritedesc_file( m_input_file[i] );
 
-  if ( m_makefile.empty() )
-    generate_sprite_sheet_files( content );
-  else
-    {
-      makefile_generator g( m_makefile, get_self_command() );
-      g.run( content );
-    }
+  generate_sprite_sheet_files( content );
 }
 
 sdc::spritedesc_collection

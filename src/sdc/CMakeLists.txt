@@ -9,7 +9,6 @@ set( SDC_SOURCE_FILES
   code/gimp_interface.cpp
   code/image_generator.cpp
   code/main.cpp
-  code/makefile_generator.cpp
   code/parser.cpp
   code/plist_generator.cpp
   code/sprite_sheet_builder.cpp
