@@ -20,21 +20,17 @@
 #include <claw/logger.hpp>
 
 void sdc::plist_generator::generate
-( std::string spritedesc_file_path, spritedesc_collection desc ) const
+( std::string spritedesc_file_path, sprite_sheet sheet ) const
 {
   const working_directory dir( spritedesc_file_path );
-  typedef spritedesc_collection::spritedesc_list_type::iterator iterator_type;
 
-  for ( iterator_type it=desc.sprite_sheet.begin();
-        it!=desc.sprite_sheet.end(); ++it )
-    {
-      claw::logger << claw::log_verbose
-                   << "Generating plist file for sprite sheet '"
-                   << it->output_name << "' of '" << spritedesc_file_path << "'"
-                   << std::endl;
+  claw::logger << claw::log_verbose
+               << "Generating plist file for sprite sheet '"
+               << sheet.description.output_name << "' of '"
+               << spritedesc_file_path << "'"
+               << std::endl;
 
-      generate_plist( dir, *it );
-    }
+  generate_plist( dir, sheet.description );
 }
 
 void sdc::plist_generator::generate_plist

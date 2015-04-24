@@ -69,8 +69,7 @@ sdc::grammar::definition<ScannerT>::definition( const grammar& self )
 {
   initialize_error_parsers();
 
-  m_file =
-    *m_sprite_sheet;
+  m_file = m_sprite_sheet;
 
   m_sprite_sheet =
     boost::spirit::classic::no_node_d

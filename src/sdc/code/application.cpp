@@ -67,9 +67,6 @@ void sdc::application::check_arguments( int& argc, char** &argv )
   m_arguments.add
     ( "-g", "--gimp-console",
       "The path to the gimp-console executable.", true );
-  m_arguments.add
-    ( "-t", "--target",
-      "The name of the sprite sheet to generate from the input file.", true );
   m_arguments.add_long
     ( "--no-spritepos", "Tells to not generate the spritepos file.", true );
   m_arguments.add_long
@@ -102,9 +99,6 @@ void sdc::application::check_arguments( int& argc, char** &argv )
 
   for ( int argi=0; argi!=argc; ++argi )
     m_input_file.push_back( argv[argi] );
-
-  if ( m_arguments.has_value( "--target" ) )
-    m_target = m_arguments.get_all_of_string( "--target" );
 }
 
 void sdc::application::process_files()
@@ -120,13 +114,12 @@ void sdc::application::process_files()
   generate_sprite_sheet_files( content );
 }
 
-sdc::spritedesc_collection
-sdc::application::read_spritedesc_stdin() const
+sdc::sprite_sheet sdc::application::read_spritedesc_stdin() const
 {
   return read_spritedesc_file( ".", std::cin );
 }
 
-sdc::spritedesc_collection
+sdc::sprite_sheet
 sdc::application::read_spritedesc_file( std::string file_name ) const
 {
   const boost::filesystem::path file_path( file_name );
@@ -135,7 +128,7 @@ sdc::application::read_spritedesc_file( std::string file_name ) const
   if ( !f )
     {
       std::cerr << "Can't find file '" << file_name << "'." << std::endl;
-      return spritedesc_collection();
+      return sprite_sheet();
     }
 
   const boost::filesystem::path file_directory( file_path.parent_path() );
@@ -143,34 +136,17 @@ sdc::application::read_spritedesc_file( std::string file_name ) const
   return read_spritedesc_file( file_directory.string(), f );
 }
 
-sdc::spritedesc_collection
+sdc::sprite_sheet
 sdc::application::read_spritedesc_file
 ( std::string directory, std::istream& in ) const
 {
-  xcf_map xcf
+  const xcf_map xcf
     ( directory, gimp_interface( m_scheme_directory, m_gimp_console_program ) );
+  sprite_sheet result( xcf );
 
   parser p;
-  std::list<spritedesc> desc;
 
-  p.run( xcf, desc, in );
-
-  spritedesc_collection result( xcf );
-
-  if ( m_target.empty() )
-    result.sprite_sheet = desc;
-  else
-    {
-      typedef
-        spritedesc_collection::spritedesc_list_type::const_iterator
-        iterator_type;
-
-      for ( iterator_type it = desc.begin();
-            it != desc.end(); ++it )
-        if ( std::find( m_target.begin(), m_target.end(), it->output_name )
-             != m_target.end() )
-          result.sprite_sheet.push_back( *it );
-    }
+  p.run( result.xcf, result.description, in );
 
   return result;
 }
@@ -191,7 +167,7 @@ void sdc::application::generate_sprite_sheet_files
 }
 
 void sdc::application::generate_sprite_sheet_files
-( std::string source_file_path, spritedesc_collection desc ) const
+( std::string source_file_path, sprite_sheet desc ) const
 {
   sprite_sheet_builder builder;
   desc = builder.build( desc );

@@ -42,14 +42,14 @@ namespace sdc
     typedef boost::spirit::classic::scanner<iterator> scanner;
 
   public:
-    bool run( xcf_map& xcf, std::list<spritedesc>& desc, std::istream& in );
+    bool run( xcf_map& xcf, spritedesc& desc, std::istream& in );
     bool run
-      ( xcf_map& xcf, std::list<spritedesc>& desc, const char* file_data,
+      ( xcf_map& xcf, spritedesc& desc, const char* file_data,
         unsigned int file_size );
 
   private:
     void scan_tree
-    ( xcf_map& xcf, std::list<spritedesc>& desc, const tree_node& node ) const;
+    ( xcf_map& xcf, spritedesc& desc, const tree_node& node ) const;
 
   };
 }

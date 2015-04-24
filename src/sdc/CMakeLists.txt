@@ -11,9 +11,9 @@ set( SDC_SOURCE_FILES
   code/main.cpp
   code/parser.cpp
   code/plist_generator.cpp
+  code/sprite_sheet.cpp
   code/sprite_sheet_builder.cpp
   code/spritedesc.cpp
-  code/spritedesc_collection.cpp
   code/spritepos_generator.cpp
   code/xcf_info.cpp
   code/xcf_map.cpp

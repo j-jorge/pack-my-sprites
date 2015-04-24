@@ -44,20 +44,16 @@ sdc::image_generator::image_generator( gimp_interface gimp )
 }
 
 void sdc::image_generator::generate
-( std::string source, spritedesc_collection desc ) const
+( std::string source, sprite_sheet sheet ) const
 {
   const working_directory dir( source );
-  typedef spritedesc_collection::spritedesc_list_type::iterator iterator_type;
 
-  for ( iterator_type it=desc.sprite_sheet.begin();
-        it!=desc.sprite_sheet.end(); ++it )
-    {
-      claw::logger << claw::log_verbose
-                   << "Generating sprite sheet '" << it->output_name << "'"
-                   << std::endl;
+  claw::logger << claw::log_verbose
+               << "Generating sprite sheet '"
+               << sheet.description.output_name << "'"
+               << std::endl;
 
-      generate_output( dir, desc.xcf, *it );
-    }
+  generate_output( dir, sheet.xcf, sheet.description );
 }
 
 void sdc::image_generator::generate_output

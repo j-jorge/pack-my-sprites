@@ -17,7 +17,7 @@
 #define __SDC_IMAGE_GENERATOR_HPP__
 
 #include "gimp_interface.hpp"
-#include "spritedesc_collection.hpp"
+#include "sprite_sheet.hpp"
 #include "working_directory.hpp"
 
 namespace sdc
@@ -44,12 +44,12 @@ namespace sdc
     typedef claw::math::rectangle<std::size_t> rectangle_type;
 
   public:
-    typedef std::map<std::string, spritedesc_collection> file_to_spritedesc_map;
+    typedef std::map<std::string, sprite_sheet> file_to_spritedesc_map;
 
   public:
     explicit image_generator( gimp_interface gimp );
 
-    void generate( std::string source, spritedesc_collection desc ) const;
+    void generate( std::string source, sprite_sheet sheet ) const;
 
   private:
     void generate_output

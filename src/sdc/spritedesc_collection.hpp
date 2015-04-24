@@ -23,17 +23,14 @@
 
 namespace sdc
 {
-  class spritedesc_collection
+  class sprite_sheet
   {
-  public:
-    typedef std::list<spritedesc> spritedesc_list_type;
-
   public:
     spritedesc_collection();
     explicit spritedesc_collection( xcf_map m );
 
   public:
-    spritedesc_list_type sprite_sheet;
+    spritedesc sprite_sheet;
     xcf_map xcf;
 
   };

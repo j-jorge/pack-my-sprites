@@ -16,7 +16,7 @@
 #ifndef __SDC_SPRITE_SHEET_BUILDER_HPP__
 #define __SDC_SPRITE_SHEET_BUILDER_HPP__
 
-#include "spritedesc_collection.hpp"
+#include "sprite_sheet.hpp"
 
 namespace sdc
 {
@@ -42,8 +42,7 @@ namespace sdc
     typedef claw::math::rectangle<std::size_t> rectangle_type;
 
   public:
-    spritedesc_collection
-    build( spritedesc_collection sprite_description ) const;
+    sprite_sheet build( sprite_sheet sprite_description ) const;
 
   private:
     void set_sprite_position( spritedesc& desc ) const;

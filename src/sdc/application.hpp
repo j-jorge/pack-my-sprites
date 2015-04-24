@@ -16,7 +16,7 @@
 #ifndef __SDC_APPLICATION_HPP__
 #define __SDC_APPLICATION_HPP__
 
-#include "spritedesc_collection.hpp"
+#include "sprite_sheet.hpp"
 
 #include <claw/application.hpp>
 
@@ -28,7 +28,7 @@ namespace sdc
     public claw::application
   {
   private:
-    typedef std::map<std::string, spritedesc_collection> file_to_spritedesc_map;
+    typedef std::map<std::string, sprite_sheet> file_to_spritedesc_map;
 
     typedef std::list<std::string> path_list_type;
 
@@ -42,22 +42,21 @@ namespace sdc
     void check_arguments( int& argc, char** &argv );
 
     void process_files();
-    spritedesc_collection read_spritedesc_stdin() const;
-    spritedesc_collection read_spritedesc_file( std::string file_name ) const;
-    spritedesc_collection read_spritedesc_file
+    sprite_sheet read_spritedesc_stdin() const;
+    sprite_sheet read_spritedesc_file( std::string file_name ) const;
+    sprite_sheet read_spritedesc_file
     ( std::string directory, std::istream& in ) const;
 
     void generate_sprite_sheet_files
     ( file_to_spritedesc_map sprite_sheet_description ) const;
     void generate_sprite_sheet_files
-    ( std::string source_file_path, spritedesc_collection desc ) const;
+    ( std::string source_file_path, sprite_sheet desc ) const;
 
     std::string get_self_command() const;
 
   private:
     bool m_quit;
     std::vector<std::string> m_input_file;
-    std::list<std::string> m_target;
     bool m_generate_spritepos;
     bool m_generate_plist;
     path_list_type m_scheme_directory;

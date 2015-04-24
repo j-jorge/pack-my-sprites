@@ -33,22 +33,15 @@ bool sdc::sprite_sheet_builder::sprite_height_comp::operator()
 
 
 
-sdc::spritedesc_collection
-sdc::sprite_sheet_builder::build
-( spritedesc_collection sprite_description ) const
+sdc::sprite_sheet
+sdc::sprite_sheet_builder::build( sprite_sheet sprite_description ) const
 {
-  typedef spritedesc_collection::spritedesc_list_type::iterator iterator_type;
+  claw::logger << claw::log_verbose
+               << "Setting sprite positions in sprite sheet '"
+               << sprite_description.description.output_name << "'"
+               << std::endl;
 
-  for ( iterator_type it=sprite_description.sprite_sheet.begin();
-        it!=sprite_description.sprite_sheet.end(); ++it )
-    {
-      claw::logger << claw::log_verbose
-                   << "Setting sprite positions in sprite sheet '"
-                   << it->output_name << "'"
-                   << std::endl;
-
-      set_sprite_position( *it );
-    }
+  set_sprite_position( sprite_description.description );
 
   return sprite_description;
 }

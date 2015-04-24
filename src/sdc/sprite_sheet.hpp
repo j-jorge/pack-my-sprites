@@ -13,27 +13,25 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef __SDC_NODE_PARSER_FILE_HPP__
-#define __SDC_NODE_PARSER_FILE_HPP__
-
-#include "node_parser/node_parser.hpp"
+#ifndef __SDC_SPRITE_SHEET_HPP__
+#define __SDC_SPRITE_SHEET_HPP__
 
 #include "spritedesc.hpp"
+#include "xcf_map.hpp"
+
+#include <list>
 
 namespace sdc
 {
-  class xcf_map;
-
-  class node_parser_file:
-    public node_parser
+  class sprite_sheet
   {
   public:
-    void parse_node
-    ( xcf_map& xcf, spritedesc& desc, const tree_node& node ) const;
+    sprite_sheet();
+    explicit sprite_sheet( xcf_map m );
 
-  private:
-    void process_sprite_sheet
-    ( xcf_map& xcf, spritedesc& desc, const tree_node& node ) const;
+  public:
+    spritedesc description;
+    xcf_map xcf;
 
   };
 }

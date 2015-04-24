@@ -16,7 +16,7 @@
 #ifndef __SDC_PLIST_GENERATOR_HPP__
 #define __SDC_PLIST_GENERATOR_HPP__
 
-#include "spritedesc_collection.hpp"
+#include "sprite_sheet.hpp"
 #include "working_directory.hpp"
 
 namespace sdc
@@ -25,7 +25,7 @@ namespace sdc
   {
   public:
     void generate
-    ( std::string spritedesc_file_path, spritedesc_collection desc ) const;
+    ( std::string spritedesc_file_path, sprite_sheet sheet ) const;
 
   private:
     void generate_plist( working_directory dir, spritedesc desc ) const;

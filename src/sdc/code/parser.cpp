@@ -24,7 +24,7 @@
 #include <sstream>
 
 bool sdc::parser::run
-( xcf_map& xcf, std::list<spritedesc>& desc, std::istream& in )
+( xcf_map& xcf, spritedesc& desc, std::istream& in )
 {
   std::stringstream file_data;
   file_data << in.rdbuf();
@@ -33,7 +33,7 @@ bool sdc::parser::run
 }
 
 bool sdc::parser::run
-( xcf_map& xcf, std::list<spritedesc>& desc, const char* file_data,
+( xcf_map& xcf, spritedesc& desc, const char* file_data,
   unsigned int file_size )
 {
   bool ok;
@@ -55,7 +55,7 @@ bool sdc::parser::run
 }
 
 void sdc::parser::scan_tree
-( xcf_map& xcf, std::list<spritedesc>& desc, const tree_node& node ) const
+( xcf_map& xcf, spritedesc& desc, const tree_node& node ) const
 {
   node_parser_file file;
 
