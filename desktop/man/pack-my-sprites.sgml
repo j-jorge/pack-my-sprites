@@ -61,13 +61,11 @@ manpage.1: manpage.sgml
       <arg><option>--log-file=<replaceable>file</replaceable></option></arg>
       <arg><option>--log-level=<replaceable>string</replaceable></option></arg>
       <arg><option>--log-uniq</option></arg>
-      <arg><option>-m=<replaceable>file</replaceable></option></arg>
       <arg rep="repeat"><option>-s=<replaceable>directory</replaceable></option></arg>
-      <arg rep="repeat"><option>-t=<replaceable>string</replaceable></option></arg>
-      <arg><option>-x=<replaceable>file</replaceable></option></arg>
-      <arg><option>--no-spritepos</option></arg>
+      <arg><option>--spritepos</option></arg>
       <arg><option>--plist</option></arg>
       <arg><option>--version</option></arg>
+      <arg rep="repeat"><option><replaceable>file</replaceable></option></arg>
    </cmdsynopsis>
   </refsynopsisdiv>
 
@@ -84,28 +82,24 @@ manpage.1: manpage.sgml
       process of the product.</para>
 
     <para>The default behavior of the program is to parse an input text
-      file to generate some sprite sheets and a listing of the
-      placement of their sprites. The input file must describe each
-      sprite with a unique name, the layers to show to build them, and
-      their final size in the sprite sheet. The output is a PNG file
-      containing each sprite and a text file associating the position
-      and the size of each sprite with its name. See
+      file to generate some sprite sheets. The input file must
+      describe each sprite with a unique name, the layers to show to
+      build them, and their final size in the sprite sheet. The output
+      is a PNG file containing each sprite. See
       <xref linkend="sect-spritedesc"/> for details about the syntax
       of the input file.</para>
 
-    <para>When invoked with the <option>--no-spritepos</option> argument, only
-      the PNG file is generated.</para>
+    <para>When invoked with the <option>--spritepos</option> argument,
+      a plain text file listing the position and the size of each
+      sprite associated with its name is also generated. See
+      <xref linkend="sect-spritepos"/> for details about this
+      format.</para>
 
     <para>When invoked with the <option>--plist</option> argument, an
-      XML file is generated for each sprite sheet described in each
-      input file. See <xref linkend="sect-plist"/> for details about
-      this format.</para>
-
-    <para>When invoked with the <option>--makefile</option> argument, the
-      program generates a makefile whose rules build the sprite
-      sheets, with dependencies on the XCF files and the input text
-      file.  No sprite sheet will be generated when using this
-      option.</para>
+      XML file listing the position and the size of each sprite
+      associated with its name is also generated. See
+      <xref linkend="sect-plist"/> for details about this
+      format.</para>
 
     <para>The software relies upon the
       <citerefentry>
@@ -120,6 +114,16 @@ manpage.1: manpage.sgml
     <para>The following options can be passed to the program:</para>
 
     <variablelist>
+      <varlistentry>
+        <term><option><replaceable>file</replaceable></option></term>
+        <listitem>
+          <para>The sprite sheet description file from which to build
+            the sprite sheet. If no file is provided then the standard
+            input is read. See <xref linkend="sect-spritedesc"/> for details
+            about the syntax of the file.</para>
+        </listitem>
+      </varlistentry>
+
       <varlistentry>
         <term><option>-g=<replaceable>file</replaceable></option>, <option>--gimp-console=<replaceable>file</replaceable></option></term>
         <listitem>
@@ -171,27 +175,19 @@ manpage.1: manpage.sgml
       </varlistentry>
 
       <varlistentry>
-        <term><option>-m=<replaceable>file</replaceable></option>, <option>--makefile=<replaceable>file</replaceable></option></term>
+        <term><option>--spritepos</option></term>
         <listitem>
-          <para>The name of the makefile to generate. If this argument
-            is set, the images are not
-            generated. If <replaceable>file</replaceable> is - then
-            the makefile is generated on the standard output.</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
-        <term><option>--no-spritepos</option></term>
-        <listitem>
-          <para>Disables the generation of the files describing the
-            position and the size of the sprites in the sprite sheet.</para>
+          <para>Enables the generation of the file describing the
+            position and the size of the sprites in the sprite
+            sheet. See <xref linkend="sect-spritepos"/> for details
+            about this format.</para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
         <term><option>--plist</option></term>
         <listitem>
-          <para>Enables the generation of the property list files
+          <para>Enables the generation of the property list file
           describing the position and the size of the sprites in the
           sprite sheet. See <xref linkend="sect-plist"/> for details
           about this format.</para>
@@ -204,15 +200,6 @@ manpage.1: manpage.sgml
           <para>The directories where are searched the Scheme scripts used
             in the scripts passed to GIMP. The default value is
             install_prefix/share/&dhpackage;/script.</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
-        <term><option>-t=<replaceable>string</replaceable></option>, <option>--target=<replaceable>string</replaceable></option></term>
-        <listitem>
-          <para>The names of the sprite sheets to generate. If the input
-            files contains multiple sprite sheets, this argument helps
-            selecting the ones to process.</para>
         </listitem>
       </varlistentry>
 
@@ -360,6 +347,29 @@ manpage.1: manpage.sgml
 
   </refsect1>
 
+  <refsect1 id="sect-spritepos">
+    <title>PLAIN TEXT DESCRIPTION</title>
+    <para>The files generated when the
+      <option>--spritepos</option> argument describe each sprite of
+      the sprite sheet in an easy to parse format. Each sprite is
+      described on a line with its name and its position in the sprite
+      sheed. The position is made of four values which are the left
+      edge, top edge, width and height of the sprite.</para>
+  </refsect1>
+
+  <refsect1 id="sect-plist">
+    <title>PROPERTY LIST</title>
+    <para>Property list files in general are used to store serialized
+      objects in various frameworks. They are typically XML files but
+      may ocasionnaly be found as binary files.</para>
+
+    <para>The files generated when the <option>--plist</option> argument
+      is present contain an XML structure describing the content of a
+      sprite sheet following the format used by Zwoptex. The generated
+      file can be immediately imported in Cocos2D projects.</para>
+
+  </refsect1>
+
   <refsect1>
     <title>EXAMPLE</title>
 
@@ -409,28 +419,16 @@ manpage.1: manpage.sgml
 
       /* End of file */</programlisting>
 
-    <para>The processing of this file will produce two outputs: an
-    image named <filename>letters-1.png</filename> and a text file
-    named <filename>letters-1.spritepos</filename>. The latter
-    contains the following placement of the sprites in the
-    image:</para>
+    <para>The processing of this file will produce an
+    image named <filename>letters-1.png</filename>.</para>
+
+    <para>When the <option>--spritepos</option> argument is used, a
+    file named <filename>letters-1.spritepos</filename> is also
+    produced, with the following content:</para>
 
     <programlisting>wave: 0 0 1002 186
       andy's: 0 187 268 168
       par_K_: 269 187 120 118</programlisting>
-
-  </refsect1>
-
-  <refsect1 id="sect-plist">
-    <title>PROPERTY LIST</title>
-    <para>Property list files in general are used to store serialized
-      objects in various frameworks. They are typically XML files but
-      may ocasionnaly be found as binary files.</para>
-
-    <para>The files generated when the <option>--plist</option> argument
-      is present contain an XML structure describing the content of a
-      sprite sheet following the format used by Zwoptex. The generated
-      file can be immediately imported in Cocos2d projects.</para>
 
   </refsect1>
 
