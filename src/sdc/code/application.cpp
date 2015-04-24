@@ -148,7 +148,16 @@ sdc::application::read_spritedesc_file
 
   p.run( result.xcf, result.description, in );
 
+  dump_sprite_sheet( result );
+
   return result;
+}
+
+void sdc::application::dump_sprite_sheet( sprite_sheet sheet ) const
+{
+  claw::logger << claw::log_verbose
+               << "Sprite sheet dump:\n"
+               << sheet.to_string();
 }
 
 void sdc::application::generate_sprite_sheet_files

@@ -38,6 +38,8 @@ namespace sdc
     bool has_info( std::string name ) const;
     xcf_info get_info( std::string name ) const;
 
+    std::string to_string() const;
+
   private:
     std::string execute_xcfinfo_process( std::string filename ) const;
 

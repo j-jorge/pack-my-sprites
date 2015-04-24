@@ -15,6 +15,8 @@
  */
 #include "sprite_sheet.hpp"
 
+#include <sstream>
+
 sdc::sprite_sheet::sprite_sheet()
 {
 
@@ -24,4 +26,13 @@ sdc::sprite_sheet::sprite_sheet( xcf_map m )
   : xcf( m )
 {
 
+}
+
+std::string sdc::sprite_sheet::to_string() const
+{
+  std::ostringstream oss;
+  oss << "XCF:\n" << xcf.to_string() << "Description:\n"
+      << description.to_string() << '\n';
+
+  return oss.str();
 }

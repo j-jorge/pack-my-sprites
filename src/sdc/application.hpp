@@ -47,6 +47,8 @@ namespace sdc
     sprite_sheet read_spritedesc_file
     ( std::string directory, std::istream& in ) const;
 
+    void dump_sprite_sheet( sprite_sheet sheet ) const;
+
     void generate_sprite_sheet_files
     ( file_to_spritedesc_map sprite_sheet_description ) const;
     void generate_sprite_sheet_files

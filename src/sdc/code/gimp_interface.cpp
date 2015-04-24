@@ -133,7 +133,9 @@ sdc::gimp_interface::open_gimp_process( int& in_fd, int& out_fd ) const
         ( m_gimp_console_program.c_str(), m_gimp_console_program.c_str(),
           "--no-data", "--no-fonts", "--batch", "-", (const char*)NULL );
       
-      std::cerr << "Error " << errno << " when calling execl." << std::endl;
+      std::cerr << "Error " << errno
+                << " (" << strerror( errno ) << ") when calling execl."
+                << std::endl;
 
       _Exit(1);
     }

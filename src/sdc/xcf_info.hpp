@@ -30,6 +30,8 @@ namespace sdc
   public:
     std::string get_layer_name( std::size_t index ) const;
 
+    std::string to_string() const;
+
   public:
     int version;
     std::size_t width;

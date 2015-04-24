@@ -29,6 +29,8 @@ namespace sdc
     sprite_sheet();
     explicit sprite_sheet( xcf_map m );
 
+    std::string to_string() const;
+
   public:
     spritedesc description;
     xcf_map xcf;

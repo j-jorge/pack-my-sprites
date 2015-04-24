@@ -15,6 +15,8 @@
  */
 #include "xcf_info.hpp"
 
+#include <sstream>
+
 std::string sdc::xcf_info::get_layer_name( std::size_t index ) const
 {
   for( layer_map::const_iterator it=layers.begin(); it!=layers.end(); ++it )
@@ -22,4 +24,26 @@ std::string sdc::xcf_info::get_layer_name( std::size_t index ) const
       return it->first;
 
   return std::string();
+}
+
+std::string sdc::xcf_info::to_string() const
+{
+  std::ostringstream oss;
+  oss << "version " << version << " size " << width << "×" << height;
+
+  if ( layers.empty() )
+    return oss.str();
+
+  oss << " layers:\n";
+
+  for ( layer_map::const_iterator it( layers.begin() );
+        it != layers.end(); ++it )
+    oss << "  [" << it->second.index << "] '" << it->first
+        << "' left=" << it->second.box.position.x
+        << ", top=" << it->second.box.position.y
+        << ", width=" << it->second.box.width
+        << ", height=" << it->second.box.height
+        << '\n';
+
+  return oss.str();
 }

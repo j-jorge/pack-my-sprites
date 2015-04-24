@@ -22,7 +22,7 @@
 void sdc::node_parser_file::parse_node
 ( xcf_map& xcf, spritedesc& desc, const tree_node& node ) const
 {
-  assert( node.value.id() == grammar::id_sprite_sheet );
+  CLAW_PRECOND( node.value.id() == grammar::id_sprite_sheet );
   process_sprite_sheet( xcf, desc, node );
 }
 

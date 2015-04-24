@@ -62,6 +62,8 @@ namespace sdc
     template<typename F>
     void sort_sprites( F f );
 
+    std::string to_string() const;
+
   public:
     std::string output_name;
     std::size_t width;

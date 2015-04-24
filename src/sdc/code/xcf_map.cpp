@@ -65,6 +65,18 @@ sdc::xcf_info sdc::xcf_map::get_info( std::string name ) const
   return m_xcf_info.find( name )->second;
 }
 
+std::string sdc::xcf_map::to_string() const
+{
+  std::ostringstream oss;
+  oss << "Directory is '" << m_xcf_directory << "'\n";
+
+  for ( name_to_info_type::const_iterator it( m_xcf_info.begin() );
+        it != m_xcf_info.end(); ++it )
+    oss << "- '" << it->first << "': " << it->second.to_string() << '\n';
+
+  return oss.str();
+}
+
 std::string sdc::xcf_map::execute_xcfinfo_process( std::string filename ) const
 {
   gimp_interface::path_list_type includes;
