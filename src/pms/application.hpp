@@ -54,8 +54,6 @@ namespace pms
     void generate_sprite_sheet_files
     ( std::string source_file_path, sprite_sheet desc ) const;
 
-    std::string get_self_command() const;
-
   private:
     bool m_quit;
     std::vector<std::string> m_input_file;

@@ -32,7 +32,7 @@
 #include <boost/algorithm/string/join.hpp>
 
 pms::application::application( int& argc, char** &argv )
-  : claw::application(argc, argv), m_quit(false), m_generate_spritepos(true),
+  : claw::application(argc, argv), m_quit(false), m_generate_spritepos(false),
     m_generate_plist(false),
     m_gimp_console_program( "gimp-console" )
 {
@@ -68,9 +68,9 @@ void pms::application::check_arguments( int& argc, char** &argv )
     ( "-g", "--gimp-console",
       "The path to the gimp-console executable.", true );
   m_arguments.add_long
-    ( "--no-spritepos", "Tells to not generate the spritepos file.", true );
+    ( "--spritepos", "Tells to generate the spritepos file.", true );
   m_arguments.add_long
-    ( "--plist", "Tells to not generate the PList file.", true );
+    ( "--plist", "Tells to generate the PList file.", true );
   m_arguments.add_long
     ( "--version", "Prints the version of the software.", true );
 
@@ -94,7 +94,7 @@ void pms::application::check_arguments( int& argc, char** &argv )
   if ( m_arguments.has_value("--scheme-directory") )
     m_scheme_directory = m_arguments.get_all_of_string("--scheme-directory");
 
-  m_generate_spritepos = !m_arguments.get_bool("--no-spritepos");
+  m_generate_spritepos = m_arguments.get_bool("--spritepos");
   m_generate_plist = m_arguments.get_bool("--plist");
 
   for ( int argi=0; argi!=argc; ++argi )
@@ -196,24 +196,4 @@ void pms::application::generate_sprite_sheet_files
       plist_generator plist;
       plist.generate( source_file_path, desc );
     }
-}
-
-std::string pms::application::get_self_command() const
-{
-  std::ostringstream result;
-
-  result << m_arguments.get_program_name() << ' '
-         << "--gimp-console=" << m_gimp_console_program;
-
-  if ( !m_generate_spritepos )
-    result << " --no-spritepos";
-
-  if ( m_generate_plist )
-    result << " --plist";
-
-  for ( path_list_type::const_iterator it = m_scheme_directory.begin();
-        it != m_scheme_directory.end(); ++it )
-    result << " --scheme-directory=" << *it;
-
-  return result.str();
 }
