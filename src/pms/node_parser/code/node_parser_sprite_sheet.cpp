@@ -17,7 +17,6 @@
 
 #include "node_parser/node_parser_xcf_entry.hpp"
 #include "node_parser/node_parser_sprite_declaration.hpp"
-#include "node_parser/node_parser_layer_to_sprite.hpp"
 
 #include "grammar.hpp"
 
@@ -55,10 +54,12 @@ void pms::node_parser_sprite_sheet::parse_node
           node_parser_sprite_declaration call;
           call.parse_node( xcf, desc, node.children[i] );
         }
-      else // id == grammar::id_layer_to_sprite
+      else
         {
-          node_parser_layer_to_sprite call;
-          call.parse_node( xcf, desc, node.children[i] );
+          const std::string value
+            ( node.children[i].value.begin(), node.children[i].value.end() );
+
+          std::cerr << "Can't parse '" << value << "'.";
         }
 
       ++i;

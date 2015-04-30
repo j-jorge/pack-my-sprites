@@ -99,20 +99,7 @@ pms::grammar::definition<ScannerT>::definition( const grammar& self )
   m_xcf_declaration =
     m_identifier >> (m_string | m_error_string);
 
-  m_sprite_description =
-    m_sprite_declaration | m_layer_to_sprite;
-
-  m_layer_to_sprite =
-    boost::spirit::classic::no_node_d
-    [ boost::spirit::classic::strlit<>("layer_to_sprite") ]
-    >> ( m_sprite_size | m_error_autosize )
-    >> boost::spirit::classic::no_node_d
-    [ boost::spirit::classic::strlit<>("with") ]
-    >> m_identifier
-    >> *m_string
-    >> ( boost::spirit::classic::no_node_d
-         [ boost::spirit::classic::ch_p(';') ] | m_error_semicolon )
-    ;
+  m_sprite_description = m_sprite_declaration;
 
   m_sprite_declaration =
     m_string

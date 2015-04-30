@@ -21,7 +21,6 @@ set( PMS_SOURCE_FILES
 
   node_parser/code/node_parser.cpp
   node_parser/code/node_parser_file.cpp
-  node_parser/code/node_parser_layer_to_sprite.cpp
   node_parser/code/node_parser_sprite_declaration.cpp
   node_parser/code/node_parser_sprite_description_base.cpp
   node_parser/code/node_parser_sprite_sheet.cpp

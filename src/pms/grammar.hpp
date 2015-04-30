@@ -29,7 +29,6 @@ namespace pms
     static const int id_margin = 17;
     static const int id_xcf_declaration = 20;
     static const int id_sprite_declaration = 40;
-    static const int id_layer_to_sprite = 41;
     static const int id_layer_reference = 45;
     static const int id_layer_properties = 45;
     static const int id_string = 50;
@@ -113,11 +112,6 @@ namespace pms
       < ScannerT,
         boost::spirit::classic::parser_tag<id_sprite_declaration> >
       m_sprite_declaration;
-
-      boost::spirit::classic::rule
-      < ScannerT,
-        boost::spirit::classic::parser_tag<id_layer_to_sprite> >
-      m_layer_to_sprite;
 
       boost::spirit::classic::rule<ScannerT> m_mask;
 
