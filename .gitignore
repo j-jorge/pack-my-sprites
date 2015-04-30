@@ -14,8 +14,3 @@ bin/
 
 # Man pages
 *.1
-
-# Examples
-example/bird.plist
-example/bird.png
-example/bird.spritepos
