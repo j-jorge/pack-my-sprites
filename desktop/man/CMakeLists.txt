@@ -30,4 +30,5 @@ endmacro()
 docbook_create_man(
   pms-man 1
   pack-my-sprites.sgml
+  auto-pack-my-sprites.sgml
   )

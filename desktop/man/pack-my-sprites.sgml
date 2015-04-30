@@ -439,7 +439,11 @@ manpage.1: manpage.sgml
       <citerefentry>
         <refentrytitle>gimp-console</refentrytitle>
         <manvolnum>1</manvolnum>
-      </citerefentry></para>
+      </citerefentry>,
+      <citerefentry>
+        <refentrytitle>auto-pack-my-sprites</refentrytitle>
+        <manvolnum>1</manvolnum>
+    </citerefentry></para>
   </refsect1>
   <refsect1>
     <title>AUTHOR</title>
