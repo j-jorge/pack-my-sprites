@@ -22,21 +22,6 @@
 
 #include <claw/logger.hpp>
 
-bool pms::image_generator::sprite_area_comp::operator()
-  ( const spritedesc::sprite& a, const spritedesc::sprite& b ) const
-{
-  return a.result_box.area() > b.result_box.area();
-}
-
-bool pms::image_generator::sprite_height_comp::operator()
-  ( const spritedesc::sprite& a, const spritedesc::sprite& b ) const
-{
-  return a.result_box.height > b.result_box.height;
-}
-
-
-
-
 pms::image_generator::image_generator( gimp_interface gimp )
   : m_gimp( gimp )
 {

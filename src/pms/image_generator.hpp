@@ -24,25 +24,6 @@ namespace pms
 {
   class image_generator
   {
-  private:
-    class sprite_area_comp
-    {
-    public:
-      bool operator()
-      ( const spritedesc::sprite& a, const spritedesc::sprite& b ) const;
-
-    };
-
-    class sprite_height_comp
-    {
-    public:
-      bool operator()
-      ( const spritedesc::sprite& a, const spritedesc::sprite& b ) const;
-
-    };
-
-    typedef claw::math::rectangle<std::size_t> rectangle_type;
-
   public:
     typedef std::map<std::string, sprite_sheet> file_to_spritedesc_map;
 
