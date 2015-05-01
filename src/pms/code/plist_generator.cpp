@@ -110,8 +110,8 @@ pms::plist_generator::get_sprite_entry( spritedesc::sprite sprite ) const
     "<string>{{" << x << ", " << y
          << "}, {" << width << ", " << height << "}}</string>\n"
     "<key>textureRotated</key>\n"
-    "<false/>\n"
-    "</dict>\n";
+         << ( sprite.rotated ? "<true/>" : "<false/>\n" )
+         << "</dict>\n";
 
   return result.str();
 }

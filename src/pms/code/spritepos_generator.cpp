@@ -48,7 +48,14 @@ void pms::spritepos_generator::generate_spritepos
 {
   for ( spritedesc::const_sprite_iterator it = desc.sprite_begin();
         it != desc.sprite_end(); ++it )
-    os << it->name << ": " << it->result_box.position.x << ' '
-       << it->result_box.position.y << ' '
-       << it->result_box.width << ' ' << it->result_box.height << '\n';
+    {
+      os << it->name << ": " << it->result_box.position.x << ' '
+         << it->result_box.position.y << ' '
+         << it->result_box.width << ' ' << it->result_box.height;
+
+      if ( it->rotated )
+        os << " r";
+
+      os << '\n';
+    }
 }

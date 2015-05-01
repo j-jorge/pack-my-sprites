@@ -385,29 +385,29 @@
 
 ; create the scaled sprite of an item
 (define create-layer-crop-with-groups
-  (lambda (img layers sx sy sw sh x y w h the_image mask)
+  (lambda (img layers sx sy sw sh x y w h rotate the_image mask)
     ; select the visible layers
     (hide-branch (gimp-image-get-layers img))
     (show-branch (get-items-by-name img layers))
     (show-groups (get-items-by-name img layers))
 
     ( create-layer-crop-current-with-groups
-      img sx sy sw sh x y w h the_image mask )
+      img sx sy sw sh x y w h rotate the_image mask )
     ) ; lambda
   ) ; define
 
 ; create the scaled sprite of an item
 (define create-layer-crop
-  (lambda (img layers sx sy sw sh x y w h the_image mask)
+  (lambda (img layers sx sy sw sh x y w h rotate the_image mask)
     ; select the visible layers
     (show-layers img layers)
-    (create-layer-crop-current img sx sy sw sh x y w h the_image mask)
+    (create-layer-crop-current img sx sy sw sh x y w h rotate the_image mask)
     ) ; lambda
   ) ; define
 
 ; create the scaled sprite of an item with the currently visible layers
 (define crop-current-layer
-  (lambda (frame sx sy sw sh x y w h the_image)
+  (lambda (frame sx sy sw sh x y w h rotate the_image)
 
     ; get the sub part of the image
     (gimp-image-crop frame sw sh sx sy)
@@ -425,6 +425,11 @@
 
       ; resize the layer
       (gimp-layer-scale-full the_layer w h TRUE INTERPOLATION-CUBIC)
+
+      (if (= 1 rotate)
+          (gimp-item-transform-rotate-simple the_layer ROTATE-90 TRUE 0 0)
+          ) ; if
+
       (gimp-layer-set-offsets the_layer x y)
 
       the_layer
@@ -434,7 +439,7 @@
 
 ; create the scaled sprite of an item with the currently visible layers
 (define create-layer-crop-current
-  (lambda (img sx sy sw sh x y w h the_image mask)
+  (lambda (img sx sy sw sh x y w h rotate the_image mask)
 
     (let ( (frame (car (begin
                          (gimp-edit-copy-visible img)
@@ -446,7 +451,7 @@
       ; turn the mask on
       (set-layer-mask img mask frame)
 
-      (crop-current-layer frame sx sy sw sh x y w h the_image)
+      (crop-current-layer frame sx sy sw sh x y w h rotate the_image)
 
       ) ; let
     ) ; lambda
@@ -454,7 +459,7 @@
 
 ; create the scaled sprite of an item with the currently visible layers
 (define create-layer-crop-current-with-groups
-  (lambda (img sx sy sw sh x y w h the_image mask)
+  (lambda (img sx sy sw sh x y w h rotate the_image mask)
 
     (let ( (frame (car (begin
                          (gimp-edit-copy-visible img)
@@ -466,7 +471,7 @@
       ; turn the mask on
       (set-layer-mask-with-groups img mask frame)
 
-      (crop-current-layer frame sx sy sw sh x y w h the_image)
+      (crop-current-layer frame sx sy sw sh x y w h rotate the_image)
 
       ) ; let
     ) ; lambda

@@ -35,7 +35,7 @@ namespace pms
       claw::math::rectangle<int> result_box;
       std::list<layer_info> layers;
       std::list<layer_info> mask;
-
+      bool rotated;
     };
 
     typedef std::map<std::string, std::string> id_to_file_map;

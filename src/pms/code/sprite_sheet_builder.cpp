@@ -68,7 +68,7 @@ void pms::sprite_sheet_builder::set_sprite_position( spritedesc& desc ) const
   std::vector<rbp::Rect> packed;
   packed.reserve( source.size() );
 
-  rbp::MaxRectsBinPack solver( false, desc.width - m, desc.height - m );
+  rbp::MaxRectsBinPack solver( true, desc.width - m, desc.height - m );
   solver.Insert( source, packed, rbp::MaxRectsBinPack::RectContactPointRule );
 
   if ( packed.size() != desc.sprite_count() )
@@ -86,9 +86,19 @@ void pms::sprite_sheet_builder::set_sprite_position( spritedesc& desc ) const
 
   for( std::size_t i( 0 ); i != packed.size(); ++i )
     {
-      spritedesc::sprite_iterator it
-        ( find_sprite_by_size
-          ( desc, packed[ i ].width - m, packed[ i ].height - m ) );
+      const int w( packed[ i ].width - m );
+      const int h( packed[ i ].height - m );
+
+      spritedesc::sprite_iterator it( find_sprite_by_size( desc, w, h ) );
+
+      if ( it == desc.sprite_end() )
+        {
+          it = find_sprite_by_size( desc, h, w );
+          it->rotated = true;
+        }
+      else
+        it->rotated = false;
+
       it->result_box.position.set( packed[ i ].x, packed[ i ].y );
       final_size = final_size.join( it->result_box );
       result.push_back( *it );
@@ -106,16 +116,11 @@ pms::spritedesc::sprite_iterator
 pms::sprite_sheet_builder::find_sprite_by_size
 ( spritedesc& desc, int width, int height ) const
 {
-  spritedesc::sprite_iterator rotated( desc.sprite_end() );
-
   for ( spritedesc::sprite_iterator it( desc.sprite_begin() );
         it != desc.sprite_end(); ++it )
     if ( ( it->result_box.width == width )
          && ( it->result_box.height == height ) )
       return it;
-    else if ( ( it->result_box.width == height )
-         && ( it->result_box.height == width ) )
-      rotated = it;
 
-  return rotated;
+  return desc.sprite_end();
 }

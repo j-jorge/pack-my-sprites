@@ -113,7 +113,8 @@ void pms::image_generator::generate_scm
      << s.result_box.position.x << ' ' << s.result_box.position.y << ' '
      << s.result_box.width << ' ' << s.result_box.height;
 
-  os << ' ' << make_image_varname(target_id) << " '(";
+  os << ' ' << ( s.rotated ? 1 : 0 )
+     << ' ' << make_image_varname(target_id) << " '(";
 
   if ( xcf.version >= 3 )
     {
