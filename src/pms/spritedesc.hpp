@@ -57,10 +57,9 @@ namespace pms
     sprite_iterator sprite_begin();
     sprite_iterator sprite_end();
 
-    void erase_sprite( sprite_iterator it );
+    std::size_t sprite_count() const;
 
-    template<typename F>
-    void sort_sprites( F f );
+    void erase_sprite( sprite_iterator it );
 
     std::string to_string() const;
 
@@ -77,7 +76,5 @@ namespace pms
 
   };
 }
-
-#include "impl/spritedesc.tpp"
 
 #endif

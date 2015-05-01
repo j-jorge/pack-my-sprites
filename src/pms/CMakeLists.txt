@@ -1,10 +1,13 @@
-include_directories(.)
+include_directories(. bin-packing)
 
 #-------------------------------------------------------------------------------
 set( PMS_EXECUTABLE_NAME pack-my-sprites )
 
 #-------------------------------------------------------------------------------
 set( PMS_SOURCE_FILES
+  bin-packing/MaxRectsBinPack.cpp
+  bin-packing/Rect.cpp
+
   code/application.cpp
   code/gimp_interface.cpp
   code/image_generator.cpp

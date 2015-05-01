@@ -22,33 +22,13 @@ namespace pms
 {
   class sprite_sheet_builder
   {
-  private:
-    class sprite_area_comp
-    {
-    public:
-      bool operator()
-      ( const spritedesc::sprite& a, const spritedesc::sprite& b ) const;
-
-    };
-
-    class sprite_height_comp
-    {
-    public:
-      bool operator()
-      ( const spritedesc::sprite& a, const spritedesc::sprite& b ) const;
-
-    };
-
-    typedef claw::math::rectangle<std::size_t> rectangle_type;
-
   public:
     sprite_sheet build( sprite_sheet sprite_description ) const;
 
   private:
     void set_sprite_position( spritedesc& desc ) const;
-    bool find_place_for
-    ( std::list<rectangle_type>& empty_places, spritedesc::sprite& s,
-      std::size_t m ) const;
+    spritedesc::sprite_iterator
+    find_sprite_by_size( spritedesc& desc, int width, int height ) const;
 
   };
 }

@@ -57,6 +57,11 @@ pms::spritedesc::sprite_iterator pms::spritedesc::sprite_end()
   return sprites.end();
 }
 
+std::size_t pms::spritedesc::sprite_count() const
+{
+  return sprites.size();
+}
+
 void pms::spritedesc::erase_sprite( sprite_iterator it )
 {
   sprites.erase( it );
