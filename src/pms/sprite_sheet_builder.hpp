@@ -23,10 +23,11 @@ namespace pms
   class sprite_sheet_builder
   {
   public:
-    sprite_sheet build( sprite_sheet sprite_description ) const;
+    sprite_sheet
+    build( bool allow_rotate, sprite_sheet sprite_description ) const;
 
   private:
-    void set_sprite_position( spritedesc& desc ) const;
+    void set_sprite_position( bool allow_rotate, spritedesc& desc ) const;
     spritedesc::sprite_iterator
     find_sprite_by_size( spritedesc& desc, int width, int height ) const;
 

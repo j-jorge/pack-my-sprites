@@ -22,14 +22,15 @@
 #include <claw/logger.hpp>
 
 pms::sprite_sheet
-pms::sprite_sheet_builder::build( sprite_sheet sprite_description ) const
+pms::sprite_sheet_builder::build
+( bool allow_rotate, sprite_sheet sprite_description ) const
 {
   claw::logger << claw::log_verbose
                << "Setting sprite positions in sprite sheet '"
                << sprite_description.description.output_name << "'"
                << std::endl;
 
-  set_sprite_position( sprite_description.description );
+  set_sprite_position( allow_rotate, sprite_description.description );
 
   claw::logger << claw::log_verbose
                << "Final sprite sheet is:\n"
@@ -38,7 +39,8 @@ pms::sprite_sheet_builder::build( sprite_sheet sprite_description ) const
   return sprite_description;
 }
 
-void pms::sprite_sheet_builder::set_sprite_position( spritedesc& desc ) const
+void pms::sprite_sheet_builder::set_sprite_position
+( bool allow_rotate, spritedesc& desc ) const
 {
   if ( desc.margin >= desc.width )
     {
@@ -68,14 +70,13 @@ void pms::sprite_sheet_builder::set_sprite_position( spritedesc& desc ) const
   std::vector<rbp::Rect> packed;
   packed.reserve( source.size() );
 
-  rbp::MaxRectsBinPack solver( true, desc.width - m, desc.height - m );
+  rbp::MaxRectsBinPack solver( allow_rotate, desc.width - m, desc.height - m );
   solver.Insert( source, packed, rbp::MaxRectsBinPack::RectContactPointRule );
 
   if ( packed.size() != desc.sprite_count() )
     {
-      claw::logger << claw::log_verbose
-                   << "Could not place all sprites, only " << packed.size()
-                   << " out of " << source.size() << '\n';
+      std::cerr << "Could not place all sprites, only " << packed.size()
+                << " out of " << desc.sprite_count() << '\n';
       return;
     }
 

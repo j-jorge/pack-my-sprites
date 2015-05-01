@@ -34,7 +34,8 @@
 pms::application::application( int& argc, char** &argv )
   : claw::application(argc, argv), m_quit(false), m_generate_spritepos(false),
     m_generate_plist(false),
-    m_gimp_console_program( "gimp-console" )
+    m_gimp_console_program( "gimp-console" ),
+    m_disable_sprite_rotation( false )
 {
   check_arguments( argc, argv );
 }
@@ -67,6 +68,9 @@ void pms::application::check_arguments( int& argc, char** &argv )
   m_arguments.add
     ( "-g", "--gimp-console",
       "The path to the gimp-console executable.", true );
+  m_arguments.add
+    ( "-r", "--no-rotation",
+      "Disables the rotation of the sprites in the sprite sheet.", true );
   m_arguments.add_long
     ( "--spritepos", "Tells to generate the spritepos file.", true );
   m_arguments.add_long
@@ -96,6 +100,7 @@ void pms::application::check_arguments( int& argc, char** &argv )
 
   m_generate_spritepos = m_arguments.get_bool("--spritepos");
   m_generate_plist = m_arguments.get_bool("--plist");
+  m_disable_sprite_rotation = m_arguments.get_bool("--no-rotation");
 
   for ( int argi=0; argi!=argc; ++argi )
     m_input_file.push_back( argv[argi] );
@@ -179,7 +184,7 @@ void pms::application::generate_sprite_sheet_files
 ( std::string source_file_path, sprite_sheet desc ) const
 {
   sprite_sheet_builder builder;
-  desc = builder.build( desc );
+  desc = builder.build( !m_disable_sprite_rotation, desc );
       
   image_generator generator
     ( gimp_interface( m_scheme_directory, m_gimp_console_program ) );

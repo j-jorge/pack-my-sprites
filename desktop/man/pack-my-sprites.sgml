@@ -62,8 +62,9 @@ manpage.1: manpage.sgml
       <arg><option>--log-level=<replaceable>string</replaceable></option></arg>
       <arg><option>--log-uniq</option></arg>
       <arg rep="repeat"><option>-s=<replaceable>directory</replaceable></option></arg>
-      <arg><option>--spritepos</option></arg>
       <arg><option>--plist</option></arg>
+      <arg><option>-r</option></arg>
+      <arg><option>--spritepos</option></arg>
       <arg><option>--version</option></arg>
       <arg rep="repeat"><option><replaceable>file</replaceable></option></arg>
    </cmdsynopsis>
@@ -100,6 +101,11 @@ manpage.1: manpage.sgml
       associated with its name is also generated. See
       <xref linkend="sect-plist"/> for details about this
       format.</para>
+
+    <para>The sprites may be rotated in the output image if such a
+      transformation helps to place more sprites. Pass
+      the <option>--no-rotation</option> argument to disable this
+      behavior.</para>
 
     <para>The software relies upon the
       <citerefentry>
@@ -175,22 +181,30 @@ manpage.1: manpage.sgml
       </varlistentry>
 
       <varlistentry>
-        <term><option>--spritepos</option></term>
-        <listitem>
-          <para>Enables the generation of the file describing the
-            position and the size of the sprites in the sprite
-            sheet. See <xref linkend="sect-spritepos"/> for details
-            about this format.</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
         <term><option>--plist</option></term>
         <listitem>
           <para>Enables the generation of the property list file
           describing the position and the size of the sprites in the
           sprite sheet. See <xref linkend="sect-plist"/> for details
           about this format.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-r</option>, <option>--no-rotation</option></term>
+        <listitem>
+          <para>Disables the rotation of the sprites in the sprite
+            sheet.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--spritepos</option></term>
+        <listitem>
+          <para>Enables the generation of the file describing the
+            position and the size of the sprites in the sprite
+            sheet. See <xref linkend="sect-spritepos"/> for details
+            about this format.</para>
         </listitem>
       </varlistentry>
 

@@ -61,7 +61,7 @@ namespace pms
     bool m_generate_plist;
     path_list_type m_scheme_directory;
     std::string m_gimp_console_program;
-
+    bool m_disable_sprite_rotation;
   };
 }
 
