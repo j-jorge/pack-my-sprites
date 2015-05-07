@@ -64,7 +64,7 @@ generate_spritedesc_entries()
             F=$(basename "$F")
         fi
 
-        printf '"%s" image_size * 1 with img_%s\n' $F $I
+        printf '"%s" image_size with img_%s\n' $F $I
         printf '  glob "*"\n'
         printf ';\n\n'
 

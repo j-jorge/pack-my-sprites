@@ -73,7 +73,7 @@ manpage.1: manpage.sgml
   <refsect1>
     <title>DESCRIPTION</title>
 
-    <para><command>&dhpackage;</command> is a program that generates
+    <para><command>&dhpackage;</command> is a program which generates
       sprite sheets from a collection of images made with GIMP.</para>
 
     <para>The purpose of the software is to reduce the time required
@@ -291,9 +291,10 @@ manpage.1: manpage.sgml
       </varlistentry>
     </variablelist>
 
-    <para>The scale factor is a positive value that determines the size
-      of the sprite in the output. For example, a value of 0.5 will
-      produce a sprite half the size of the reference box.</para>
+    <para>The scale factor is an optional positive value that
+      determines the size of the sprite in the output. For example, a
+      value of 0.5 will produce a sprite half the size of the reference
+      box.</para>
 
     <para>The layer selection has different formats:</para>
 

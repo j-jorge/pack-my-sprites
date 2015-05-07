@@ -72,7 +72,7 @@ manpage.1: manpage.sgml
   <refsect1>
     <title>DESCRIPTION</title>
 
-    <para><command>&dhpackage;</command> is a program that generates
+    <para><command>&dhpackage;</command> is a program which generates
       sprite sheets from a collection of images. It serves as a front end
       to
       <citerefentry>

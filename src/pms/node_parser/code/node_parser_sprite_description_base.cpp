@@ -25,13 +25,17 @@ void pms::node_parser_sprite_description_base::apply_result_box_ratio
   double ratio;
 
   if ( iss >> ratio )
-    {
-      s.result_box.width = s.source_box.width * ratio;
-      s.result_box.height = s.source_box.height * ratio;
-    }
+    apply_result_box_ratio( s, ratio );
   else
     std::cerr << "invalid ratio '" << input
               << "' for sprite '" << s.name << "'" << std::endl;
+}
+
+void pms::node_parser_sprite_description_base::apply_result_box_ratio
+( spritedesc::sprite& s, float ratio ) const
+{ 
+  s.result_box.width = s.source_box.width * ratio;
+  s.result_box.height = s.source_box.height * ratio;
 }
 
 void pms::node_parser_sprite_description_base::crop_sprite_to_image_bounds

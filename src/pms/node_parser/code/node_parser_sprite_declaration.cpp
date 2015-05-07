@@ -111,35 +111,41 @@ void pms::node_parser_sprite_declaration::get_layers_and_size
 ( const xcf_info& image, spritedesc::sprite& s, const tree_node& size_node,
   const tree_node& layer_list_node ) const
 {
-  tree_node ratio;
+  tree_node key_node;
 
-  if ( size_node.value.id() == grammar::id_autosize )
+  if ( size_node.children.empty() )
+    key_node = size_node;
+  else
+    key_node = size_node.children[0];
+  
+  const std::string key( key_node.value.begin(), key_node.value.end() );
+  
+  if ( key == "autosize" )
     {
       s.layers = get_layers( image, layer_list_node );
       compute_source_box( s );
-      ratio = size_node;
     }
   else
     {
-      if ( size_node.value.id() == grammar::id_image_size )
-        {
+      if ( key == "image_size" )
           s.source_box.set( 0, 0, image.width, image.height );
-          ratio = size_node;
-        }
-      else // id == grammar::id_layer_size
+      else // key is the name of a layer
         {
           layer_info layer;
-          get_layer_info( image, layer, size_node.children[0] );
+          get_layer_info( image, layer, key );
 
           s.source_box = layer.box;
-          ratio = size_node.children[1];
         }
 
       s.layers = get_layers( image, layer_list_node );
     }
 
   crop_sprite_to_image_bounds( image, s );
-  apply_result_box_ratio( s, ratio );
+
+  if ( size_node.children.empty() )
+    apply_result_box_ratio( s, 1 );
+  else
+    apply_result_box_ratio( s, size_node.children[ 1 ] );
 }
 
 std::list<pms::layer_info> pms::node_parser_sprite_declaration::get_layers
@@ -300,7 +306,13 @@ void pms::node_parser_sprite_declaration::compute_source_box
 void pms::node_parser_sprite_declaration::get_layer_info
 ( const xcf_info& xcf, layer_info& layer, const tree_node& node ) const
 {
-  std::string raw_name( node.value.begin(), node.value.end() );
+  return get_layer_info
+    ( xcf, layer, std::string( node.value.begin(), node.value.end() ) );
+}
+
+void pms::node_parser_sprite_declaration::get_layer_info
+( const xcf_info& xcf, layer_info& layer, const std::string& raw_name ) const
+{
   std::string layer_name;
   claw::text::c_escape
     ( raw_name.begin(), raw_name.end(),

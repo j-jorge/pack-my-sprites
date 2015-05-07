@@ -34,9 +34,6 @@ namespace pms
     static const int id_string = 50;
     static const int id_glob = 55;
     static const int id_exclude = 57;
-    static const int id_autosize = 60;
-    static const int id_image_size = 70;
-    static const int id_layer_size = 80;
     static const int id_identifier = 90;
 
   public:
@@ -129,18 +126,6 @@ namespace pms
         m_properties;
 
       boost::spirit::classic::rule<ScannerT> m_sprite_size;
-
-      boost::spirit::classic::rule
-      < ScannerT,
-        boost::spirit::classic::parser_tag<id_autosize> > m_autosize;
-
-      boost::spirit::classic::rule
-      < ScannerT,
-        boost::spirit::classic::parser_tag<id_image_size> > m_image_size;
-
-      boost::spirit::classic::rule
-      < ScannerT,
-        boost::spirit::classic::parser_tag<id_layer_size> > m_layer_size;
 
       boost::spirit::classic::rule
       < ScannerT,

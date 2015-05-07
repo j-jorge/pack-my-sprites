@@ -3,7 +3,7 @@ sprite_sheet "bleeding" 256 x 256
 img1 "images/checkboard.png"
 img2 "images/stripes.png"
 
-[ bleed ] "bleed1" image_size * 1 with img1
+[ bleed ] "bleed1" image_size with img1
   glob "*"
   ;
 
@@ -11,10 +11,10 @@ img2 "images/stripes.png"
   glob "*"
   ;
 
-"dry1" image_size * 1 with img1
+"dry1" autosize with img1
   glob "*"
   ;
 
-"dry2" image_size * 1 with img2
+"dry2" autosize * 1 with img2
   glob "*"
   ;

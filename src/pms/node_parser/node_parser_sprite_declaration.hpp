@@ -64,6 +64,9 @@ namespace pms
 
     void get_layer_info
     ( const xcf_info& xcf, layer_info& layer, const tree_node& node ) const;
+    void get_layer_info
+    ( const xcf_info& xcf, layer_info& layer,
+      const std::string& raw_name ) const;
 
   };
 }

@@ -143,27 +143,9 @@ pms::grammar::definition<ScannerT>::definition( const grammar& self )
     >> (m_string | m_glob);
 
   m_sprite_size =
-    m_autosize | m_image_size | m_layer_size;
-
-  m_image_size =
-    boost::spirit::classic::no_node_d
-    [ boost::spirit::classic::strlit<>("image_size")
-      >> boost::spirit::classic::ch_p('*') ]
-    >> boost::spirit::classic::real_p
-    ;
-
-  m_autosize =
-    boost::spirit::classic::no_node_d
-    [ boost::spirit::classic::strlit<>("autosize")
-      >> boost::spirit::classic::ch_p('*') ]
-    >> boost::spirit::classic::real_p
-    ;
-
-  m_layer_size =
-    m_string
-    >> boost::spirit::classic::no_node_d[ boost::spirit::classic::ch_p('*') ]
-    >> boost::spirit::classic::real_p
-    ;
+    ( m_identifier | m_string )
+    >> !( boost::spirit::classic::no_node_d[ boost::spirit::classic::ch_p('*') ]
+          >> boost::spirit::classic::real_p );
 
   m_identifier =
     boost::spirit::classic::no_node_d[ *boost::spirit::classic::blank_p ]

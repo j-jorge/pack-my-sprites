@@ -1,1 +1,1 @@
-auto-pack-my-sprites --bleeding images/checkboard.png --no-bleeding images/stripes.png
+auto-pack-my-sprites images/stripes.png --bleeding images/checkboard.png
