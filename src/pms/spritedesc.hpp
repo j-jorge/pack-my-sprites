@@ -36,6 +36,7 @@ namespace pms
       std::list<layer_info> layers;
       std::list<layer_info> mask;
       bool rotated;
+      bool bleed;
     };
 
     typedef std::map<std::string, std::string> id_to_file_map;

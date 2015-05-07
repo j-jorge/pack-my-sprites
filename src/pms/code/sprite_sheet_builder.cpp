@@ -177,22 +177,20 @@ static void pms::detail::place_sprite_from_packing
   claw::math::coordinate_2d<int>& final_size, spritedesc& desc,
   const rbp::Rect& packing )
 {
-  const std::size_t m( desc.margin );
-
-  const int w( packing.width - m );
-  const int h( packing.height - m );
-
-  spritedesc::sprite_iterator it( find_sprite_by_size( desc, w, h ) );
+  spritedesc::sprite_iterator it
+    ( find_sprite_by_size( desc, packing.width, packing.height ) );
 
   if ( it == desc.sprite_end() )
     {
-      it = find_sprite_by_size( desc, h, w );
+      it = find_sprite_by_size( desc, packing.height, packing.width );
       it->rotated = true;
     }
   else
     it->rotated = false;
 
-  it->result_box.position.set( packing.x, packing.y );
+  const std::size_t offset( it->bleed ? 1 : 0 );
+
+  it->result_box.position.set( packing.x + offset, packing.y + offset );
   final_size.x = std::max( final_size.x, packing.x + packing.width );
   final_size.y = std::max( final_size.y, packing.y + packing.height );
       
@@ -211,8 +209,9 @@ pms::detail::build_sprite_sizes( const spritedesc& desc )
   for ( spritedesc::const_sprite_iterator it( desc.sprite_begin() );
         it != desc.sprite_end(); ++it )
     {
+      const std::size_t padding( (it->bleed ? 2 : 0) + m );
       const rbp::RectSize rect =
-        { it->result_box.width + m, it->result_box.height + m }; 
+        { it->result_box.width + padding, it->result_box.height + padding }; 
       result.push_back( rect );
     }
 
@@ -222,11 +221,18 @@ pms::detail::build_sprite_sizes( const spritedesc& desc )
 static pms::spritedesc::sprite_iterator
 pms::detail::find_sprite_by_size( spritedesc& desc, int width, int height )
 {
+  width -= desc.margin;
+  height -= desc.margin;
+  
   for ( spritedesc::sprite_iterator it( desc.sprite_begin() );
         it != desc.sprite_end(); ++it )
-    if ( ( it->result_box.width == width )
-         && ( it->result_box.height == height ) )
-      return it;
+    {
+      const std::size_t padding( it->bleed ? 2 : 0 );
+      
+      if ( ( it->result_box.width == width - padding )
+           && ( it->result_box.height == height - padding ) )
+        return it;
+    }
 
   return desc.sprite_end();
 }

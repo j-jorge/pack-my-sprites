@@ -55,12 +55,16 @@ manpage.1: manpage.sgml
     <cmdsynopsis>
       <command>&dhpackage;</command>
 
-      <arg><option>-p</option></arg>
-      <arg><option>-h</option></arg>
-      <arg><option>-o=<replaceable>file</replaceable></option></arg>
+      <arg><option>--dump</option></arg>
       <arg><option>-f</option></arg>
+      <arg><option>-h</option></arg>
+      <arg><option>-m</option></arg>
+      <arg><option>-o=<replaceable>file</replaceable></option></arg>
+      <arg><option>-p</option></arg>
       <arg><option>-z=<replaceable>WxH</replaceable></option></arg>
       <arg rep="repeat"><option><replaceable>pms-arg</replaceable></option></arg>
+      <arg rep="repeat"><option><replaceable>file</replaceable></option></arg>
+      <arg><option>--bleeding</option></arg>
       <arg rep="repeat"><option><replaceable>file</replaceable></option></arg>
    </cmdsynopsis>
   </refsynopsisdiv>
@@ -95,6 +99,16 @@ manpage.1: manpage.sgml
       <option>--output=</option><replaceable>file</replaceable> argument.
       If not set then the name sprite-sheet.png is used.</para>
 
+    <para>The sprites are placed with a default transparent margin of
+      one pixel between them. This value can be adjusted with
+      the <option>--margin<option> option.</para>
+
+    <para>The sprites produced from the images following
+      a <option>--bleeding</option> opton will have their edges cloned
+      outside their bounds (i.e. the topmost pixel row is duplicated above
+      the sprite, the rightmost pixel column on its right and so
+      on).</para>
+    
     <para>The program accepts all the command line options of <citerefentry>
         <refentrytitle>pack-my-sprites</refentrytitle>
         <manvolnum>1</manvolnum>
@@ -122,6 +136,22 @@ manpage.1: manpage.sgml
       </varlistentry>
 
       <varlistentry>
+        <term><option>--bleeding</option></term>
+        <listitem>
+          <para>Duplicate the edges of the sprites generated from the
+            following files.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--dump</option></term>
+        <listitem>
+          <para>Dump the spritedesc file used to build the sprite
+            sheet.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
         <term><option>-f</option>, <option>--force</option></term>
         <listitem>
           <para>Enables overwriting the output sprite sheet if it already exists
@@ -133,6 +163,14 @@ manpage.1: manpage.sgml
         <term><option>-h, --help</option></term>
         <listitem>
           <para>Shows a summary of options.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-m=<replaceable>margin</replaceable></option>, <option>--margin=<replaceable>margin</replaceable></option></term>
+        <listitem>
+          <para>Sets the width of the transparent space between the sprites
+            in the output sprite sheet.</para>
         </listitem>
       </varlistentry>
 
@@ -200,7 +238,14 @@ manpage.1: manpage.sgml
     <programlisting>
       auto-pack-my-sprites images/*.png --output=sprites.png --plist --strip-paths
     </programlisting>
-  </refsect1>
+
+      <para>Creates a PNG file with two bleeding sprites and one that
+        does not bleed.</para>
+
+    <programlisting>
+      auto-pack-my-sprites --output=output/sprites.png img1.png --bleeding img2.png img3.png
+    </programlisting>
+</refsect1>
 
   <refsect1>
     <title>SEE ALSO</title>

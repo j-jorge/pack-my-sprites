@@ -237,19 +237,11 @@ manpage.1: manpage.sgml
       maximum size of the output image, according to the following
       syntax:</para>
 
-    <programlisting>sprite_sheet "name" width x height [margin M] [order "O"]</programlisting>
+    <programlisting>sprite_sheet "name" width x height [margin M]</programlisting>
 
     <para>The <quote>margin M</quote> optional argument allows to
     define the spacing between the sprites in the output. The default
     value is 1.</para>
-
-    <para>The <quote>order "O"</quote> optional argument allows to
-      force a given heuristic for the placement of the sprites in the
-      output. The default value is "area", which considers the sprites
-      in decreasing order of their area. Other possible values are
-      "height" to select the sprites by decreasing order of their
-      height or "none" to consider the sprites in their declaration
-      order.</para>
 
     <para>Following the header is a list of XCF files used to build
       the sprites:</para>
@@ -259,16 +251,28 @@ manpage.1: manpage.sgml
       &hellip;</programlisting>
 
     <para>Then come the sprites, defined by a name, a size, a source
-      image, a selection of layers and an optional mask. The selection
-      of layers can be prefixed by some properties to apply to the
-      selected layers:</para>
+      image, a selection of layers and an optional mask. A sprite
+      declaration can be prefixed by some properties to apply to the
+      resulting sprite, as for the selection of layers:</para>
 
-    <programlisting>"name" reference_box * scale_factor with image_name
+    <programlisting>[sprite_properties] "name" reference_box * scale_factor with image_name
       [layer_properties] layer_selection_1
       [layer_properties] layer_selection_2
       &hellip;
       [mask "layer_name"]
       ;</programlisting>
+
+    <para>The sprite declaration can be prefixed by a list
+      of properties to change how the sprite is built in the
+      output. The current only property is <quote>bleed</quote>; it
+      tells the program to duplicate the edges of the resulting sprite
+      outside its bounds (i.e. the topmost pixel row is duplicated above
+      the sprite, the rightmost pixel column on its right and so
+      on). The properties are optional and must be separated by spaces
+      and put between brackets, according to the following
+      syntax:</para>
+
+    <programlisting>[ property_1 property_2 &hellip; ]</programlisting>
 
     <para>The reference box can be the name of a layer from the source
     image, or one of the following special values:</para>
@@ -346,11 +350,7 @@ manpage.1: manpage.sgml
       of properties to change how the layers are used in the
       image. The current only property is <quote>hollow</quote>; it
       tells the program not to consider the size of the layer when
-      computing the size of the sprite. The properties are
-      optional and must be separated by spaces and put between
-      brackets, according to the following syntax:</para>
-
-    <programlisting>[ property_1 property_2 &hellip; ]</programlisting>
+      computing the size of the sprite.</para>
 
     <para>The optional <emphasis>mask</emphasis> command tells to use
       the layer with the given name as a mask in the resulting
@@ -391,7 +391,7 @@ manpage.1: manpage.sgml
 
     <programlisting>
       /* Comments are written like this.*/
-      sprite_sheet "letters-1" 1024 x 1024 margin 1 order "height"
+      sprite_sheet "letters-1" 1024 x 1024 margin 1
 
       logo "logo.xcf.bz2"
 
@@ -431,18 +431,20 @@ manpage.1: manpage.sgml
       &nbsp; mask "par_K_"
       ;
 
+      /*
+      This entry produces a sprite whose edges are cloned outside its bound
+      (i.e. the topmost pixel row is duplicated above
+      the sprite, the rightmost pixel column on its right and so
+      on).
+      */
+      [ bleed ] "stretch" autosize * 0.3 with logo
+      &nbsp; "stretch"
+      ;
+
       /* End of file */</programlisting>
 
     <para>The processing of this file will produce an
     image named <filename>letters-1.png</filename>.</para>
-
-    <para>When the <option>--spritepos</option> argument is used, a
-    file named <filename>letters-1.spritepos</filename> is also
-    produced, with the following content:</para>
-
-    <programlisting>wave: 0 0 1002 186
-      andy's: 0 187 268 168
-      par_K_: 269 187 120 118</programlisting>
 
   </refsect1>
 

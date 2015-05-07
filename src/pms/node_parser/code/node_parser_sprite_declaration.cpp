@@ -22,30 +22,74 @@
 void pms::node_parser_sprite_declaration::parse_node
 ( const xcf_map& xcf, spritedesc& desc, const tree_node& node ) const
 {
-  // node 0 is the name
-  // node 1 is the size
-  // node 2 is the source image
-  // node 3 is the layer list
-  // node 4 is the mask (optional)
-
   spritedesc::sprite s;
-  get_sprite_name( s, node.children[0] );
+  s.bleed = false;
+
+  std::size_t n( 0 );
+
+  if ( ( node.children[n].value.id() == grammar::id_properties )
+       || ( node.children[n].value.id() == grammar::id_identifier ) )
+      apply_sprite_properties( s, node.children[ n++ ] );
+
+  const tree_node name_node( node.children[n++] );
+  const tree_node size_node( node.children[n++] );
+  const tree_node image_node( node.children[n++] );
+  const tree_node layers_node( node.children[n++] );
+  
+  get_sprite_name( s, name_node );
 
   if ( desc.get_sprite_by_name(s.name) != desc.sprite_end() )
     std::cerr << "warning: duplicate sprite entry '" << s.name << "'."
               << std::endl;
 
-  get_image_id( s, node.children[2] );
+  get_image_id( s, image_node );
 
   xcf_info image;
   get_xcf_from_id( xcf, desc, image, s.xcf_id );
 
-  get_layers_and_size( image, s, node.children[1], node.children[3] );
+  get_layers_and_size( image, s, size_node, layers_node );
 
-  if ( node.children.size() == 5 )
-    s.mask = get_layers( image, node.children[4] );
+  if ( n < node.children.size() )
+    s.mask = get_layers( image, node.children[n++] );
 
   desc.add_sprite( s );
+}
+
+void pms::node_parser_sprite_declaration::apply_sprite_properties
+( spritedesc::sprite& result, const tree_node& properties_node ) const
+{
+  const std::vector<std::string> properties
+    ( get_properties( properties_node ) );
+
+  for ( std::size_t i(0); i != properties.size(); ++i )
+    if ( properties[i] == "bleed" )
+      result.bleed = true;
+    else
+      std::cerr << "Unknown sprite property: '" << properties[i] << "'."
+                << std::endl;
+}
+
+std::vector<std::string>
+pms::node_parser_sprite_declaration::get_properties
+( const tree_node& properties_node ) const
+{
+  std::vector<std::string> properties;
+
+  if ( properties_node.value.id() == grammar::id_properties )
+    for ( std::size_t i(0); i != properties_node.children.size(); ++i )
+      {
+        const std::string p
+          ( properties_node.children[i].value.begin(),
+            properties_node.children[i].value.end() );
+
+        properties.push_back( p );
+      }
+  else
+    properties.push_back
+      ( std::string
+        ( properties_node.value.begin(), properties_node.value.end() ) );
+
+  return properties;
 }
 
 void pms::node_parser_sprite_declaration::get_sprite_name
@@ -104,7 +148,7 @@ std::list<pms::layer_info> pms::node_parser_sprite_declaration::get_layers
   std::list<layer_info> result;
 
   if ( (layer_list_node.value.id() == grammar::id_string)
-       || (layer_list_node.value.id() == grammar::id_layer_properties)
+       || (layer_list_node.value.id() == grammar::id_properties)
        || (layer_list_node.value.id() == grammar::id_glob) )
     add_layers( image, result, layer_list_node );
   else
@@ -117,21 +161,8 @@ std::list<pms::layer_info> pms::node_parser_sprite_declaration::get_layers
 void pms::node_parser_sprite_declaration::apply_layer_properties
 ( std::list<layer_info>& result, const tree_node& properties_node ) const
 {
-  std::vector<std::string> properties;
-
-  if ( properties_node.value.id() == grammar::id_layer_properties )
-    for ( std::size_t i(0); i != properties_node.children.size(); ++i )
-      {
-        const std::string p
-          ( properties_node.children[i].value.begin(),
-            properties_node.children[i].value.end() );
-
-        properties.push_back( p );
-      }
-  else
-    properties.push_back
-      ( std::string
-        ( properties_node.value.begin(), properties_node.value.end() ) );
+  const std::vector<std::string> properties
+    ( get_properties( properties_node ) );
 
   for ( std::size_t i(0); i != properties.size(); ++i )
     if ( properties[i] == "hollow" )
@@ -157,7 +188,7 @@ void pms::node_parser_sprite_declaration::add_layers
       tree_node layer_node;
       const bool has_properties
         ( (node.children.size() == 2)
-          && (node.value.id() == grammar::id_layer_properties) );
+          && (node.value.id() == grammar::id_properties) );
 
       if ( has_properties )
         layer_node = node.children[1];

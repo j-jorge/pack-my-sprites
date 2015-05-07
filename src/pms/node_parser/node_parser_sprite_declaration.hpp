@@ -28,6 +28,11 @@ namespace pms
     ( const xcf_map& xcf, spritedesc& s, const tree_node& node ) const;
 
   private:
+    void apply_sprite_properties
+    ( spritedesc::sprite& result, const tree_node& properties_node ) const;
+    std::vector<std::string>
+    get_properties( const tree_node& properties_node ) const;
+    
     void get_sprite_name
     ( spritedesc::sprite& s, const tree_node& node ) const;
     void get_image_id

@@ -385,29 +385,67 @@
 
 ; create the scaled sprite of an item
 (define create-layer-crop-with-groups
-  (lambda (img layers sx sy sw sh x y w h rotate the_image mask)
+  (lambda (img layers sx sy sw sh x y w h rotate bleed the_image mask)
     ; select the visible layers
     (hide-branch (gimp-image-get-layers img))
     (show-branch (get-items-by-name img layers))
     (show-groups (get-items-by-name img layers))
 
     ( create-layer-crop-current-with-groups
-      img sx sy sw sh x y w h rotate the_image mask )
+      img sx sy sw sh x y w h rotate bleed the_image mask )
     ) ; lambda
   ) ; define
 
 ; create the scaled sprite of an item
 (define create-layer-crop
-  (lambda (img layers sx sy sw sh x y w h rotate the_image mask)
+  (lambda (img layers sx sy sw sh x y w h rotate bleed the_image mask)
     ; select the visible layers
     (show-layers img layers)
-    (create-layer-crop-current img sx sy sw sh x y w h rotate the_image mask)
+    (create-layer-crop-current img sx sy sw sh x y w h rotate bleed the_image
+                               mask)
+    ) ; lambda
+  ) ; define
+
+(define copy-paste-rectangle
+  (lambda (image layer rx ry rw rh x y)
+    
+    (gimp-image-select-rectangle image CHANNEL-OP-REPLACE rx ry rw rh)
+    (gimp-edit-copy layer)
+    (gimp-selection-none image)
+      
+    (let ( (pasted (car (gimp-edit-paste layer TRUE))) )
+      (gimp-layer-set-offsets pasted x y)
+      (gimp-floating-sel-anchor pasted)
+      )
+    ) ; lambda
+  ) ; define
+          
+(define apply-bleeding
+  (lambda (image layer weight)
+    (let ( (w (+ (* 2 weight) (car (gimp-drawable-width layer))))
+           (h (+ (* 2 weight) (car (gimp-drawable-height layer))))
+           (x (- (car (gimp-drawable-offsets layer)) weight))
+           (y (- (cadr (gimp-drawable-offsets layer)) weight)) )
+
+      (gimp-layer-resize layer w h weight weight )
+      (gimp-layer-set-offsets layer x y)
+
+      ; top
+      (copy-paste-rectangle image layer x (+ 1 y) w 1 x y)
+      ; bottom
+      (copy-paste-rectangle image layer x (- (+ y h) 2) w 1 x (- (+ y h) 1))
+      ; left
+      (copy-paste-rectangle image layer (+ 1 x) y 1 h x y)
+      ; right
+      (copy-paste-rectangle image layer (- (+ x w) 2) y 1 h (- (+ x w) 1) y)
+
+      ) ; let
     ) ; lambda
   ) ; define
 
 ; create the scaled sprite of an item with the currently visible layers
 (define crop-current-layer
-  (lambda (frame sx sy sw sh x y w h rotate the_image)
+  (lambda (frame sx sy sw sh x y w h rotate bleed the_image)
 
     ; get the sub part of the image
     (gimp-image-crop frame sw sh sx sy)
@@ -432,6 +470,10 @@
 
       (gimp-layer-set-offsets the_layer x y)
 
+      (if (> bleed 0)
+          (apply-bleeding the_image the_layer bleed)
+          ) ; if
+      
       the_layer
       ) ; let
     ) ; lambda
@@ -439,7 +481,7 @@
 
 ; create the scaled sprite of an item with the currently visible layers
 (define create-layer-crop-current
-  (lambda (img sx sy sw sh x y w h rotate the_image mask)
+  (lambda (img sx sy sw sh x y w h rotate bleed the_image mask)
 
     (let ( (frame (car (begin
                          (gimp-edit-copy-visible img)
@@ -451,7 +493,7 @@
       ; turn the mask on
       (set-layer-mask img mask frame)
 
-      (crop-current-layer frame sx sy sw sh x y w h rotate the_image)
+      (crop-current-layer frame sx sy sw sh x y w h rotate bleed the_image)
 
       ) ; let
     ) ; lambda
@@ -459,7 +501,7 @@
 
 ; create the scaled sprite of an item with the currently visible layers
 (define create-layer-crop-current-with-groups
-  (lambda (img sx sy sw sh x y w h rotate the_image mask)
+  (lambda (img sx sy sw sh x y w h rotate bleed the_image mask)
 
     (let ( (frame (car (begin
                          (gimp-edit-copy-visible img)
@@ -471,7 +513,7 @@
       ; turn the mask on
       (set-layer-mask-with-groups img mask frame)
 
-      (crop-current-layer frame sx sy sw sh x y w h rotate the_image)
+      (crop-current-layer frame sx sy sw sh x y w h rotate bleed the_image)
 
       ) ; let
     ) ; lambda

@@ -98,13 +98,15 @@ std::string pms::spritedesc::to_string() const
       oss << "  * '" << it->name
           << "' with xcf '" << xcf.find( it->xcf_id )->second
           << "', source box (left=" << it->source_box.position.x
-          << ", right=" << it->source_box.position.y
+          << ", top=" << it->source_box.position.y
           << ", width=" << it->source_box.width
           << ", height=" << it->source_box.height
           << "), output box (left=" << it->result_box.position.x
           << ", right=" << it->result_box.position.y
           << ", width=" << it->result_box.width
           << ", height=" << it->result_box.height
+          << ", rotate=" << it->rotated
+          << ", bleed=" << it->bleed
           << "), layers [";
 
       for ( std::list<layer_info>::const_iterator layer( it->layers.begin() );

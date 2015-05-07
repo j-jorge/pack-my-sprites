@@ -50,7 +50,12 @@ void pms::image_generator::generate_output
   gimp_interface::path_list_type includes;
   includes.push_back( "common.scm" );
 
-  m_gimp.run( oss.str(), includes );
+  const std::string result( m_gimp.run( oss.str(), includes ) );
+
+  if ( result.find( " Error:" ) == std::string::npos )
+    claw::logger << claw::log_verbose << result << '\n';
+  else
+    std::cerr << result << '\n';
 }
 
 void pms::image_generator::generate_scm
@@ -114,6 +119,7 @@ void pms::image_generator::generate_scm
      << s.result_box.width << ' ' << s.result_box.height;
 
   os << ' ' << ( s.rotated ? 1 : 0 )
+     << ' ' << ( s.bleed ? 1 : 0 )
      << ' ' << make_image_varname(target_id) << " '(";
 
   if ( xcf.version >= 3 )

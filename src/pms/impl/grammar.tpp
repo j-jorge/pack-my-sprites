@@ -102,7 +102,8 @@ pms::grammar::definition<ScannerT>::definition( const grammar& self )
   m_sprite_description = m_sprite_declaration;
 
   m_sprite_declaration =
-    m_string
+    !m_properties
+    >> m_string
     >> ( m_sprite_size | m_error_autosize )
     >> boost::spirit::classic::no_node_d
        [ boost::spirit::classic::strlit<>("with") ]
@@ -123,10 +124,10 @@ pms::grammar::definition<ScannerT>::definition( const grammar& self )
     *m_layer_reference;
 
   m_layer_reference =
-    ( !m_layer_properties >> (m_string | m_glob) )
+    ( !m_properties >> (m_string | m_glob) )
     | m_exclude;
 
-  m_layer_properties =
+  m_properties =
     boost::spirit::classic::no_node_d[ boost::spirit::classic::ch_p('[') ]
     >> *m_identifier
     >> boost::spirit::classic::no_node_d[ boost::spirit::classic::ch_p(']') ]

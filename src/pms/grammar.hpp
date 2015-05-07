@@ -30,13 +30,14 @@ namespace pms
     static const int id_xcf_declaration = 20;
     static const int id_sprite_declaration = 40;
     static const int id_layer_reference = 45;
-    static const int id_layer_properties = 45;
+    static const int id_properties = 45;
     static const int id_string = 50;
     static const int id_glob = 55;
     static const int id_exclude = 57;
     static const int id_autosize = 60;
     static const int id_image_size = 70;
     static const int id_layer_size = 80;
+    static const int id_identifier = 90;
 
   public:
     template<typename ScannerT>
@@ -124,8 +125,8 @@ namespace pms
 
       boost::spirit::classic::rule
       < ScannerT,
-        boost::spirit::classic::parser_tag<id_layer_properties> >
-        m_layer_properties;
+        boost::spirit::classic::parser_tag<id_properties> >
+        m_properties;
 
       boost::spirit::classic::rule<ScannerT> m_sprite_size;
 
@@ -141,7 +142,9 @@ namespace pms
       < ScannerT,
         boost::spirit::classic::parser_tag<id_layer_size> > m_layer_size;
 
-      boost::spirit::classic::rule<ScannerT> m_identifier;
+      boost::spirit::classic::rule
+      < ScannerT,
+        boost::spirit::classic::parser_tag<id_identifier> > m_identifier;
 
       boost::spirit::classic::rule
       < ScannerT, boost::spirit::classic::parser_tag<id_string> > m_string;

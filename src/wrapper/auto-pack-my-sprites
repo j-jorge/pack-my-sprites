@@ -4,22 +4,31 @@ ARGS=
 STRIP_PATHS=0
 FILES=
 SELF_SCRIPT_NAME="$0"
+DUMP=0
 FORCE=0
 OUTPUT=sprite-sheet.png
 SIZE="1024x1024"
+MARGIN=1
+BLEEDING_STATE=0
+
+BLEED_LIST=$(mktemp)
+trap "rm -f $BLEED_LIST" EXIT
 
 usage()
 {
-    printf "%s [ -p ] [ -h ] [ -o=output ] [ -f ] [ -z=WxH ] [ pms-arg... ] file...\n" \
+    printf "%s [ -p ] [ -h ] [ --dump ] [ -o=output ] [ -f ] [ -m=margin ] [ -z=WxH ] [ pms-arg... ] file... [ --bleeding file... ]\n" \
         "$SELF_SCRIPT_NAME"
     printf "where:\n"
-    printf "\t-f, --force\t\tOverwrite the output file if it already exists.\n"
-    printf "\t-h, --help\t\tPrint this message and exit.\n"
-    printf "\t-o, --output\t\tSet the name of the output file. Default is %s\n" "$OUTPUT"
-    printf "\t-p, --strip-paths\tRemove the directories from the input file names when naming the sprites.\n"
-    printf "\t-z, --size\t\tSet the maximum size of the resulting sprite sheet to a width of W pixels and a height of H pixels. Default size is %s.\n" "$SIZE"
-    printf "\tpms-arg\t\t\tCommand line option to be passed to pack-my-sprites (see below).\n"
-    printf "\tfile\t\t\tAn image file to pack in a sprite sheet.\n"
+    printf "\t--bleeding\n\t\tEnable the bleeding for the next file arguments.\n\n"
+    printf "\t--dump\n\t\tDumps the resulting spritedesc file.\n\n"
+    printf "\t-f, --force\n\t\tOverwrite the output file if it already exists.\n\n"
+    printf "\t-h, --help\n\t\tPrint this message and exit.\n\n"
+    printf "\t-m, --margin\n\t\tSet the padding between the sprites. Default is %s.\n\n" "$MARGIN"
+    printf "\t-o, --output\n\t\tSet the name of the output file. Default is %s\n\n" "$OUTPUT"
+    printf "\t-p, --strip-paths\n\t\tRemove the directories from the input file names when naming the sprites.\n\n"
+    printf "\t-z, --size\n\t\tSet the maximum size of the resulting sprite sheet to a width of W pixels and a height of H pixels. Default size is %s.\n\n" "$SIZE"
+    printf "\tpms-arg\n\t\t\tCommand line option to be passed to pack-my-sprites (see below).\n\n"
+    printf "\tfile\n\t\t\tAn image file to pack in a sprite sheet.\n"
 
     printf "\n\nPack My Sprites' command line arguments are:\n\n"
     pack-my-sprites --help
@@ -45,11 +54,16 @@ generate_spritedesc_entries()
     I=1
     for F in $FILES
     do
+        if grep "$F" $BLEED_LIST > /dev/null
+        then
+            printf '[ bleed ] '
+        fi
+
         if [ "$STRIP_PATHS" -eq 1 ]
         then
             F=$(basename "$F")
         fi
-        
+
         printf '"%s" image_size * 1 with img_%s\n' $F $I
         printf '  glob "*"\n'
         printf ';\n\n'
@@ -58,15 +72,35 @@ generate_spritedesc_entries()
     done
 }
 
+print_spritedesc()
+{
+    cat <<EOF
+sprite_sheet "$(basename $OUTPUT .png)" $(formatted_size) margin $MARGIN
+
+$(name_input_files)
+
+$(generate_spritedesc_entries)
+EOF
+}
+
 for ARG in "$@"
 do
     case $ARG in
+        --bleeding)
+            BLEEDING_STATE=1
+            ;;
+        --dump)
+            DUMP=1
+            ;;
         --force|-f)
             FORCE=1
             ;;
         --help|-h)
             usage
             exit 0
+            ;;
+        --margin=*|-m=*)
+            MARGIN=$(echo $ARG | cut -d= -f2-)
             ;;
         --output=*|-o=*)
             OUTPUT=$(echo $ARG | cut -d= -f2-)
@@ -82,6 +116,11 @@ do
             ;;
         *)
             FILES="$FILES $ARG"
+
+            if [ $BLEEDING_STATE -ne 0 ]
+            then
+                printf '%s\n' "$ARG" >> $BLEED_LIST
+            fi
             ;;
     esac
 done
@@ -97,10 +136,11 @@ then
     [ "$OVERWRITE" = "y" ] || [ "$OVERWRITE" = "Y" ] || exit 0
 fi
 
-pack-my-sprites $ARGS <<EOF
-sprite_sheet "$(basename $OUTPUT .png)" $(formatted_size) order "height"
-
-$(name_input_files)
-
-$(generate_spritedesc_entries)
-EOF
+if [ $DUMP -eq 0 ]
+then
+    print_spritedesc | pack-my-sprites $ARGS
+else
+    print_spritedesc \
+        | tee $(basename $OUTPUT .png).spritedesc \
+        | pack-my-sprites $ARGS
+fi
