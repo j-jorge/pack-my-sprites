@@ -101,7 +101,7 @@ manpage.1: manpage.sgml
 
     <para>The sprites are placed with a default transparent margin of
       one pixel between them. This value can be adjusted with
-      the <option>--margin<option> option.</para>
+      the <option>--margin</option> option.</para>
 
     <para>The sprites produced from the images following
       a <option>--bleeding</option> opton will have their edges cloned
