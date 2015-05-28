@@ -9,6 +9,7 @@ set( PMS_SOURCE_FILES
   bin-packing/Rect.cpp
 
   code/application.cpp
+  code/css_generator.cpp
   code/gimp_interface.cpp
   code/image_generator.cpp
   code/main.cpp

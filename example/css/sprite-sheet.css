@@ -1,0 +1,49 @@
+.line::before {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 96px;
+  top: 16px;
+  left: 0;
+  z-index: -1;
+  background-image: url('./sprite-sheet.png');
+  background-position: -0px -0px;
+  transform: rotate(-90deg);
+  transform-origin: 0 0;
+}
+
+.line {
+  position: relative;
+  width: 96px;
+  height: 16px;
+  z-index: 1;
+}
+
+.dialog-error {
+  background-image: url('./sprite-sheet.png');
+  background-position: -17px -0px;
+  width: 48px;
+  height: 48px;
+}
+
+.dialog-warning {
+  background-image: url('./sprite-sheet.png');
+  background-position: -17px -49px;
+  width: 48px;
+  height: 48px;
+}
+
+.non-starred {
+  background-image: url('./sprite-sheet.png');
+  background-position: -66px -0px;
+  width: 48px;
+  height: 48px;
+}
+
+.starred {
+  background-image: url('./sprite-sheet.png');
+  background-position: -66px -49px;
+  width: 48px;
+  height: 48px;
+}
+

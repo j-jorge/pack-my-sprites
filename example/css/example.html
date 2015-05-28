@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="sprite-sheet.css">
+    <link rel="stylesheet" href="style.css">
+    <title>Pack My Sprites CSS output example</title>
+  </head>
+  
+  <body>
+    <p>Calling <span class="prog-name">auto-pack-my-sprites</span> as follows,
+      from the directory containing this page:</p>
+
+    <div class="sample">
+      auto-pack-my-sprites icons/* --strip-paths --css --force --size=120x100
+    </div>
+
+    <p>will produce the following sprite sheet and CSS file</p>
+
+    <div class="sample">
+      <div class="sample-title">
+        sprite-sheet.png
+      </div>
+      <img src="sprite-sheet.png">
+    </div>
+    
+    <div class="sample">
+      <div class="sample-title">
+        sprite-sheet.css
+      </div>
+      <div class="source-code">
+        <div class="code-block">
+          <p>.line::before {</p>
+          <div class="code-indent-1">
+            <p>content: "";</p>
+            <p>position: absolute;</p>
+            <p>width: 16px;</p>
+            <p>height: 96px;</p>
+            <p>top: 16px;</p>
+            <p>left: 0;</p>
+            <p>z-index: -1;</p>
+            <p>background-image: url('./sprite-sheet.png');</p>
+            <p>background-position: -0px -0px;</p>
+            <p>transform: rotate(-90deg);</p>
+            <p>transform-origin: 0 0;</p>
+          </div>
+          <p>}</p>
+        </div>
+
+        <div class="code-block">
+          <p>.line {</p>
+          <div class="code-indent-1">
+            <p>position: relative;</p>
+            <p>width: 96px;</p>
+            <p>height: 16px;</p>
+            <p>z-index: 1;</p>
+          </div>
+          <p>}</p>
+        </div>
+
+        <div class="code-block">
+          <p>.dialog-error {</p>
+          <div class="code-indent-1">
+            <p>background-image: url('./sprite-sheet.png');</p>
+            <p>background-position: -17px -0px;</p>
+            <p>width: 48px;</p>
+            <p>height: 48px;</p>
+          </div>
+          <p>}</p>
+        </div>
+
+        <div class="code-block">
+          <p>.dialog-warning {</p>
+          <div class="code-indent-1">
+            <p>background-image: url('./sprite-sheet.png');</p>
+            <p>background-position: -17px -49px;</p>
+            <p>width: 48px;</p>
+            <p>height: 48px;</p>
+          </div>
+          <p>}</p>
+        </div>
+
+        <div class="code-block">
+          <p>.non-starred {</p>
+          <div class="code-indent-1">
+            <p>background-image: url('./sprite-sheet.png');</p>
+            <p>background-position: -66px -0px;</p>
+            <p>width: 48px;</p>
+            <p>height: 48px;</p>
+          </div>
+          <p>}</p>
+        </div>
+
+        <div class="code-block">
+          <p>.starred {</p>
+          <div class="code-indent-1">
+            <p>background-image: url('./sprite-sheet.png');</p>
+            <p>background-position: -66px -49px;</p>
+            <p>width: 48px;</p>
+            <p>height: 48px;</p>
+          </div>
+          <p>}</p>
+        </div>
+      </div>
+      
+    </div>
+    
+    <p>Then we can use this sprite sheet to add some icons in our page.
+    For example:</p>
+
+    <div class="dialog-error"></div>
+    <div class="starred"></div>
+
+    <p>The inlined version <span class="non-starred" style="display: inline-block"></span> works too.</p>
+
+    <p>The rotated one:</p>
+
+    <div class="line">
+      <div class="text-in-rotated">great!</div>
+    </div>
+    
+    <p>That's all.</p>
+  </body>
+    
+</html>

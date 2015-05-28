@@ -55,6 +55,7 @@ manpage.1: manpage.sgml
     <cmdsynopsis>
       <command>&dhpackage;</command>
 
+      <arg><option>--css</option></arg>
       <arg><option>-g=<replaceable>file</replaceable></option></arg>
       <arg><option>-h</option></arg>
       <arg><option>--log-concise</option></arg>
@@ -102,6 +103,9 @@ manpage.1: manpage.sgml
       <xref linkend="sect-plist"/> for details about this
       format.</para>
 
+    <para>When invoked with the <option>--css</option> argument, a
+      CSS file declaring a class for each sprite is also generated.</para>
+
     <para>The sprites may be rotated in the output image if such a
       transformation helps to place more sprites. Pass
       the <option>--no-rotation</option> argument to disable this
@@ -127,6 +131,14 @@ manpage.1: manpage.sgml
             the sprite sheet. If no file is provided then the standard
             input is read. See <xref linkend="sect-spritedesc"/> for details
             about the syntax of the file.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--css</option></term>
+        <listitem>
+          <para>Enables the generation of the CSS file with the classes
+            corresponding to the sprites in the sprite sheet.</para>
         </listitem>
       </varlistentry>
 

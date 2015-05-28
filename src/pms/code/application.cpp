@@ -20,6 +20,7 @@
 
 #include <claw/logger.hpp>
 
+#include "css_generator.hpp"
 #include "gimp_interface.hpp"
 #include "image_generator.hpp"
 #include "parser.hpp"
@@ -76,6 +77,8 @@ void pms::application::check_arguments( int& argc, char** &argv )
   m_arguments.add_long
     ( "--plist", "Tells to generate the PList file.", true );
   m_arguments.add_long
+    ( "--css", "Tells to generate the CSS file.", true );
+  m_arguments.add_long
     ( "--version", "Prints the version of the software.", true );
 
   m_arguments.parse( argc, argv );
@@ -100,6 +103,7 @@ void pms::application::check_arguments( int& argc, char** &argv )
 
   m_generate_spritepos = m_arguments.get_bool("--spritepos");
   m_generate_plist = m_arguments.get_bool("--plist");
+  m_generate_css = m_arguments.get_bool("--css");
   m_disable_sprite_rotation = m_arguments.get_bool("--no-rotation");
 
   for ( int argi=0; argi!=argc; ++argi )
@@ -192,13 +196,19 @@ void pms::application::generate_sprite_sheet_files
 
   if ( m_generate_spritepos )
     {
-      spritepos_generator spritepos;
-      spritepos.generate( source_file_path, desc );
+      spritepos_generator generator;
+      generator.generate( source_file_path, desc );
     }
 
   if ( m_generate_plist )
     {
-      plist_generator plist;
-      plist.generate( source_file_path, desc );
+      plist_generator generator;
+      generator.generate( source_file_path, desc );
+    }
+
+  if ( m_generate_css )
+    {
+      css_generator generator;
+      generator.generate( source_file_path, desc );
     }
 }

@@ -59,6 +59,7 @@ namespace pms
     std::vector<std::string> m_input_file;
     bool m_generate_spritepos;
     bool m_generate_plist;
+    bool m_generate_css;
     path_list_type m_scheme_directory;
     std::string m_gimp_console_program;
     bool m_disable_sprite_rotation;
