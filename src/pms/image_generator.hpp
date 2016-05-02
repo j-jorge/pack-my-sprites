@@ -41,7 +41,7 @@ namespace pms
       spritedesc desc ) const;
 
     void generate_scm
-    ( std::ostream& os, const xcf_info& xcf, const spritedesc::sprite& s,
+    ( std::ostream& os, const image_info& xcf, const spritedesc::sprite& s,
       const std::string& target_id ) const;
 
     std::string make_image_varname( const std::string& id ) const;

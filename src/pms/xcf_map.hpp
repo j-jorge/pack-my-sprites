@@ -17,7 +17,7 @@
 #define __PMS_XCF_MAP_HPP__
 
 #include "gimp_interface.hpp"
-#include "xcf_info.hpp"
+#include "image_info.hpp"
 
 #include <string>
 #include <map>
@@ -27,7 +27,7 @@ namespace pms
   class xcf_map
   {
   private:
-    typedef std::map<std::string, xcf_info> name_to_info_type;
+    typedef std::map<std::string, image_info> name_to_info_type;
 
   public:
     xcf_map();
@@ -36,7 +36,7 @@ namespace pms
     void load( const std::string& name );
 
     bool has_info( const std::string& name ) const;
-    xcf_info get_info( const std::string& name ) const;
+    const image_info& get_info( const std::string& name ) const;
 
     std::string to_string() const;
 
@@ -48,11 +48,12 @@ namespace pms
     std::string execute_xcfinfo_process( const std::string& file_path ) const;
 
     void parse_xcf_info_header
-    ( xcf_info& info, const std::string& header ) const;
-    void parse_xcf_info_layer( xcf_info& info, const std::string& layer ) const;
+    ( image_info& info, const std::string& header ) const;
+    void parse_xcf_info_layer
+    ( image_info& info, const std::string& layer ) const;
 
   private:
-    name_to_info_type m_xcf_info;
+    name_to_info_type m_image_info;
     std::string m_xcf_directory;
     gimp_interface m_gimp;
 

@@ -13,11 +13,11 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "xcf_info.hpp"
+#include "image_info.hpp"
 
 #include <sstream>
 
-std::string pms::xcf_info::get_layer_name( std::size_t index ) const
+std::string pms::image_info::get_layer_name( std::size_t index ) const
 {
   for( layer_map::const_iterator it=layers.begin(); it!=layers.end(); ++it )
     if ( it->second.index == index )
@@ -26,7 +26,7 @@ std::string pms::xcf_info::get_layer_name( std::size_t index ) const
   return std::string();
 }
 
-std::string pms::xcf_info::to_string() const
+std::string pms::image_info::to_string() const
 {
   std::ostringstream oss;
   oss << "version " << version << " size " << width << "×" << height;

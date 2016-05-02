@@ -91,7 +91,7 @@ void pms::image_generator::generate_scm
 }
 
 void pms::image_generator::generate_scm
-( std::ostream& os, const xcf_info& xcf, const spritedesc::sprite& s,
+( std::ostream& os, const image_info& xcf, const spritedesc::sprite& s,
   const std::string& target_id ) const
 {
   // starting with version 3 of the format, the XCF files have layer groups.

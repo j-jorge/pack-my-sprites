@@ -38,34 +38,34 @@ namespace pms
     void get_image_id
     ( spritedesc::sprite& s, const tree_node& node ) const;
     void get_layers_and_size
-    ( const xcf_info& image, spritedesc::sprite& s, const tree_node& size_node,
-      const tree_node& layer_list_node ) const;
+    ( const image_info& image, spritedesc::sprite& s,
+      const tree_node& size_node, const tree_node& layer_list_node ) const;
 
     std::list<layer_info> get_layers
-    ( const xcf_info& image, const tree_node& layer_list_node ) const;
+    ( const image_info& image, const tree_node& layer_list_node ) const;
 
     void apply_layer_properties
     ( std::list<layer_info>& result, const tree_node& properties_node ) const;
 
     void add_layers
-    ( const xcf_info& image, std::list<layer_info>& result,
+    ( const image_info& image, std::list<layer_info>& result,
       const tree_node& node ) const;
     void add_layers_glob
-    ( const xcf_info& image, std::list<layer_info>& result,
+    ( const image_info& image, std::list<layer_info>& result,
       const tree_node& node ) const;
     void exclude_layers
-    ( const xcf_info& image, std::list<layer_info>& result,
+    ( const image_info& image, std::list<layer_info>& result,
       const tree_node& node ) const;
     void add_single_layer
-    ( const xcf_info& image, std::list<layer_info>& result,
+    ( const image_info& image, std::list<layer_info>& result,
       const tree_node& node ) const;
 
     void compute_source_box( spritedesc::sprite& s ) const;
 
     void get_layer_info
-    ( const xcf_info& xcf, layer_info& layer, const tree_node& node ) const;
+    ( const image_info& xcf, layer_info& layer, const tree_node& node ) const;
     void get_layer_info
-    ( const xcf_info& xcf, layer_info& layer,
+    ( const image_info& xcf, layer_info& layer,
       const std::string& raw_name ) const;
 
   };

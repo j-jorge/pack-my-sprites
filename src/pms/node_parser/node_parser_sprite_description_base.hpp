@@ -33,10 +33,10 @@ namespace pms
     void apply_result_box_ratio( spritedesc::sprite& s, float ratio ) const;
 
   void crop_sprite_to_image_bounds
-    ( const xcf_info& image, spritedesc::sprite& s ) const;
+    ( const image_info& image, spritedesc::sprite& s ) const;
 
     void get_xcf_from_id
-    ( const xcf_map& xcf, const spritedesc& desc, xcf_info& info,
+    ( const xcf_map& xcf, const spritedesc& desc, image_info& info,
       const std::string& xcf_id ) const;
 
   };

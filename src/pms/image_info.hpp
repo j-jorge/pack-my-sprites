@@ -13,8 +13,8 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef __PMS_XCF_INFO_HPP__
-#define __PMS_XCF_INFO_HPP__
+#ifndef __PMS_IMAGE_INFO_HPP__
+#define __PMS_IMAGE_INFO_HPP__
 
 #include "layer_info.hpp"
 
@@ -22,7 +22,7 @@
 
 namespace pms
 {
-  class xcf_info
+  class image_info
   {
   public:
     typedef std::map<std::string, layer_info> layer_map;

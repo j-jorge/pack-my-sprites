@@ -44,7 +44,7 @@ void pms::node_parser_sprite_declaration::parse_node
 
   get_image_id( s, image_node );
 
-  xcf_info image;
+  image_info image;
   get_xcf_from_id( xcf, desc, image, s.xcf_id );
 
   get_layers_and_size( image, s, size_node, layers_node );
@@ -108,7 +108,7 @@ void pms::node_parser_sprite_declaration::get_image_id
 }
 
 void pms::node_parser_sprite_declaration::get_layers_and_size
-( const xcf_info& image, spritedesc::sprite& s, const tree_node& size_node,
+( const image_info& image, spritedesc::sprite& s, const tree_node& size_node,
   const tree_node& layer_list_node ) const
 {
   tree_node key_node;
@@ -149,7 +149,7 @@ void pms::node_parser_sprite_declaration::get_layers_and_size
 }
 
 std::list<pms::layer_info> pms::node_parser_sprite_declaration::get_layers
-( const xcf_info& image, const tree_node& layer_list_node ) const
+( const image_info& image, const tree_node& layer_list_node ) const
 {
   std::list<layer_info> result;
 
@@ -184,7 +184,7 @@ void pms::node_parser_sprite_declaration::apply_layer_properties
 }
 
 void pms::node_parser_sprite_declaration::add_layers
-( const xcf_info& image, std::list<layer_info>& result,
+( const image_info& image, std::list<layer_info>& result,
   const tree_node& node ) const
 {
   if ( node.value.id() == grammar::id_exclude )
@@ -216,7 +216,7 @@ void pms::node_parser_sprite_declaration::add_layers
 }
 
 void pms::node_parser_sprite_declaration::add_layers_glob
-( const xcf_info& image, std::list<layer_info>& result,
+( const image_info& image, std::list<layer_info>& result,
   const tree_node& node ) const
 {
   CLAW_PRECOND( node.value.id() == grammar::id_glob );
@@ -225,7 +225,7 @@ void pms::node_parser_sprite_declaration::add_layers_glob
   const std::string pattern
       ( node.children.back().value.begin(), node.children.back().value.end() );
 
-  xcf_info::layer_map::const_iterator it;
+  image_info::layer_map::const_iterator it;
   bool found=false;
 
   for ( it=image.layers.begin(); it!=image.layers.end(); ++it )
@@ -240,7 +240,7 @@ void pms::node_parser_sprite_declaration::add_layers_glob
 }
 
 void pms::node_parser_sprite_declaration::exclude_layers
-( const xcf_info& image, std::list<layer_info>& result,
+( const image_info& image, std::list<layer_info>& result,
   const tree_node& node ) const
 {
   CLAW_PRECOND( node.value.id() == grammar::id_exclude );
@@ -267,7 +267,7 @@ void pms::node_parser_sprite_declaration::exclude_layers
 }
 
 void pms::node_parser_sprite_declaration::add_single_layer
-( const xcf_info& image, std::list<layer_info>& result,
+( const image_info& image, std::list<layer_info>& result,
   const tree_node& node ) const
 {
   layer_info info;
@@ -304,21 +304,21 @@ void pms::node_parser_sprite_declaration::compute_source_box
 }
 
 void pms::node_parser_sprite_declaration::get_layer_info
-( const xcf_info& xcf, layer_info& layer, const tree_node& node ) const
+( const image_info& xcf, layer_info& layer, const tree_node& node ) const
 {
   return get_layer_info
     ( xcf, layer, std::string( node.value.begin(), node.value.end() ) );
 }
 
 void pms::node_parser_sprite_declaration::get_layer_info
-( const xcf_info& xcf, layer_info& layer, const std::string& raw_name ) const
+( const image_info& xcf, layer_info& layer, const std::string& raw_name ) const
 {
   std::string layer_name;
   claw::text::c_escape
     ( raw_name.begin(), raw_name.end(),
       std::inserter( layer_name, layer_name.end() ) );
 
-  const xcf_info::layer_map::const_iterator it_layer =
+  const image_info::layer_map::const_iterator it_layer =
     xcf.layers.find( layer_name );
 
   if ( it_layer == xcf.layers.end() )

@@ -86,14 +86,14 @@ bool pms::xcf_map::load_with_internal_tool
   layer.box.width = image.width();
   layer.box.height = image.height();
   
-  xcf_info result;
+  image_info result;
   result.version = 0;
   result.width = layer.box.width;
   result.height = layer.box.height;
 
   result.layers[ "Image" ] = layer;
 
-  m_xcf_info[ name ] = result;
+  m_image_info[ name ] = result;
 
   return true;
 }
@@ -105,7 +105,7 @@ void pms::xcf_map::load_with_gimp
   
   std::istringstream info( execute_xcfinfo_process( file_path ) );
 
-  xcf_info result;
+  image_info result;
   std::string line;
   
   std::getline( info, line );
@@ -114,17 +114,17 @@ void pms::xcf_map::load_with_gimp
   while ( std::getline( info, line ) )
     parse_xcf_info_layer( result, line );
 
-  m_xcf_info[ name ] = result;
+  m_image_info[ name ] = result;
 }
 
 bool pms::xcf_map::has_info( const std::string& name ) const
 {
-  return m_xcf_info.find( name ) != m_xcf_info.end();
+  return m_image_info.find( name ) != m_image_info.end();
 }
 
-pms::xcf_info pms::xcf_map::get_info( const std::string& name ) const
+const pms::image_info& pms::xcf_map::get_info( const std::string& name ) const
 {
-  return m_xcf_info.find( name )->second;
+  return m_image_info.find( name )->second;
 }
 
 std::string pms::xcf_map::to_string() const
@@ -132,8 +132,8 @@ std::string pms::xcf_map::to_string() const
   std::ostringstream oss;
   oss << "Directory is '" << m_xcf_directory << "'\n";
 
-  for ( name_to_info_type::const_iterator it( m_xcf_info.begin() );
-        it != m_xcf_info.end(); ++it )
+  for ( name_to_info_type::const_iterator it( m_image_info.begin() );
+        it != m_image_info.end(); ++it )
     oss << "- '" << it->first << "': " << it->second.to_string() << '\n';
 
   return oss.str();
@@ -160,7 +160,7 @@ pms::xcf_map::execute_xcfinfo_process( const std::string& file_path ) const
 }
 
 void pms::xcf_map::parse_xcf_info_header
-( xcf_info& info, const std::string& header ) const
+( image_info& info, const std::string& header ) const
 {
   std::istringstream iss( header );
 
@@ -182,7 +182,7 @@ void pms::xcf_map::parse_xcf_info_header
 }
 
 void pms::xcf_map::parse_xcf_info_layer
-( xcf_info& info, const std::string& layer ) const
+( image_info& info, const std::string& layer ) const
 {
   std::istringstream iss( layer );
 

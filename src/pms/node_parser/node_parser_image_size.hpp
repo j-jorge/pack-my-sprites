@@ -27,7 +27,8 @@ namespace pms
   {
   public:
     void parse_node
-    ( const xcf_info& xcf, spritedesc::sprite& s, const tree_node& node ) const;
+    ( const image_info& xcf, spritedesc::sprite& s,
+      const tree_node& node ) const;
 
   };
 }
