@@ -20,7 +20,7 @@ set( PMS_SOURCE_FILES
   code/spritedesc.cpp
   code/spritepos_generator.cpp
   code/image_info.cpp
-  code/xcf_map.cpp
+  code/image_map.cpp
   code/working_directory.cpp
 
   node_parser/code/node_parser.cpp

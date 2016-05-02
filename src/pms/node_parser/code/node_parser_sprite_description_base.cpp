@@ -15,7 +15,7 @@
  */
 #include "node_parser/node_parser_sprite_description_base.hpp"
 
-#include "xcf_map.hpp"
+#include "image_map.hpp"
 
 void pms::node_parser_sprite_description_base::apply_result_box_ratio
 ( spritedesc::sprite& s, const tree_node& node ) const
@@ -61,7 +61,7 @@ void pms::node_parser_sprite_description_base::crop_sprite_to_image_bounds
 }
 
 void pms::node_parser_sprite_description_base::get_xcf_from_id
-( const xcf_map& xcf, const spritedesc& desc, image_info& info,
+( const image_map& xcf, const spritedesc& desc, image_info& info,
   const std::string& xcf_id ) const
 {
   // solve the xcf name from the identifier.

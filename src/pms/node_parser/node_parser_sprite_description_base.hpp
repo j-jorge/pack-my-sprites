@@ -18,7 +18,7 @@
 
 #include "node_parser/node_parser.hpp"
 
-#include "xcf_map.hpp"
+#include "image_map.hpp"
 #include "spritedesc.hpp"
 
 namespace pms
@@ -36,7 +36,7 @@ namespace pms
     ( const image_info& image, spritedesc::sprite& s ) const;
 
     void get_xcf_from_id
-    ( const xcf_map& xcf, const spritedesc& desc, image_info& info,
+    ( const image_map& xcf, const spritedesc& desc, image_info& info,
       const std::string& xcf_id ) const;
 
   };

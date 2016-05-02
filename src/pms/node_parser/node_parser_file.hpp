@@ -22,18 +22,18 @@
 
 namespace pms
 {
-  class xcf_map;
+  class image_map;
 
   class node_parser_file:
     public node_parser
   {
   public:
     void parse_node
-    ( xcf_map& xcf, spritedesc& desc, const tree_node& node ) const;
+    ( image_map& xcf, spritedesc& desc, const tree_node& node ) const;
 
   private:
     void process_sprite_sheet
-    ( xcf_map& xcf, spritedesc& desc, const tree_node& node ) const;
+    ( image_map& xcf, spritedesc& desc, const tree_node& node ) const;
 
   };
 }

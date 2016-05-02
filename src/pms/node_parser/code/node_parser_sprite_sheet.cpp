@@ -23,7 +23,7 @@
 #include "spritedesc.hpp"
 
 void pms::node_parser_sprite_sheet::parse_node
-( xcf_map& xcf, spritedesc& desc, const tree_node& node ) const
+( image_map& xcf, spritedesc& desc, const tree_node& node ) const
 {
   CLAW_PRECOND( node.children.size() > 4 );
 

@@ -16,8 +16,8 @@
 #ifndef __PMS_SPRITEDESC_COLLECTION_HPP__
 #define __PMS_SPRITEDESC_COLLECTION_HPP__
 
+#include "image_map.hpp"
 #include "spritedesc.hpp"
-#include "xcf_map.hpp"
 
 #include <list>
 
@@ -27,11 +27,11 @@ namespace pms
   {
   public:
     spritedesc_collection();
-    explicit spritedesc_collection( xcf_map m );
+    explicit spritedesc_collection( const image_map& m );
 
   public:
     spritedesc sprite_sheet;
-    xcf_map xcf;
+    image_map image;
 
   };
 }

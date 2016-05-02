@@ -38,11 +38,11 @@ void pms::image_generator::generate
                << sheet.description.output_name << "'"
                << std::endl;
 
-  generate_output( dir, sheet.xcf, sheet.description );
+  generate_output( dir, sheet.image, sheet.description );
 }
 
 void pms::image_generator::generate_output
-( working_directory dir, xcf_map xcf, spritedesc desc ) const
+( working_directory dir, image_map xcf, spritedesc desc ) const
 {
   std::ostringstream oss;
   generate_scm( oss, dir, xcf, desc );
@@ -59,7 +59,8 @@ void pms::image_generator::generate_output
 }
 
 void pms::image_generator::generate_scm
-( std::ostream& os, working_directory dir, xcf_map xcf, spritedesc desc ) const
+( std::ostream& os, working_directory dir, image_map xcf,
+  spritedesc desc ) const
 {
   os << "(let ( ";
 

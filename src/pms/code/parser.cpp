@@ -24,7 +24,7 @@
 #include <sstream>
 
 bool pms::parser::run
-( xcf_map& xcf, spritedesc& desc, std::istream& in )
+( image_map& xcf, spritedesc& desc, std::istream& in )
 {
   std::stringstream file_data;
   file_data << in.rdbuf();
@@ -33,7 +33,7 @@ bool pms::parser::run
 }
 
 bool pms::parser::run
-( xcf_map& xcf, spritedesc& desc, const char* file_data,
+( image_map& xcf, spritedesc& desc, const char* file_data,
   unsigned int file_size )
 {
   bool ok;
@@ -55,7 +55,7 @@ bool pms::parser::run
 }
 
 void pms::parser::scan_tree
-( xcf_map& xcf, spritedesc& desc, const tree_node& node ) const
+( image_map& xcf, spritedesc& desc, const tree_node& node ) const
 {
   node_parser_file file;
 

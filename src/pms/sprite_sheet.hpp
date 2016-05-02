@@ -16,10 +16,8 @@
 #ifndef __PMS_SPRITE_SHEET_HPP__
 #define __PMS_SPRITE_SHEET_HPP__
 
+#include "image_map.hpp"
 #include "spritedesc.hpp"
-#include "xcf_map.hpp"
-
-#include <list>
 
 namespace pms
 {
@@ -27,13 +25,13 @@ namespace pms
   {
   public:
     sprite_sheet();
-    explicit sprite_sheet( xcf_map m );
+    explicit sprite_sheet( const image_map& m );
 
     std::string to_string() const;
 
   public:
     spritedesc description;
-    xcf_map xcf;
+    image_map image;
 
   };
 }

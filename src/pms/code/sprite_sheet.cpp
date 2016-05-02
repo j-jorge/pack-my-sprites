@@ -22,8 +22,8 @@ pms::sprite_sheet::sprite_sheet()
 
 }
 
-pms::sprite_sheet::sprite_sheet( xcf_map m )
-  : xcf( m )
+pms::sprite_sheet::sprite_sheet( const image_map& m )
+  : image( m )
 {
 
 }
@@ -31,7 +31,7 @@ pms::sprite_sheet::sprite_sheet( xcf_map m )
 std::string pms::sprite_sheet::to_string() const
 {
   std::ostringstream oss;
-  oss << "XCF:\n" << xcf.to_string() << "Description:\n"
+  oss << "Image:\n" << image.to_string() << "Description:\n"
       << description.to_string() << '\n';
 
   return oss.str();

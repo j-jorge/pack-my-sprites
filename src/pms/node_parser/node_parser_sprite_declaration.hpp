@@ -25,7 +25,7 @@ namespace pms
   {
   public:
     void parse_node
-    ( const xcf_map& xcf, spritedesc& s, const tree_node& node ) const;
+    ( const image_map& xcf, spritedesc& s, const tree_node& node ) const;
 
   private:
     void apply_sprite_properties

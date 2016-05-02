@@ -21,14 +21,14 @@
 namespace pms
 {
   class spritedesc;
-  class xcf_map;
+  class image_map;
 
   class node_parser_sprite_sheet:
     public node_parser
   {
   public:
     void parse_node
-      ( xcf_map& xcf, spritedesc& desc, const tree_node& node ) const;
+      ( image_map& xcf, spritedesc& desc, const tree_node& node ) const;
 
   private:
     void parse_name( spritedesc& desc, const tree_node& node ) const;

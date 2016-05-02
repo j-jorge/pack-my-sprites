@@ -16,12 +16,12 @@
 #include "node_parser/node_parser_xcf_entry.hpp"
 
 #include "spritedesc.hpp"
-#include "xcf_map.hpp"
+#include "image_map.hpp"
 
 #include <claw/assert.hpp>
 
 void pms::node_parser_xcf_entry::parse_node
-( xcf_map& xcf, spritedesc& desc, const tree_node& node ) const
+( image_map& xcf, spritedesc& desc, const tree_node& node ) const
 {
   CLAW_PRECOND( node.children.size() == 2 );
 

@@ -13,7 +13,7 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "xcf_map.hpp"
+#include "image_map.hpp"
 
 #include "working_directory.hpp"
 
@@ -24,13 +24,13 @@
 #include <fstream>
 #include <sstream>
 
-pms::xcf_map::xcf_map()
+pms::image_map::image_map()
   : m_xcf_directory( "." )
 {
 
 }
 
-pms::xcf_map::xcf_map
+pms::image_map::image_map
 ( const std::string& xcf_directory, const gimp_interface& gimp )
   : m_xcf_directory( xcf_directory ), m_gimp( gimp )
 {
@@ -38,7 +38,7 @@ pms::xcf_map::xcf_map
     m_xcf_directory = '.';
 }
 
-void pms::xcf_map::load( const std::string& name )
+void pms::image_map::load( const std::string& name )
 {
   if ( has_info(name) )
     return;
@@ -59,7 +59,7 @@ void pms::xcf_map::load( const std::string& name )
   load_with_gimp( name, file_path );
 }
 
-bool pms::xcf_map::load_with_internal_tool
+bool pms::image_map::load_with_internal_tool
 ( const std::string& name, const std::string& file_path )
 {
   claw::logger << claw::log_verbose << "Using internal tool…\n";
@@ -98,7 +98,7 @@ bool pms::xcf_map::load_with_internal_tool
   return true;
 }
 
-void pms::xcf_map::load_with_gimp
+void pms::image_map::load_with_gimp
 ( const std::string& name, const std::string& file_path )
 {
   claw::logger << claw::log_verbose << "Using gimp…\n";
@@ -117,17 +117,17 @@ void pms::xcf_map::load_with_gimp
   m_image_info[ name ] = result;
 }
 
-bool pms::xcf_map::has_info( const std::string& name ) const
+bool pms::image_map::has_info( const std::string& name ) const
 {
   return m_image_info.find( name ) != m_image_info.end();
 }
 
-const pms::image_info& pms::xcf_map::get_info( const std::string& name ) const
+const pms::image_info& pms::image_map::get_info( const std::string& name ) const
 {
   return m_image_info.find( name )->second;
 }
 
-std::string pms::xcf_map::to_string() const
+std::string pms::image_map::to_string() const
 {
   std::ostringstream oss;
   oss << "Directory is '" << m_xcf_directory << "'\n";
@@ -140,7 +140,7 @@ std::string pms::xcf_map::to_string() const
 }
 
 std::string
-pms::xcf_map::execute_xcfinfo_process( const std::string& file_path ) const
+pms::image_map::execute_xcfinfo_process( const std::string& file_path ) const
 {
   gimp_interface::path_list_type includes;
   includes.push_back( "info.scm" );
@@ -159,7 +159,7 @@ pms::xcf_map::execute_xcfinfo_process( const std::string& file_path ) const
   return result;
 }
 
-void pms::xcf_map::parse_xcf_info_header
+void pms::image_map::parse_xcf_info_header
 ( image_info& info, const std::string& header ) const
 {
   std::istringstream iss( header );
@@ -181,7 +181,7 @@ void pms::xcf_map::parse_xcf_info_header
               << "'. Does the file exists?" << std::endl;
 }
 
-void pms::xcf_map::parse_xcf_info_layer
+void pms::image_map::parse_xcf_info_layer
 ( image_info& info, const std::string& layer ) const
 {
   std::istringstream iss( layer );

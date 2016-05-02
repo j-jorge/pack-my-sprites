@@ -34,10 +34,10 @@ namespace pms
 
   private:
     void generate_output
-    ( working_directory dir, xcf_map xcf, spritedesc desc ) const;
+    ( working_directory dir, image_map xcf, spritedesc desc ) const;
 
     void generate_scm
-    ( std::ostream& os, working_directory dir, xcf_map xcf,
+    ( std::ostream& os, working_directory dir, image_map xcf,
       spritedesc desc ) const;
 
     void generate_scm

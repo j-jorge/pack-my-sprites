@@ -20,7 +20,7 @@
 #include <claw/string_algorithm.hpp>
 
 void pms::node_parser_sprite_declaration::parse_node
-( const xcf_map& xcf, spritedesc& desc, const tree_node& node ) const
+( const image_map& xcf, spritedesc& desc, const tree_node& node ) const
 {
   spritedesc::sprite s;
   s.bleed = false;

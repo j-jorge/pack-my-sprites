@@ -13,8 +13,8 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef __PMS_XCF_MAP_HPP__
-#define __PMS_XCF_MAP_HPP__
+#ifndef __PMS_IMAGE_MAP_HPP__
+#define __PMS_IMAGE_MAP_HPP__
 
 #include "gimp_interface.hpp"
 #include "image_info.hpp"
@@ -24,14 +24,14 @@
 
 namespace pms
 {
-  class xcf_map
+  class image_map
   {
   private:
     typedef std::map<std::string, image_info> name_to_info_type;
 
   public:
-    xcf_map();
-    xcf_map( const std::string& xcf_directory, const gimp_interface& gimp );
+    image_map();
+    image_map( const std::string& xcf_directory, const gimp_interface& gimp );
 
     void load( const std::string& name );
 
@@ -43,7 +43,8 @@ namespace pms
   private:
     bool load_with_internal_tool
     ( const std::string& name, const std::string& file_path );
-    void load_with_gimp( const std::string& name, const std::string& file_path );
+    void load_with_gimp
+    ( const std::string& name, const std::string& file_path );
 
     std::string execute_xcfinfo_process( const std::string& file_path ) const;
 
