@@ -34,14 +34,14 @@ namespace pms
 
   private:
     void generate_output
-    ( working_directory dir, image_map xcf, spritedesc desc ) const;
+    ( working_directory dir, image_map images, spritedesc desc ) const;
 
     void generate_scm
-    ( std::ostream& os, working_directory dir, image_map xcf,
+    ( std::ostream& os, working_directory dir, image_map images,
       spritedesc desc ) const;
 
     void generate_scm
-    ( std::ostream& os, const image_info& xcf, const spritedesc::sprite& s,
+    ( std::ostream& os, const image_info& images, const spritedesc::sprite& s,
       const std::string& target_id ) const;
 
     std::string make_image_varname( const std::string& id ) const;

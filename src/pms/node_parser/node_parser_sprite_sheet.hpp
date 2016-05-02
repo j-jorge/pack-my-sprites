@@ -28,7 +28,7 @@ namespace pms
   {
   public:
     void parse_node
-      ( image_map& xcf, spritedesc& desc, const tree_node& node ) const;
+      ( image_map& images, spritedesc& desc, const tree_node& node ) const;
 
   private:
     void parse_name( spritedesc& desc, const tree_node& node ) const;
@@ -37,7 +37,7 @@ namespace pms
     bool parse_margin( spritedesc& desc, const tree_node& node ) const;
     bool parse_order( spritedesc& desc, const tree_node& node ) const;
 
-    void check_xcf_usage( const spritedesc& desc ) const;
+    void check_image_usage( const spritedesc& desc ) const;
 
   };
 }

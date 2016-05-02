@@ -25,10 +25,10 @@ set( PMS_SOURCE_FILES
 
   node_parser/code/node_parser.cpp
   node_parser/code/node_parser_file.cpp
+  node_parser/code/node_parser_image_entry.cpp
   node_parser/code/node_parser_sprite_declaration.cpp
   node_parser/code/node_parser_sprite_description_base.cpp
   node_parser/code/node_parser_sprite_sheet.cpp
-  node_parser/code/node_parser_xcf_entry.cpp
   )
 
 #-------------------------------------------------------------------------------

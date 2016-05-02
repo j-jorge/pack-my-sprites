@@ -25,7 +25,7 @@ namespace pms
   {
   public:
     void parse_node
-    ( const image_map& xcf, spritedesc& s, const tree_node& node ) const;
+    ( const image_map& images, spritedesc& s, const tree_node& node ) const;
 
   private:
     void apply_sprite_properties
@@ -63,9 +63,10 @@ namespace pms
     void compute_source_box( spritedesc::sprite& s ) const;
 
     void get_layer_info
-    ( const image_info& xcf, layer_info& layer, const tree_node& node ) const;
+    ( const image_info& images, layer_info& layer,
+      const tree_node& node ) const;
     void get_layer_info
-    ( const image_info& xcf, layer_info& layer,
+    ( const image_info& images, layer_info& layer,
       const std::string& raw_name ) const;
 
   };

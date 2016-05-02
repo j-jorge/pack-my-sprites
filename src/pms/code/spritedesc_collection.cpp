@@ -21,7 +21,7 @@ pms::spritedesc_collection::spritedesc_collection()
 }
 
 pms::spritedesc_collection::spritedesc_collection( const image_map& m )
-  : xcf( m )
+  : images( m )
 {
 
 }

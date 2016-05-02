@@ -20,16 +20,16 @@
 #include "grammar.hpp"
 
 void pms::node_parser_file::parse_node
-( image_map& xcf, spritedesc& desc, const tree_node& node ) const
+( image_map& images, spritedesc& desc, const tree_node& node ) const
 {
   CLAW_PRECOND( node.value.id() == grammar::id_sprite_sheet );
-  process_sprite_sheet( xcf, desc, node );
+  process_sprite_sheet( images, desc, node );
 }
 
 void pms::node_parser_file::process_sprite_sheet
-( image_map& xcf, spritedesc& desc, const tree_node& node ) const
+( image_map& images, spritedesc& desc, const tree_node& node ) const
 {
   node_parser_sprite_sheet parser;
 
-  parser.parse_node( xcf, desc, node );
+  parser.parse_node( images, desc, node );
 }

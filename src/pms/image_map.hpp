@@ -31,7 +31,7 @@ namespace pms
 
   public:
     image_map();
-    image_map( const std::string& xcf_directory, const gimp_interface& gimp );
+    image_map( const std::string& image_directory, const gimp_interface& gimp );
 
     void load( const std::string& name );
 
@@ -55,7 +55,7 @@ namespace pms
 
   private:
     name_to_info_type m_image_info;
-    std::string m_xcf_directory;
+    std::string m_image_directory;
     gimp_interface m_gimp;
 
   };

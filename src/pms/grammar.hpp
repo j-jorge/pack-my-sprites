@@ -27,7 +27,7 @@ namespace pms
     static const int id_file = 10;
     static const int id_sprite_sheet = 15;
     static const int id_margin = 17;
-    static const int id_xcf_declaration = 20;
+    static const int id_image_declaration = 20;
     static const int id_sprite_declaration = 40;
     static const int id_layer_reference = 45;
     static const int id_properties = 45;
@@ -101,8 +101,8 @@ namespace pms
 
       boost::spirit::classic::rule
       < ScannerT,
-        boost::spirit::classic::parser_tag<id_xcf_declaration> >
-      m_xcf_declaration;
+        boost::spirit::classic::parser_tag<id_image_declaration> >
+      m_image_declaration;
 
       boost::spirit::classic::rule<ScannerT> m_sprite_description;
 

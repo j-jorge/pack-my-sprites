@@ -25,17 +25,17 @@
 #include <sstream>
 
 pms::image_map::image_map()
-  : m_xcf_directory( "." )
+  : m_image_directory( "." )
 {
 
 }
 
 pms::image_map::image_map
-( const std::string& xcf_directory, const gimp_interface& gimp )
-  : m_xcf_directory( xcf_directory ), m_gimp( gimp )
+( const std::string& image_directory, const gimp_interface& gimp )
+  : m_image_directory( image_directory ), m_gimp( gimp )
 {
-  if ( m_xcf_directory.empty() )
-    m_xcf_directory = '.';
+  if ( m_image_directory.empty() )
+    m_image_directory = '.';
 }
 
 void pms::image_map::load( const std::string& name )
@@ -48,7 +48,7 @@ void pms::image_map::load( const std::string& name )
   if ( working_directory::is_fully_qualified( name ) )
     file_path = name;
   else
-    file_path = m_xcf_directory + '/' + name;
+    file_path = m_image_directory + '/' + name;
 
   claw::logger << claw::log_verbose << "Loading '" << name << "' from '"
                << file_path << "'…" << std::endl;
@@ -130,7 +130,7 @@ const pms::image_info& pms::image_map::get_info( const std::string& name ) const
 std::string pms::image_map::to_string() const
 {
   std::ostringstream oss;
-  oss << "Directory is '" << m_xcf_directory << "'\n";
+  oss << "Directory is '" << m_image_directory << "'\n";
 
   for ( name_to_info_type::const_iterator it( m_image_info.begin() );
         it != m_image_info.end(); ++it )

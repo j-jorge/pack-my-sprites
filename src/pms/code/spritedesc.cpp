@@ -96,7 +96,7 @@ std::string pms::spritedesc::to_string() const
         it != sprites.end(); ++it )
     {
       oss << "  * '" << it->name
-          << "' with xcf '" << xcf.find( it->xcf_id )->second
+          << "' with image '" << images.find( it->image_id )->second
           << "', source box (left=" << it->source_box.position.x
           << ", top=" << it->source_box.position.y
           << ", width=" << it->source_box.width

@@ -29,7 +29,7 @@ namespace pms
   public:
     struct sprite
     {
-      std::string xcf_id;
+      std::string image_id;
       std::string name;
       claw::math::rectangle<int> source_box;
       claw::math::rectangle<int> result_box;
@@ -70,7 +70,7 @@ namespace pms
     std::size_t height;
     std::size_t margin;
     placement_order order;
-    id_to_file_map xcf;
+    id_to_file_map images;
 
   private:
     sprite_list sprites;

@@ -29,11 +29,11 @@ namespace pms
   {
   public:
     void parse_node
-    ( image_map& xcf, spritedesc& desc, const tree_node& node ) const;
+    ( image_map& images, spritedesc& desc, const tree_node& node ) const;
 
   private:
     void process_sprite_sheet
-    ( image_map& xcf, spritedesc& desc, const tree_node& node ) const;
+    ( image_map& images, spritedesc& desc, const tree_node& node ) const;
 
   };
 }

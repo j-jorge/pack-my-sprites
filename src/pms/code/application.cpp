@@ -149,9 +149,9 @@ pms::sprite_sheet
 pms::application::read_spritedesc_file
 ( std::string directory, std::istream& in ) const
 {
-  const image_map xcf
+  const image_map images
     ( directory, gimp_interface( m_scheme_directory, m_gimp_console_program ) );
-  sprite_sheet result( xcf );
+  sprite_sheet result( images );
 
   parser p;
 

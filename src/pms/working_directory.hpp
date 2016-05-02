@@ -28,7 +28,7 @@ namespace pms
     explicit working_directory( std::string input_file_name );
 
     std::string get_input_file_name() const;
-    std::string get_xcf_path( std::string xcf_name ) const;
+    std::string get_image_path( std::string image_name ) const;
     std::string get_output_image_path( std::string sheet_name ) const;
     std::string
     get_output_file_path( std::string sheet_name, std::string extension ) const;

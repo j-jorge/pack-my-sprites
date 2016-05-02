@@ -42,14 +42,14 @@ namespace pms
     typedef boost::spirit::classic::scanner<iterator> scanner;
 
   public:
-    bool run( image_map& xcf, spritedesc& desc, std::istream& in );
+    bool run( image_map& images, spritedesc& desc, std::istream& in );
     bool run
-      ( image_map& xcf, spritedesc& desc, const char* file_data,
+      ( image_map& images, spritedesc& desc, const char* file_data,
         unsigned int file_size );
 
   private:
     void scan_tree
-    ( image_map& xcf, spritedesc& desc, const tree_node& node ) const;
+    ( image_map& images, spritedesc& desc, const tree_node& node ) const;
 
   };
 }

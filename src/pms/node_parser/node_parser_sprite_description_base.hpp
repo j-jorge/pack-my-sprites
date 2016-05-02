@@ -35,9 +35,9 @@ namespace pms
   void crop_sprite_to_image_bounds
     ( const image_info& image, spritedesc::sprite& s ) const;
 
-    void get_xcf_from_id
-    ( const image_map& xcf, const spritedesc& desc, image_info& info,
-      const std::string& xcf_id ) const;
+    void get_image_from_id
+    ( const image_map& images, const spritedesc& desc, image_info& info,
+      const std::string& image_id ) const;
 
   };
 }

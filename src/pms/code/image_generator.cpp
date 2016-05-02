@@ -42,10 +42,10 @@ void pms::image_generator::generate
 }
 
 void pms::image_generator::generate_output
-( working_directory dir, image_map xcf, spritedesc desc ) const
+( working_directory dir, image_map images, spritedesc desc ) const
 {
   std::ostringstream oss;
-  generate_scm( oss, dir, xcf, desc );
+  generate_scm( oss, dir, images, desc );
 
   gimp_interface::path_list_type includes;
   includes.push_back( "common.scm" );
@@ -59,18 +59,18 @@ void pms::image_generator::generate_output
 }
 
 void pms::image_generator::generate_scm
-( std::ostream& os, working_directory dir, image_map xcf,
+( std::ostream& os, working_directory dir, image_map images,
   spritedesc desc ) const
 {
   os << "(let ( ";
 
-  for ( spritedesc::id_to_file_map::const_iterator it = desc.xcf.begin();
-        it != desc.xcf.end(); ++it )
+  for ( spritedesc::id_to_file_map::const_iterator it = desc.images.begin();
+        it != desc.images.end(); ++it )
     {
-      const std::string xcf_path( dir.get_xcf_path( it->second ) );
+      const std::string image_path( dir.get_image_path( it->second ) );
 
       os << "(" << make_image_varname( it->first )
-         << " (car (gimp-file-load 1 \"" << xcf_path << "\" \"" << xcf_path
+         << " (car (gimp-file-load 1 \"" << image_path << "\" \"" << image_path
          << "\" )))\n";
     }
 
@@ -82,7 +82,8 @@ void pms::image_generator::generate_scm
   for ( spritedesc::const_sprite_iterator it = desc.sprite_begin();
         it != desc.sprite_end(); ++it )
     generate_scm
-      ( os, xcf.get_info( desc.xcf[it->xcf_id] ), *it, desc.output_name );
+      ( os, images.get_info( desc.images[it->image_id] ), *it,
+        desc.output_name );
 
   os << "(save-frames \""
      << dir.get_output_image_path(desc.output_name) << "\" "
@@ -92,22 +93,22 @@ void pms::image_generator::generate_scm
 }
 
 void pms::image_generator::generate_scm
-( std::ostream& os, const image_info& xcf, const spritedesc::sprite& s,
+( std::ostream& os, const image_info& images, const spritedesc::sprite& s,
   const std::string& target_id ) const
 {
   // starting with version 3 of the format, the XCF files have layer groups.
-  if ( xcf.version >= 3 )
+  if ( images.version >= 3 )
     {
-      os << "(create-layer-crop-with-groups " << make_image_varname(s.xcf_id)
+      os << "(create-layer-crop-with-groups " << make_image_varname(s.image_id)
          << " '(";
 
       for ( std::list<layer_info>::const_iterator it=s.layers.begin();
             it != s.layers.end(); ++it )
-        os << '"' << xcf.get_layer_name( it->index ) << "\" ";
+        os << '"' << images.get_layer_name( it->index ) << "\" ";
     }
   else
     {
-      os << "(create-layer-crop " << make_image_varname(s.xcf_id) << " '(";
+      os << "(create-layer-crop " << make_image_varname(s.image_id) << " '(";
 
       for ( std::list<layer_info>::const_iterator it=s.layers.begin();
             it != s.layers.end(); ++it )
@@ -123,11 +124,11 @@ void pms::image_generator::generate_scm
      << ' ' << ( s.bleed ? 1 : 0 )
      << ' ' << make_image_varname(target_id) << " '(";
 
-  if ( xcf.version >= 3 )
+  if ( images.version >= 3 )
     {
       for ( std::list<layer_info>::const_iterator it=s.mask.begin();
             it != s.mask.end(); ++it )
-        os << '"' << xcf.get_layer_name( it->index ) << "\" ";
+        os << '"' << images.get_layer_name( it->index ) << "\" ";
     }
   else
     {

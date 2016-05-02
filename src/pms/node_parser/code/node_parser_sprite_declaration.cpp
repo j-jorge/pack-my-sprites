@@ -20,7 +20,7 @@
 #include <claw/string_algorithm.hpp>
 
 void pms::node_parser_sprite_declaration::parse_node
-( const image_map& xcf, spritedesc& desc, const tree_node& node ) const
+( const image_map& images, spritedesc& desc, const tree_node& node ) const
 {
   spritedesc::sprite s;
   s.bleed = false;
@@ -45,7 +45,7 @@ void pms::node_parser_sprite_declaration::parse_node
   get_image_id( s, image_node );
 
   image_info image;
-  get_xcf_from_id( xcf, desc, image, s.xcf_id );
+  get_image_from_id( images, desc, image, s.image_id );
 
   get_layers_and_size( image, s, size_node, layers_node );
 
@@ -104,7 +104,7 @@ void pms::node_parser_sprite_declaration::get_sprite_name
 void pms::node_parser_sprite_declaration::get_image_id
 ( spritedesc::sprite& s, const tree_node& node ) const
 {
-  s.xcf_id = std::string( node.value.begin(), node.value.end() );
+  s.image_id = std::string( node.value.begin(), node.value.end() );
 }
 
 void pms::node_parser_sprite_declaration::get_layers_and_size
@@ -304,14 +304,15 @@ void pms::node_parser_sprite_declaration::compute_source_box
 }
 
 void pms::node_parser_sprite_declaration::get_layer_info
-( const image_info& xcf, layer_info& layer, const tree_node& node ) const
+( const image_info& images, layer_info& layer, const tree_node& node ) const
 {
   return get_layer_info
-    ( xcf, layer, std::string( node.value.begin(), node.value.end() ) );
+    ( images, layer, std::string( node.value.begin(), node.value.end() ) );
 }
 
 void pms::node_parser_sprite_declaration::get_layer_info
-( const image_info& xcf, layer_info& layer, const std::string& raw_name ) const
+( const image_info& images, layer_info& layer,
+  const std::string& raw_name ) const
 {
   std::string layer_name;
   claw::text::c_escape
@@ -319,9 +320,9 @@ void pms::node_parser_sprite_declaration::get_layer_info
       std::inserter( layer_name, layer_name.end() ) );
 
   const image_info::layer_map::const_iterator it_layer =
-    xcf.layers.find( layer_name );
+    images.layers.find( layer_name );
 
-  if ( it_layer == xcf.layers.end() )
+  if ( it_layer == images.layers.end() )
     std::cerr << "Unknown layer '" << layer_name << "'" << std::endl;
   else
     layer = it_layer->second;

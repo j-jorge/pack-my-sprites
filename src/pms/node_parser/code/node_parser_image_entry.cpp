@@ -13,24 +13,24 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef __PMS_NODE_PARSER_XCF_ENTRY_HPP__
-#define __PMS_NODE_PARSER_XCF_ENTRY_HPP__
+#include "node_parser/node_parser_image_entry.hpp"
 
-#include "node_parser/node_parser.hpp"
+#include "spritedesc.hpp"
+#include "image_map.hpp"
 
-namespace pms
+#include <claw/assert.hpp>
+
+void pms::node_parser_image_entry::parse_node
+( image_map& images, spritedesc& desc, const tree_node& node ) const
 {
-  class spritedesc;
-  class image_map;
+  CLAW_PRECOND( node.children.size() == 2 );
 
-  class node_parser_xcf_entry:
-    public node_parser
-  {
-  public:
-    void parse_node
-    ( image_map& xcf, spritedesc& desc, const tree_node& node ) const;
+  const std::string id
+    ( node.children[0].value.begin(), node.children[0].value.end() );
+  const std::string name
+    ( node.children[1].value.begin(), node.children[1].value.end() );
+  
+  images.load( name );
 
-  };
+  desc.images[ id ] = name;
 }
-
-#endif

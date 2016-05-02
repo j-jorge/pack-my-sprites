@@ -24,16 +24,16 @@
 #include <sstream>
 
 bool pms::parser::run
-( image_map& xcf, spritedesc& desc, std::istream& in )
+( image_map& images, spritedesc& desc, std::istream& in )
 {
   std::stringstream file_data;
   file_data << in.rdbuf();
   
-  return run( xcf, desc, file_data.str().c_str(), file_data.str().size() );
+  return run( images, desc, file_data.str().c_str(), file_data.str().size() );
 }
 
 bool pms::parser::run
-( image_map& xcf, spritedesc& desc, const char* file_data,
+( image_map& images, spritedesc& desc, const char* file_data,
   unsigned int file_size )
 {
   bool ok;
@@ -49,15 +49,15 @@ bool pms::parser::run
 
   ok = info.match;
 
-  scan_tree( xcf, desc, info.trees[0] );
+  scan_tree( images, desc, info.trees[0] );
 
   return ok;
 }
 
 void pms::parser::scan_tree
-( image_map& xcf, spritedesc& desc, const tree_node& node ) const
+( image_map& images, spritedesc& desc, const tree_node& node ) const
 {
   node_parser_file file;
 
-  file.parse_node( xcf, desc, node );
+  file.parse_node( images, desc, node );
 }

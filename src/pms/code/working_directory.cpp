@@ -41,12 +41,13 @@ std::string pms::working_directory::get_input_file_name() const
   return m_input_file_name;
 }
 
-std::string pms::working_directory::get_xcf_path( std::string xcf_name ) const
+std::string
+pms::working_directory::get_image_path( std::string image_name ) const
 {
-  if ( is_fully_qualified( xcf_name ) )
-    return xcf_name;
+  if ( is_fully_qualified( image_name ) )
+    return image_name;
 
-  return m_input_directory + '/' + xcf_name;
+  return m_input_directory + '/' + image_name;
 }
 
 std::string

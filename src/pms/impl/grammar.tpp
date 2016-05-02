@@ -82,7 +82,7 @@ pms::grammar::definition<ScannerT>::definition( const grammar& self )
          | m_error_size )
     >> !m_margin
     >> !m_order
-    >> *m_xcf_declaration >> *m_sprite_description;
+    >> *m_image_declaration >> *m_sprite_description;
 
   m_margin =
     boost::spirit::classic::no_node_d
@@ -96,7 +96,7 @@ pms::grammar::definition<ScannerT>::definition( const grammar& self )
     >> (m_string | m_error_string)
     ;
 
-  m_xcf_declaration =
+  m_image_declaration =
     m_identifier >> (m_string | m_error_string);
 
   m_sprite_description = m_sprite_declaration;

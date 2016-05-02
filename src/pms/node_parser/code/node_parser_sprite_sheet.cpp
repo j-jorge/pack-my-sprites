@@ -15,7 +15,7 @@
  */
 #include "node_parser/node_parser_sprite_sheet.hpp"
 
-#include "node_parser/node_parser_xcf_entry.hpp"
+#include "node_parser/node_parser_image_entry.hpp"
 #include "node_parser/node_parser_sprite_declaration.hpp"
 
 #include "grammar.hpp"
@@ -23,7 +23,7 @@
 #include "spritedesc.hpp"
 
 void pms::node_parser_sprite_sheet::parse_node
-( image_map& xcf, spritedesc& desc, const tree_node& node ) const
+( image_map& images, spritedesc& desc, const tree_node& node ) const
 {
   CLAW_PRECOND( node.children.size() > 4 );
 
@@ -40,10 +40,10 @@ void pms::node_parser_sprite_sheet::parse_node
     ++i;
 
   while ( (i != node.children.size())
-          && ( node.children[i].value.id() == grammar::id_xcf_declaration ) )
+          && ( node.children[i].value.id() == grammar::id_image_declaration ) )
     {
-      node_parser_xcf_entry call;
-      call.parse_node( xcf, desc, node.children[i] );
+      node_parser_image_entry call;
+      call.parse_node( images, desc, node.children[i] );
       ++i;
     }
 
@@ -52,7 +52,7 @@ void pms::node_parser_sprite_sheet::parse_node
       if ( node.children[i].value.id() == grammar::id_sprite_declaration )
         {
           node_parser_sprite_declaration call;
-          call.parse_node( xcf, desc, node.children[i] );
+          call.parse_node( images, desc, node.children[i] );
         }
       else
         {
@@ -65,7 +65,7 @@ void pms::node_parser_sprite_sheet::parse_node
       ++i;
     }
 
-  check_xcf_usage( desc );
+  check_image_usage( desc );
 }
 
 void pms::node_parser_sprite_sheet::parse_name
@@ -130,18 +130,18 @@ bool pms::node_parser_sprite_sheet::parse_order
     return false;
 }
 
-void pms::node_parser_sprite_sheet::check_xcf_usage
+void pms::node_parser_sprite_sheet::check_image_usage
 ( const spritedesc& desc ) const
 {
-  spritedesc::id_to_file_map xcf_files = desc.xcf;
+  spritedesc::id_to_file_map images = desc.images;
   
   for ( spritedesc::const_sprite_iterator it = desc.sprite_begin();
         it != desc.sprite_end(); ++it )
-    xcf_files.erase( it->xcf_id );
+    images.erase( it->image_id );
 
-  for ( spritedesc::id_to_file_map::const_iterator it = xcf_files.begin();
-        it != xcf_files.end(); ++it )
-    std::cerr << "warning: XCF file '" << it->second << "' identified as '"
+  for ( spritedesc::id_to_file_map::const_iterator it = images.begin();
+        it != images.end(); ++it )
+    std::cerr << "warning: Image file '" << it->second << "' identified as '"
               << it->first << "' is never used in sprite sheet '"
               << desc.output_name << "'." << std::endl;
 }

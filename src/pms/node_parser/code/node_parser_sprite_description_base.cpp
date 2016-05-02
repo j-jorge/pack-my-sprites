@@ -60,24 +60,24 @@ void pms::node_parser_sprite_description_base::crop_sprite_to_image_bounds
     s.source_box.height = image.height - s.source_box.position.y;
 }
 
-void pms::node_parser_sprite_description_base::get_xcf_from_id
-( const image_map& xcf, const spritedesc& desc, image_info& info,
-  const std::string& xcf_id ) const
+void pms::node_parser_sprite_description_base::get_image_from_id
+( const image_map& images, const spritedesc& desc, image_info& info,
+  const std::string& image_id ) const
 {
-  // solve the xcf name from the identifier.
+  // solve the image name from the identifier.
   const std::map<std::string, std::string>::const_iterator it =
-    desc.xcf.find( xcf_id );
+    desc.images.find( image_id );
 
-  if ( it == desc.xcf.end() )
-    std::cerr << "Unknown xcf identifier '" << xcf_id
+  if ( it == desc.images.end() )
+    std::cerr << "Unknown image identifier '" << image_id
               << "'" << std::endl;
   else
     {
-      const std::string xcf_name = it->second;
+      const std::string image_name = it->second;
 
-      if ( !xcf.has_info( xcf_name ) )
-        std::cerr << "Unknown xcf file '" << xcf_name << "'" << std::endl;
+      if ( !images.has_info( image_name ) )
+        std::cerr << "Unknown image file '" << image_name << "'" << std::endl;
       else
-        info = xcf.get_info( xcf_name );
+        info = images.get_info( image_name );
     }
 }
