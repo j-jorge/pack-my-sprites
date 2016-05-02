@@ -21,28 +21,118 @@
 #include <limits>
 
 #include <claw/logger.hpp>
+#include <claw/png.hpp>
 
-pms::image_generator::image_generator( gimp_interface gimp )
+pms::image_generator::image_generator( const gimp_interface& gimp )
   : m_gimp( gimp )
 {
 
 }
 
 void pms::image_generator::generate
-( std::string source, sprite_sheet sheet ) const
+( const std::string& source, const sprite_sheet& sheet ) const
 {
   const working_directory dir( source );
 
   claw::logger << claw::log_verbose
                << "Generating sprite sheet '"
-               << sheet.description.output_name << "'"
-               << std::endl;
+               << sheet.description.output_name << "'";
 
-  generate_output( dir, sheet.image, sheet.description );
+  if ( sheet.internally_supported() )
+    {
+      claw::logger << claw::log_verbose << " using internal tool.\n";
+      generate_output_with_internal_tool( dir, sheet.image, sheet.description );
+    }
+  else
+    {
+      claw::logger << claw::log_verbose << " using internal tool.\n";
+      generate_output_with_gimp( dir, sheet.image, sheet.description );
+    }
 }
 
-void pms::image_generator::generate_output
-( working_directory dir, image_map images, spritedesc desc ) const
+void pms::image_generator::generate_output_with_internal_tool
+( const working_directory& dir, const image_map& images,
+  const spritedesc& desc ) const
+{
+  claw::graphic::image result( desc.width, desc.height );
+  result.fill
+    ( claw::math::rectangle< int >( 0, 0, desc.width, desc.height ),
+      claw::graphic::transparent_pixel );
+  
+  for ( spritedesc::const_sprite_iterator it( desc.sprite_begin() );
+        it != desc.sprite_end(); ++it )
+    copy_sprite( result, desc.images.find( it->image_id )->second, *it );
+  
+  claw::graphic::png::writer writer( result );
+  std::ofstream output( dir.get_output_image_path( desc.output_name ) );
+  writer.save( output );
+}
+
+void pms::image_generator::copy_sprite
+( claw::graphic::image& result, const std::string& file_path,
+  const spritedesc::sprite& sprite ) const
+{
+  std::ifstream f( file_path );
+  claw::graphic::image image( f );
+
+  if ( sprite.rotated )
+    rotate( image );
+
+  const claw::math::coordinate_2d< int > position( sprite.result_box.position );
+
+  result.partial_copy( image, position );
+
+  if ( sprite.bleed )
+    bleed( result, image, position );
+}
+
+void pms::image_generator::rotate( claw::graphic::image& image ) const
+{
+  const unsigned int source_width( image.width() );
+  const unsigned int source_height( image.height() );
+
+  const unsigned int dest_width( source_height );
+  const unsigned int dest_height( source_width );
+  
+  claw::graphic::image result( dest_width, dest_height );
+
+  for ( unsigned int y( 0 ); y != dest_height; ++y )
+    for ( unsigned int x( 0 ); x != dest_width; ++x )
+      result[ y ][ x ] = image[ x ][ source_width - y - 1 ];
+
+  image.swap( result );
+}
+
+void pms::image_generator::bleed
+( claw::graphic::image& result, const claw::graphic::image& image,
+  const claw::math::coordinate_2d< int >& position ) const
+{
+  const unsigned int width( image.width() );
+  const unsigned int height( image.height() );
+  
+  for ( unsigned int y( 0 ); y != height; ++y )
+    {
+      result[ position.y + y ][ position.x - 1 ] = image[ y ][ 0 ];
+      result[ position.y + y ][ position.x + width ] = image[ y ][ width - 1 ];
+    }
+
+  for ( unsigned int x( 0 ); x != width; ++x )
+    {
+      result[ position.y - 1 ][ position.x + x ] = image[ 0 ][ x ];
+      result[ position.y + height ][ position.x + x ] =
+        image[ height - 1 ][ x ];
+    }
+
+  result[ position.y - 1 ][ position.x - 1 ] = image[ 0 ][ 0 ];
+  result[ position.y - 1 ][ position.x + width ] = image[ 0 ][ width - 1 ];
+  result[ position.y + height ][ position.x - 1 ] = image[ height - 1 ][ 0 ];
+  result[ position.y + height ][ position.x + width ] =
+    image[ height - 1 ][ width - 1 ];
+}
+
+void pms::image_generator::generate_output_with_gimp
+( const working_directory& dir, const image_map& images,
+  const spritedesc& desc ) const
 {
   std::ostringstream oss;
   generate_scm( oss, dir, images, desc );
@@ -59,8 +149,8 @@ void pms::image_generator::generate_output
 }
 
 void pms::image_generator::generate_scm
-( std::ostream& os, working_directory dir, image_map images,
-  spritedesc desc ) const
+( std::ostream& os, const working_directory& dir, const image_map& images,
+  const spritedesc& desc ) const
 {
   os << "(let ( ";
 
@@ -82,7 +172,7 @@ void pms::image_generator::generate_scm
   for ( spritedesc::const_sprite_iterator it = desc.sprite_begin();
         it != desc.sprite_end(); ++it )
     generate_scm
-      ( os, images.get_info( desc.images[it->image_id] ), *it,
+      ( os, images.get_info( desc.images.find( it->image_id )->second ), *it,
         desc.output_name );
 
   os << "(save-frames \""

@@ -90,7 +90,8 @@ bool pms::image_map::load_with_internal_tool
   result.version = 0;
   result.width = layer.box.width;
   result.height = layer.box.height;
-
+  result.internally_supported = true;
+  
   result.layers[ "Image" ] = layer;
 
   m_image_info[ name ] = result;
@@ -114,6 +115,8 @@ void pms::image_map::load_with_gimp
   while ( std::getline( info, line ) )
     parse_xcf_info_layer( result, line );
 
+  result.internally_supported = false;
+  
   m_image_info[ name ] = result;
 }
 

@@ -36,3 +36,19 @@ std::string pms::sprite_sheet::to_string() const
 
   return oss.str();
 }
+
+bool pms::sprite_sheet::internally_supported() const
+{
+  for ( spritedesc::const_sprite_iterator it( description.sprite_begin() );
+        it != description.sprite_end(); ++it )
+    {
+      const std::string image_name
+        ( description.images.find( it->image_id )->second );
+      
+      if ( !image.get_info( image_name ).internally_supported )
+        return false;
+    }
+
+  return true;
+}
+

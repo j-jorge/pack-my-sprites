@@ -37,7 +37,7 @@ namespace pms
     std::size_t width;
     std::size_t height;
     layer_map layers;
-
+    bool internally_supported;
   };
 }
 

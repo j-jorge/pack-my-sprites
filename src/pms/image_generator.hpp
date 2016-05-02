@@ -20,25 +20,38 @@
 #include "sprite_sheet.hpp"
 #include "working_directory.hpp"
 
+#include <claw/image.hpp>
+
 namespace pms
 {
   class image_generator
   {
   public:
-    typedef std::map<std::string, sprite_sheet> file_to_spritedesc_map;
+    explicit image_generator( const gimp_interface& gimp );
 
-  public:
-    explicit image_generator( gimp_interface gimp );
-
-    void generate( std::string source, sprite_sheet sheet ) const;
+    void generate( const std::string& source, const sprite_sheet& sheet ) const;
 
   private:
-    void generate_output
-    ( working_directory dir, image_map images, spritedesc desc ) const;
+    void generate_output_with_internal_tool
+    ( const working_directory& dir, const image_map& images,
+      const spritedesc& desc ) const;
+    
+    void copy_sprite
+    ( claw::graphic::image& result, const std::string& file_path,
+      const spritedesc::sprite& sprite ) const;
+
+    void rotate( claw::graphic::image& image ) const;
+    void bleed
+    ( claw::graphic::image& result, const claw::graphic::image& image,
+      const claw::math::coordinate_2d< int >& position ) const;
+
+    void generate_output_with_gimp
+    ( const working_directory& dir, const image_map& images,
+      const spritedesc& desc ) const;
 
     void generate_scm
-    ( std::ostream& os, working_directory dir, image_map images,
-      spritedesc desc ) const;
+    ( std::ostream& os, const working_directory& dir, const image_map& images,
+      const spritedesc& desc ) const;
 
     void generate_scm
     ( std::ostream& os, const image_info& images, const spritedesc::sprite& s,

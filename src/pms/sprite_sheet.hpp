@@ -29,6 +29,8 @@ namespace pms
 
     std::string to_string() const;
 
+    bool internally_supported() const;
+    
   public:
     spritedesc description;
     image_map image;
