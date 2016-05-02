@@ -211,7 +211,10 @@ pms::detail::build_sprite_sizes( const spritedesc& desc )
     {
       const std::size_t padding( (it->bleed ? 2 : 0) + m );
       const rbp::RectSize rect =
-        { it->result_box.width + padding, it->result_box.height + padding }; 
+        {
+          int( it->result_box.width + padding ),
+          int( it->result_box.height + padding )
+        }; 
       result.push_back( rect );
     }
 

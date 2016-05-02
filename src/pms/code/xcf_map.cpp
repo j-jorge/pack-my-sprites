@@ -17,7 +17,11 @@
 
 #include "working_directory.hpp"
 
+#include <claw/exception.hpp>
+#include <claw/image.hpp>
 #include <claw/logger.hpp>
+
+#include <fstream>
 #include <sstream>
 
 pms::xcf_map::xcf_map()
@@ -27,21 +31,79 @@ pms::xcf_map::xcf_map()
 }
 
 pms::xcf_map::xcf_map
-( std::string xcf_directory, gimp_interface gimp )
+( const std::string& xcf_directory, const gimp_interface& gimp )
   : m_xcf_directory( xcf_directory ), m_gimp( gimp )
 {
   if ( m_xcf_directory.empty() )
     m_xcf_directory = '.';
 }
 
-void pms::xcf_map::load( std::string name )
+void pms::xcf_map::load( const std::string& name )
 {
   if ( has_info(name) )
     return;
 
-  claw::logger << claw::log_verbose << "Loading '" << name << "'…" << std::endl;
+  std::string file_path;
 
-  std::istringstream info( execute_xcfinfo_process( name ) );
+  if ( working_directory::is_fully_qualified( name ) )
+    file_path = name;
+  else
+    file_path = m_xcf_directory + '/' + name;
+
+  claw::logger << claw::log_verbose << "Loading '" << name << "' from '"
+               << file_path << "'…" << std::endl;
+
+  if ( load_with_internal_tool( name, file_path ) )
+    return;
+
+  load_with_gimp( name, file_path );
+}
+
+bool pms::xcf_map::load_with_internal_tool
+( const std::string& name, const std::string& file_path )
+{
+  claw::logger << claw::log_verbose << "Using internal tool…\n";
+
+  std::ifstream f( file_path );
+
+  if ( !f )
+    return false;
+  
+  claw::graphic::image image;
+
+  try
+    {
+      claw::graphic::image( f ).swap( image );
+    }
+  catch( const claw::bad_format& f )
+    {
+      return false;
+    }
+
+  layer_info layer;
+  layer.box.position.x = 0;
+  layer.box.position.y = 0;
+  layer.box.width = image.width();
+  layer.box.height = image.height();
+  
+  xcf_info result;
+  result.version = 0;
+  result.width = layer.box.width;
+  result.height = layer.box.height;
+
+  result.layers[ "Image" ] = layer;
+
+  m_xcf_info[ name ] = result;
+
+  return true;
+}
+
+void pms::xcf_map::load_with_gimp
+( const std::string& name, const std::string& file_path )
+{
+  claw::logger << claw::log_verbose << "Using gimp…\n";
+  
+  std::istringstream info( execute_xcfinfo_process( file_path ) );
 
   xcf_info result;
   std::string line;
@@ -55,12 +117,12 @@ void pms::xcf_map::load( std::string name )
   m_xcf_info[ name ] = result;
 }
 
-bool pms::xcf_map::has_info( std::string name ) const
+bool pms::xcf_map::has_info( const std::string& name ) const
 {
   return m_xcf_info.find( name ) != m_xcf_info.end();
 }
 
-pms::xcf_info pms::xcf_map::get_info( std::string name ) const
+pms::xcf_info pms::xcf_map::get_info( const std::string& name ) const
 {
   return m_xcf_info.find( name )->second;
 }
@@ -77,17 +139,11 @@ std::string pms::xcf_map::to_string() const
   return oss.str();
 }
 
-std::string pms::xcf_map::execute_xcfinfo_process( std::string filename ) const
+std::string
+pms::xcf_map::execute_xcfinfo_process( const std::string& file_path ) const
 {
   gimp_interface::path_list_type includes;
   includes.push_back( "info.scm" );
-
-  std::string file_path;
-
-  if ( working_directory::is_fully_qualified( filename ) )
-    file_path = filename;
-  else
-    file_path = m_xcf_directory + '/' + filename;
 
   const std::string script( "(xcfinfo \"" + file_path + "\")" );
   std::istringstream iss( m_gimp.run( script, includes ) );
@@ -104,7 +160,7 @@ std::string pms::xcf_map::execute_xcfinfo_process( std::string filename ) const
 }
 
 void pms::xcf_map::parse_xcf_info_header
-( xcf_info& info, std::string header ) const
+( xcf_info& info, const std::string& header ) const
 {
   std::istringstream iss( header );
 
@@ -126,7 +182,7 @@ void pms::xcf_map::parse_xcf_info_header
 }
 
 void pms::xcf_map::parse_xcf_info_layer
-( xcf_info& info, std::string layer ) const
+( xcf_info& info, const std::string& layer ) const
 {
   std::istringstream iss( layer );
 

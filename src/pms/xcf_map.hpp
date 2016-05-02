@@ -31,20 +31,25 @@ namespace pms
 
   public:
     xcf_map();
-    xcf_map( std::string xcf_directory, gimp_interface gimp );
+    xcf_map( const std::string& xcf_directory, const gimp_interface& gimp );
 
-    void load( std::string name );
+    void load( const std::string& name );
 
-    bool has_info( std::string name ) const;
-    xcf_info get_info( std::string name ) const;
+    bool has_info( const std::string& name ) const;
+    xcf_info get_info( const std::string& name ) const;
 
     std::string to_string() const;
 
   private:
-    std::string execute_xcfinfo_process( std::string filename ) const;
+    bool load_with_internal_tool
+    ( const std::string& name, const std::string& file_path );
+    void load_with_gimp( const std::string& name, const std::string& file_path );
 
-    void parse_xcf_info_header( xcf_info& info, std::string header ) const;
-    void parse_xcf_info_layer( xcf_info& info, std::string layer ) const;
+    std::string execute_xcfinfo_process( const std::string& file_path ) const;
+
+    void parse_xcf_info_header
+    ( xcf_info& info, const std::string& header ) const;
+    void parse_xcf_info_layer( xcf_info& info, const std::string& layer ) const;
 
   private:
     name_to_info_type m_xcf_info;
