@@ -1,29 +1,22 @@
 cmake_minimum_required( VERSION 2.8 )
 
-project( pack-my-sprites )
+enable_testing()
 
-#-------------------------------------------------------------------------------
-set( EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/bin" )
+function( declare_test SOURCE NAME )
+  add_executable( ${NAME}-test ${SOURCE} )
+  add_test( ${NAME} ${NAME}-test )
 
-#-------------------------------------------------------------------------------
-# where the programs are installed
-if( NOT PMS_INSTALL_EXECUTABLE_DIR )
-  set( PMS_INSTALL_EXECUTABLE_DIR bin )
-endif( NOT PMS_INSTALL_EXECUTABLE_DIR )
+  foreach( LIB ${ARGN} )
+    target_link_libraries( ${NAME}-test ${LIB} )
+  endforeach()
+    
+  target_link_libraries( ${NAME}-test utest )
+endfunction()
 
-# where the resources are installed
-if( NOT PMS_INSTALL_RESOURCES_DIR )
-  set( PMS_INSTALL_RESOURCES_DIR share/pack-my-sprites )
-endif( NOT PMS_INSTALL_RESOURCES_DIR )
+add_subdirectory( modules )
+add_subdirectory( apps )
+add_subdirectory( docs )
 
-#-------------------------------------------------------------------------------
-subdirs(
-  src
-  desktop
-  )
-
-#-------------------------------------------------------------------------------
-# target to uninstall files
 configure_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
   "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"

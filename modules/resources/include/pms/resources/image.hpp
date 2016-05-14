@@ -1,0 +1,44 @@
+/*
+  This file is part of Pack My Sprites.
+
+  Pack My Sprites is free software: you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published by
+  the Free Software Foundation, version 3 of the License.
+
+  Pack My Sprites is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#pragma once
+
+#include "pms/resources/layer.hpp"
+
+#include <string>
+#include <unordered_map>
+
+namespace pms
+{
+  namespace resources
+  {
+    class image
+    {
+    public:
+      image( const std::string& format, bool internally_supported );
+      
+      std::string get_layer_name( std::size_t index ) const;
+      std::string to_string() const;
+
+    public:
+      const std::string format;
+      const bool internally_supported;
+      int version;
+      unsigned int width;
+      unsigned int height;
+      std::unordered_map< std::string, layer > layers;
+    };
+  }
+}
