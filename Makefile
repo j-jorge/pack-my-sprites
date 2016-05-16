@@ -23,6 +23,9 @@ all: test
 install: all
 	cd $(BUILD_DIR) && $(MAKE) install
 
+uninstall:
+	[ -d $(BUILD_DIR) ] && cd $(BUILD_DIR) && $(MAKE) uninstall
+
 test: target
 	cd $(BUILD_DIR) && CTEST_OUTPUT_ON_FAILURE=1 ctest
 
