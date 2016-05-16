@@ -39,4 +39,4 @@ install(
   WORLD_READ WORLD_EXECUTE
 )
 
-subdirs(pms)
+include( CMakeLists-pack-my-sprites.txt )

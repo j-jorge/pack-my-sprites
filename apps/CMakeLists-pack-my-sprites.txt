@@ -1,0 +1,51 @@
+include(FindBoost)
+find_package( Boost 1.42 REQUIRED COMPONENTS program_options )
+
+set( PMS_EXECUTABLE_NAME pack-my-sprites )
+
+add_executable(
+  ${PMS_EXECUTABLE_NAME}
+
+  src/pms/app/general_program_options.cpp
+  src/pms/app/pack_my_sprites.cpp
+  src/pms/app/packer.cpp
+  src/pms/app/packer_program_options.cpp
+  src/pms/app/packer_options.cpp
+  )
+
+if( PMS_DEFAULT_SCHEME_PATH )
+  set(
+    PMS_COMPILE_DEFINITIONS
+    ${PMS_COMPILE_DEFINITIONS}
+    "PMS_DEFAULT_SCHEME_PATH=${PMS_DEFAULT_SCHEME_PATH}"
+    )
+endif()
+
+set_target_properties(
+  ${PMS_EXECUTABLE_NAME}
+  PROPERTIES
+  COMPILE_DEFINITIONS
+  "${PMS_COMPILE_DEFINITIONS}"
+  CXX_STANDARD 11
+  )
+
+target_include_directories(
+  ${PMS_EXECUTABLE_NAME}
+  PUBLIC
+  include
+  )
+
+target_link_libraries(
+  ${PMS_EXECUTABLE_NAME}
+  pms_generators
+  pms_serialization
+  ${Boost_LIBRARIES}
+  )
+
+install(
+  TARGETS ${PMS_EXECUTABLE_NAME}
+  DESTINATION ${PMS_INSTALL_EXECUTABLE_DIR}
+  PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+  GROUP_READ GROUP_EXECUTE
+  WORLD_READ WORLD_EXECUTE
+  )

@@ -13,17 +13,27 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef __PMS_VERSION_HPP__
-#define __PMS_VERSION_HPP__
+#pragma once
 
-#define PMS_TO_STR_BIS(v) # v
-#define PMS_TO_STR(v) PMS_TO_STR_BIS(v)
+#include <vector>
+#include <string>
 
-#define PMS_MAJOR_VERSION 1
-#define PMS_MINOR_VERSION 0
-#define PMS_RELEASE_NUMBER 3
-#define PMS_VERSION_STRING "Pack My Sprites, "                          \
-  PMS_TO_STR(PMS_MAJOR_VERSION) "." PMS_TO_STR(PMS_MINOR_VERSION)       \
-  "." PMS_TO_STR(PMS_RELEASE_NUMBER)
+namespace pms
+{
+  namespace app
+  {
+    class packer_options
+    {
+    public:
+      packer_options();
 
-#endif
+    public:
+      bool generate_spritepos;
+      bool generate_plist;
+      bool generate_css;
+      std::vector< std::string > scheme_directory;
+      std::string gimp_console_program;
+      bool enable_sprite_rotation;
+    };
+  };
+}

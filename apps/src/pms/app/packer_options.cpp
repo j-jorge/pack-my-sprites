@@ -13,6 +13,15 @@
   You should have received a copy of the GNU General Public License
   along with Pack My Sprites.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "application.hpp"
+#include "pms/app/packer_options.hpp"
 
-CLAW_APPLICATION_IMPLEMENT(pms::application)
+pms::app::packer_options::packer_options()
+  : generate_spritepos( false ),
+    generate_plist( false ),
+    generate_css( false ),
+    gimp_console_program( "gimp-console" ),
+    enable_sprite_rotation( true )
+{
+
+}
+
