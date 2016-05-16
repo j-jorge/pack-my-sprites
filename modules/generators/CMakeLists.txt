@@ -1,5 +1,7 @@
 project( libpms_generators )
 
+install_script( scripts/common.scm )
+
 add_library( pms_generators STATIC
   src/pms/generators/css.cpp
   src/pms/generators/plist.cpp

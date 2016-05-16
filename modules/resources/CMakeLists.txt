@@ -1,5 +1,7 @@
 project( libpms_resources )
 
+install_script( scripts/info.scm )
+
 find_package( Boost 1.42 REQUIRED )
 find_package( libclaw 1.7.4 )
 

@@ -13,6 +13,24 @@ function( declare_test SOURCE NAME )
   target_link_libraries( ${NAME}-test utest )
 endfunction()
 
+if( NOT PMS_INSTALL_RESOURCES_DIR )
+  set( PMS_INSTALL_RESOURCES_DIR share/pack-my-sprites )
+endif()
+
+set( PMS_INSTALL_SCRIPT_DIR "${PMS_INSTALL_RESOURCES_DIR}/script" )
+
+function( install_script SOURCE )
+
+  install(
+    FILES ${SOURCE}
+    DESTINATION ${PMS_INSTALL_SCRIPT_DIR}
+
+    PERMISSIONS OWNER_READ OWNER_WRITE
+    GROUP_READ
+    WORLD_READ
+    )
+endfunction()
+
 add_subdirectory( modules )
 add_subdirectory( apps )
 add_subdirectory( docs )
