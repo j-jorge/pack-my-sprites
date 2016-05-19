@@ -49,6 +49,8 @@ bool pms::app::parse_general_program_options
       return false;
     }
 
+  claw::logger.set( new claw::console_logger() );
+  
   if ( values.count( "verbose" ) != 0 )
     claw::logger.set_level( claw::log_verbose );
   else
