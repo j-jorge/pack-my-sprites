@@ -9,13 +9,5 @@ if( NOT PMS_DEFAULT_SCHEME_PATH )
     )
 endif()
 
-install(
-  FILES wrapper/auto-pack-my-sprites
-  DESTINATION ${PMS_INSTALL_EXECUTABLE_DIR}
-
-  PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
-  GROUP_READ GROUP_EXECUTE
-  WORLD_READ WORLD_EXECUTE
-)
-
+include( CMakeLists-auto-pack-my-sprites.txt )
 include( CMakeLists-pack-my-sprites.txt )

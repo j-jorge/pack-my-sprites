@@ -1,0 +1,22 @@
+# -*- cmake -*-
+
+set( APMS_EXECUTABLE_NAME auto-pack-my-sprites )
+
+add_executable(
+  ${APMS_EXECUTABLE_NAME}
+
+  src/pms/app/auto_pack_my_sprites.cpp
+  )
+
+target_link_libraries(
+  ${APMS_EXECUTABLE_NAME}
+  pms_app
+  )
+
+install(
+  TARGETS ${APMS_EXECUTABLE_NAME}
+  DESTINATION ${PMS_INSTALL_EXECUTABLE_DIR}
+  PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+  GROUP_READ GROUP_EXECUTE
+  WORLD_READ WORLD_EXECUTE
+  )
