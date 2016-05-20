@@ -15,10 +15,17 @@
  */
 #pragma once
 
-#include "pms/layout/sprite_sheet.hpp"
+#include <string>
+#include <iostream>
 
 namespace pms
 {
+  namespace layout
+  {
+    class description;
+    class sprite_sheet;
+  }
+  
   namespace generators
   {
     namespace detail
@@ -35,8 +42,8 @@ namespace pms
 
     private:
       void generate_spritepos
-      ( const detail::working_directory& dir,
-        const layout::description& desc ) const;
+      ( const detail::working_directory& dir, std::size_t index,
+        const layout::sprite_sheet& sheet ) const;
       void generate_spritepos
       ( std::ostream& os, const layout::description& desc ) const;
     };

@@ -76,11 +76,13 @@ std::string pms::layout::description::to_string() const
 {
   std::ostringstream oss;
 
-  oss << "output '" << output_name << "', size " << width << "×" << height
-      << ", margin " << margin;
+  oss << "size " << width << "×" << height;
 
   if ( sprites.empty() )
-    return oss.str();
+    {
+      oss << '\n';
+      return oss.str();
+    }
 
   oss << ", sprites:\n";
 

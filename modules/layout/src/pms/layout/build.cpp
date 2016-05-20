@@ -46,26 +46,30 @@ namespace pms
           named_heuristic( nullptr, rbp::MaxRectsBinPack::RectContactPointRule )
         };
 
-      static bool set_sprite_positions( bool allow_rotate, description& desc );
-      static bool try_all_heuristics( bool allow_rotate, description& desc );
+      static description build
+      ( bool allow_rotate, const sprite_sheet& sheet, description& desc );
+      
+      static description try_all_heuristics
+      ( bool allow_rotate, const sprite_sheet& sheet, description& desc );
 
-      static bool try_heuristic
+      static description try_heuristic
       ( bool allow_rotate, const std::vector<rbp::RectSize>& source,
-        description& desc,
+        const sprite_sheet& sheet, description& desc,
         rbp::MaxRectsBinPack::FreeRectChoiceHeuristic heuristic );
       static std::vector<rbp::Rect> try_heuristic
       ( bool allow_rotate, std::vector<rbp::RectSize> source, int width,
         int height, rbp::MaxRectsBinPack::FreeRectChoiceHeuristic heuristic );
 
-      static void apply_positions
-      ( description& desc, const std::vector<rbp::Rect>& packing );
+      static description apply_positions
+      ( description& desc, const std::vector<rbp::Rect>& packing,
+        std::size_t margin );
       static void place_sprite_from_packing
       ( std::vector<description::sprite>& result,
         claw::math::coordinate_2d<int>& final_size, description& desc,
-        const rbp::Rect& packing );
+        const rbp::Rect& packing, std::size_t margin );
 
       static std::vector<rbp::RectSize>
-      build_sprite_sizes( const description& desc );
+      build_sprite_sizes( const description& desc, std::size_t margin );
     
       static description::sprite_iterator
       find_sprite_by_size( description& desc, int width, int height );
@@ -73,73 +77,106 @@ namespace pms
   }
 }
 
-bool pms::layout::build( bool allow_rotate, description& desc )
+bool pms::layout::build( bool allow_rotate, sprite_sheet& sheet )
+{
+  assert( sheet.pages.size() == 1 );
+  
+  if ( sheet.pages[ 0 ].sprite_count() == 0 )
+    return true;
+
+  std::vector< description > result;
+  description remaining( sheet.pages[ 0 ] );
+  sheet.pages.clear();
+  
+  while( remaining.sprite_count() != 0 )
+    {
+      description packed( detail::build( allow_rotate, sheet, remaining ) );
+
+      if ( packed.sprite_count() == 0 )
+        return false;
+
+      result.push_back( packed );
+    }
+
+  sheet.pages = result;
+  return true;
+}
+
+pms::layout::description
+pms::layout::detail::build
+( bool allow_rotate, const sprite_sheet& sheet, description& desc )
 {
   claw::logger << claw::log_verbose
                << "Setting sprite positions in sprite sheet '"
-               << desc.output_name << "'"
+               << sheet.output_name << "', with " << desc.sprite_count()
+               << " sprites:\n"
+               << desc.to_string()
                << std::endl;
 
-  const bool result( detail::set_sprite_positions( allow_rotate, desc ) );
+  const description result
+    ( detail::try_all_heuristics( allow_rotate, sheet, desc ) );
 
   claw::logger << claw::log_verbose
                << "Final sprite sheet is:\n"
-               << desc.to_string();
+               << result.to_string();
 
   return result;
 }
 
-bool pms::layout::detail::set_sprite_positions
-( bool allow_rotate, description& desc )
+pms::layout::description pms::layout::detail::try_all_heuristics
+( bool allow_rotate, const sprite_sheet& sheet, description& desc )
 {
-  if ( desc.margin >= desc.width )
-    {
-      std::cerr << "Fatal: the margin is larger than the expected width.\n";
-      return false;
-    }
-
-  if ( desc.margin >= desc.height )
-    {
-      std::cerr << "Fatal: the margin is larger than the expected height.\n";
-      return false;
-    }
-
-  return try_all_heuristics( allow_rotate, desc );
-}
-
-bool pms::layout::detail::try_all_heuristics
-( bool allow_rotate, description& desc )
-{
-  const std::vector< rbp::RectSize > source( build_sprite_sizes( desc ) );
-
+  const description reference( desc );
+  const std::vector< rbp::RectSize > regions
+    ( build_sprite_sizes( desc, sheet.margin ) );
+  const std::size_t reference_count( regions.size() );
+  
+  std::size_t best_count( 0 );
+  description best_result;
+  description best_remaining;
+  
   for ( const named_heuristic* h = g_heuristics; h->first != nullptr; ++h )
     {
       claw::logger << claw::log_verbose << "Packing with heuristic \""
                    << h->first << "\".\n";
-      if ( try_heuristic( allow_rotate, source, desc, h->second ) )
-        return true;
+      
+      description base( reference );
+      const description packed
+        ( try_heuristic( allow_rotate, regions, sheet, base, h->second ) );
+      const std::size_t sprite_count( packed.sprite_count() );
+      
+      if ( sprite_count == reference_count )
+        {
+          desc = base;
+          return packed;
+        }
+      else if ( sprite_count > best_count )
+        {
+          best_count = sprite_count;
+          best_result = packed;
+          best_remaining = base;
+        }
     }
 
-  std::cerr << "Could not place all sprites.\n";
-  return false;
+  claw::logger << claw::log_verbose << "Could not place all sprites.\n";
+
+  desc = best_remaining;
+  return best_result;
 }
 
-bool pms::layout::detail::try_heuristic
+pms::layout::description
+pms::layout::detail::try_heuristic
 ( bool allow_rotate, const std::vector< rbp::RectSize >& source,
-  description& desc, rbp::MaxRectsBinPack::FreeRectChoiceHeuristic heuristic )
+  const sprite_sheet& sheet, description& desc,
+  rbp::MaxRectsBinPack::FreeRectChoiceHeuristic heuristic )
 {
-  const std::size_t m( desc.margin );
+  const std::size_t m( sheet.margin );
 
   const std::vector< rbp::Rect > packing
     ( try_heuristic
-      ( allow_rotate, source, desc.width - m, desc.height - m, heuristic ) );
+      ( allow_rotate, source, sheet.width - m, sheet.height - m, heuristic ) );
 
-  if ( packing.size() != source.size() )
-    return false;
-  
-  apply_positions( desc, packing );
-  
-  return true;
+  return apply_positions( desc, packing, m );
 }
 
 std::vector<rbp::Rect> pms::layout::detail::try_heuristic
@@ -155,63 +192,76 @@ std::vector<rbp::Rect> pms::layout::detail::try_heuristic
   return packing;
 }
 
-void pms::layout::detail::apply_positions
-( description& desc, const std::vector< rbp::Rect >& packing )
+pms::layout::description
+pms::layout::detail::apply_positions
+( description& desc, const std::vector< rbp::Rect >& packing,
+  std::size_t margin )
 {
-  std::vector< description::sprite > result;
-  result.reserve( packing.size() );
+  std::vector< description::sprite > sprites;
+  sprites.reserve( packing.size() );
 
   claw::math::coordinate_2d<int> final_size( 1, 1 );
 
   for( std::size_t i( 0 ); i != packing.size(); ++i )
-      place_sprite_from_packing( result, final_size, desc, packing[ i ] );
+    place_sprite_from_packing
+      ( sprites, final_size, desc, packing[ i ], margin );
 
-  for( std::size_t i( 0 ); i != result.size(); ++i )
-    desc.add_sprite( result[ i ] );
+  description result;
+  
+  for( const auto& s : sprites )
+    {
+      result.images[ s.image_id ] = desc.images[ s.image_id ];
+      result.add_sprite( s );
+    }
 
-  desc.width = final_size.x ;
-  desc.height = final_size.y;
+  result.width = final_size.x ;
+  result.height = final_size.y;
+
+  return result;
 }
 
 void pms::layout::detail::place_sprite_from_packing
 ( std::vector< description::sprite >& result,
   claw::math::coordinate_2d< int >& final_size, description& desc,
-  const rbp::Rect& packing )
+  const rbp::Rect& packing, std::size_t margin )
 {
   description::sprite_iterator it
-    ( find_sprite_by_size( desc, packing.width, packing.height ) );
+    ( find_sprite_by_size
+      ( desc, packing.width - margin, packing.height - margin ) );
 
   if ( it == desc.sprite_end() )
     {
-      it = find_sprite_by_size( desc, packing.height, packing.width );
+      it =
+        find_sprite_by_size
+        ( desc, packing.height - margin, packing.width - margin );
       it->rotated = true;
     }
   else
     it->rotated = false;
 
-  const int m( desc.margin );
-  const std::size_t offset( ( it->bleed ? 1 : 0 ) + m );
+  const std::size_t offset( ( it->bleed ? 1 : 0 ) + margin );
 
   it->result_box.position.set( packing.x + offset, packing.y + offset );
-  final_size.x = std::max( final_size.x, packing.x + packing.width + m );
-  final_size.y = std::max( final_size.y, packing.y + packing.height + m );
+  final_size.x =
+    std::max< int >( final_size.x, packing.x + packing.width + margin );
+  final_size.y =
+    std::max< int >( final_size.y, packing.y + packing.height + margin );
       
   result.push_back( *it );
   desc.erase_sprite( it );
 }
 
 std::vector< rbp::RectSize >
-pms::layout::detail::build_sprite_sizes( const description& desc )
+pms::layout::detail::build_sprite_sizes
+( const description& desc, std::size_t margin )
 {
-  const std::size_t m( desc.margin );
-
   std::vector<rbp::RectSize> result;
   result.reserve( desc.sprite_count() );
 
   for ( description::const_sprite_iterator it( desc.sprite_begin() );
         it != desc.sprite_end(); ++it )
     {
-      const std::size_t padding( (it->bleed ? 2 : 0) + m );
+      const std::size_t padding( (it->bleed ? 2 : 0) + margin );
       const rbp::RectSize rect =
         {
           int( it->result_box.width + padding ),
@@ -227,9 +277,6 @@ pms::layout::description::sprite_iterator
 pms::layout::detail::find_sprite_by_size
 ( description& desc, int width, int height )
 {
-  width -= desc.margin;
-  height -= desc.margin;
-  
   for ( description::sprite_iterator it( desc.sprite_begin() );
         it != desc.sprite_end(); ++it )
     {

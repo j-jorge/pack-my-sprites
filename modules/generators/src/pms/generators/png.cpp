@@ -38,24 +38,40 @@ void pms::generators::png::generate
 
   claw::logger << claw::log_verbose
                << "Generating sprite sheet '"
-               << sheet.description.output_name << "'";
+               << sheet.output_name << "'";
 
   if ( sheet.internally_supported() )
     {
       claw::logger << claw::log_verbose << " using internal tool.\n";
-      generate_output_with_internal_tool( dir, sheet.image, sheet.description );
+      generate_output_with_internal_tool( dir, sheet );
     }
   else
     {
       claw::logger << claw::log_verbose << " using internal tool.\n";
-      generate_output_with_gimp( dir, sheet.image, sheet.description );
+      generate_output_with_gimp( dir, sheet );
     }
 }
 
 void pms::generators::png::generate_output_with_internal_tool
-( const detail::working_directory& dir, const resources::image_mapping& images,
-  const layout::description& desc ) const
+( const detail::working_directory& dir,
+  const layout::sprite_sheet& sheet ) const
 {
+  const std::size_t page_count( sheet.pages.size() );
+
+  for ( std::size_t i( 0 ); i != page_count; ++i )
+    {
+      claw::logger << claw::log_verbose
+                   << "Page " << ( i + 1 ) << '/' << page_count << "…\n";
+
+      generate_output_with_internal_tool( dir, i, sheet );
+    }
+}
+
+void pms::generators::png::generate_output_with_internal_tool
+( const detail::working_directory& dir, std::size_t index,
+  const layout::sprite_sheet& sheet ) const
+{
+  const layout::description& desc( sheet.pages[ index ] );
   claw::graphic::image result( desc.width, desc.height );
 
   std::fill( result.begin(), result.end(), claw::graphic::transparent_pixel );
@@ -68,7 +84,9 @@ void pms::generators::png::generate_output_with_internal_tool
         *it );
   
   claw::graphic::png::writer writer( result );
-  std::ofstream output( dir.get_output_image_path( desc.output_name ) );
+  std::ofstream output
+    ( dir.get_output_file_path
+      ( sheet.output_name, index, sheet.pages.size(), "png" ) );
   writer.save( output );
 }
 
@@ -135,11 +153,26 @@ void pms::generators::png::bleed
 }
 
 void pms::generators::png::generate_output_with_gimp
-( const detail::working_directory& dir, const resources::image_mapping& images,
-  const layout::description& desc ) const
+( const detail::working_directory& dir,
+  const layout::sprite_sheet& sheet ) const
+{
+  const std::size_t page_count( sheet.pages.size() );
+
+  for ( std::size_t i( 0 ); i != page_count; ++i )
+    {
+      claw::logger << claw::log_verbose
+                   << "Page " << ( i + 1 ) << '/' << page_count << "…\n";
+
+      generate_output_with_gimp( dir, i, sheet );
+    }
+}
+
+void pms::generators::png::generate_output_with_gimp
+( const detail::working_directory& dir, std::size_t index,
+  const layout::sprite_sheet& sheet ) const
 {
   std::ostringstream oss;
-  generate_scm( oss, dir, images, desc );
+  generate_scm( oss, dir, index, sheet );
 
   gimp::system_interface::path_list_type includes;
   includes.push_back( "common.scm" );
@@ -153,10 +186,11 @@ void pms::generators::png::generate_output_with_gimp
 }
 
 void pms::generators::png::generate_scm
-( std::ostream& os, const detail::working_directory& dir,
-  const resources::image_mapping& images,
-  const layout::description& desc ) const
+( std::ostream& os, const detail::working_directory& dir, std::size_t index,
+  const layout::sprite_sheet& sheet ) const
 {
+  const layout::description& desc( sheet.pages[ index ] );
+  
   os << "(let ( ";
 
   for ( auto it( desc.images.begin() ); it != desc.images.end(); ++it )
@@ -168,19 +202,21 @@ void pms::generators::png::generate_scm
          << "\" )))\n";
     }
 
-  os << "(" << make_image_varname(desc.output_name)
+  os << "(" << make_image_varname(sheet.output_name)
      << " (new-image " << desc.width << ' ' << desc.height << "))\n";
 
   os << ")\n";
 
   for ( auto it( desc.sprite_begin() ); it != desc.sprite_end(); ++it )
     generate_scm
-      ( os, *images.get_image( desc.images.find( it->image_id )->second ), *it,
-        desc.output_name );
+      ( os, *sheet.image.get_image( desc.images.find( it->image_id )->second ),
+        *it, sheet.output_name );
 
   os << "(save-frames \""
-     << dir.get_output_image_path(desc.output_name) << "\" "
-     << make_image_varname(desc.output_name) << ")\n";
+     << dir.get_output_file_path
+          (sheet.output_name, index, sheet.pages.size(), "png")
+     << "\" "
+     << make_image_varname(sheet.output_name) << ")\n";
 
   os << ")\n";
 }

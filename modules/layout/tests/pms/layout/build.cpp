@@ -70,27 +70,35 @@ pms::layout::description::sprite create_sprite
 
 void empty()
 {
-  pms::layout::description description;
-  description.width = 200;
-  description.height = 200;
-  description.margin = 0;
-
-  TEST( pms::layout::build( false, description ) );
+  pms::layout::sprite_sheet sheet;
+  sheet.width = 200;
+  sheet.height = 200;
+  sheet.margin = 0;
+  sheet.pages.emplace_back();
   
-  TEST( description.sprite_count() == 0 );
+  TEST( pms::layout::build( false, sheet ) );
+  
+  TEST_EQ( 1, sheet.pages.size() );
+  TEST_EQ( 0, sheet.pages[ 0 ].sprite_count() );
 }
 
 void fit_one()
 {
+  pms::layout::sprite_sheet sheet;
+  sheet.width = 200;
+  sheet.height = 300;
+  sheet.margin = 0;
+  
   pms::layout::description description;
   description.images[ "a" ] = "path/to/a";
-  description.width = 200;
-  description.height = 300;
-  description.margin = 0;
-
   description.add_sprite( create_sprite( "a", "b", 200, 300, false ) );
+
+  sheet.pages.push_back( description );
   
-  TEST( pms::layout::build( false, description ) );
+  TEST( pms::layout::build( false, sheet ) );
+  TEST_EQ( 1, sheet.pages.size() );
+
+  description = sheet.pages[ 0 ];
 
   const auto it( description.get_sprite_by_name( "b" ) );
   
@@ -102,17 +110,21 @@ void fit_one()
 
 void fit_rotate()
 {
+  pms::layout::sprite_sheet sheet;
+  sheet.width = 300;
+  sheet.height = 200;
+  sheet.margin = 0;
+  
   pms::layout::description description;
   description.images[ "a" ] = "path/to/a";
-  description.width = 300;
-  description.height = 200;
-  description.margin = 0;
-
   description.add_sprite( create_sprite( "a", "b", 200, 300, false ) );
   
-  TEST( pms::layout::build( true, description ) );
+  sheet.pages.push_back( description );
+  
+  TEST( pms::layout::build( true, sheet ) );
+  TEST_EQ( 1, sheet.pages.size() );
 
-  const auto it( description.get_sprite_by_name( "b" ) );
+  const auto it( sheet.pages[ 0 ].get_sprite_by_name( "b" ) );
   
   TEST( it->result_box.position.x == 0 );
   TEST( it->result_box.position.y == 0 );
@@ -123,47 +135,61 @@ void fit_rotate()
 
 void forbid_rotate()
 {
+  pms::layout::sprite_sheet sheet;
+  sheet.width = 300;
+  sheet.height = 200;
+  sheet.margin = 0;
+  
   pms::layout::description description;
   description.images[ "a" ] = "path/to/a";
-  description.width = 300;
-  description.height = 200;
-  description.margin = 0;
-
   description.add_sprite( create_sprite( "a", "b", 200, 300, false ) );
   
-  TEST( pms::layout::build( false, description ) == false );
+  sheet.pages.push_back( description );
+
+  TEST( !pms::layout::build( false, sheet ) );
 }
 
 void final_size()
 {
+  pms::layout::sprite_sheet sheet;
+  sheet.width = 2000;
+  sheet.height = 3000;
+  sheet.margin = 0;
+  
   pms::layout::description description;
   description.images[ "a" ] = "path/to/a";
-  description.width = 2000;
-  description.height = 3000;
-  description.margin = 0;
-
   description.add_sprite( create_sprite( "a", "b", 200, 300, false ) );
   
-  TEST( pms::layout::build( false, description ) );
+  sheet.pages.push_back( description );
 
-  TEST( description.width == 200 );
-  TEST( description.height == 300 );
+  TEST( pms::layout::build( false, sheet ) );
+  TEST_EQ( 1, sheet.pages.size() );
+
+  TEST_EQ( 200, sheet.pages[ 0 ].width );
+  TEST_EQ( 300, sheet.pages[ 0 ].height );
 }
 
 void rotate()
 {
+  pms::layout::sprite_sheet sheet;
+  sheet.width = 40;
+  sheet.height = 40;
+  sheet.margin = 0;
+
   pms::layout::description description;
   description.images[ "a" ] = "path/to/a";
-  description.width = 40;
-  description.height = 40;
-  description.margin = 0;
 
   description.add_sprite( create_sprite( "a", "s1", 20, 10, false ) );
   description.add_sprite( create_sprite( "a", "s2", 11, 21, false ) );
   description.add_sprite( create_sprite( "a", "s3", 22, 12, false ) );
   description.add_sprite( create_sprite( "a", "s4", 13, 23, false ) );
 
-  TEST( pms::layout::build( true, description ) );
+  sheet.pages.push_back( description );
+
+  TEST( pms::layout::build( true, sheet ) );
+  TEST_EQ( 1, sheet.pages.size() );
+
+  description = sheet.pages[ 0 ];
 
   std::vector< pms::layout::description::sprite > sprites
     ( description.sprite_begin(), description.sprite_end() );
@@ -212,21 +238,28 @@ void rotate()
 
 void margin()
 {
+  pms::layout::sprite_sheet sheet;
+  sheet.width = 30;
+  sheet.height = 60;
+  sheet.margin = 2;
+
   pms::layout::description description;
   description.images[ "a" ] = "path/to/a";
-  description.width = 30;
-  description.height = 60;
-  description.margin = 2;
 
   description.add_sprite( create_sprite( "a", "s1", 10, 20, false ) );
   description.add_sprite( create_sprite( "a", "s2", 10, 20, false ) );
   description.add_sprite( create_sprite( "a", "s3", 10, 20, false ) );
   description.add_sprite( create_sprite( "a", "s4", 10, 20, false ) );
 
-  TEST( pms::layout::build( false, description ) );
+  sheet.pages.push_back( description );
 
-  TEST( description.width == 26 );
-  TEST( description.height == 46 );
+  TEST( pms::layout::build( false, sheet ) );
+  TEST_EQ( 1, sheet.pages.size() );
+
+  description = sheet.pages[ 0 ];
+
+  TEST_EQ( 26, description.width );
+  TEST_EQ( 46, description.height );
 
   std::vector< pms::layout::description::sprite > sprites
     ( description.sprite_begin(), description.sprite_end() );
@@ -264,18 +297,25 @@ void margin()
 
 void bleeding()
 {
+  pms::layout::sprite_sheet sheet;
+  sheet.width = 60;
+  sheet.height = 30;
+  sheet.margin = 0;
+
   pms::layout::description description;
   description.images[ "a" ] = "path/to/a";
-  description.width = 60;
-  description.height = 30;
-  description.margin = 0;
 
   description.add_sprite( create_sprite( "a", "s1", 20, 10, true ) );
   description.add_sprite( create_sprite( "a", "s2", 21, 11, false ) );
   description.add_sprite( create_sprite( "a", "s3", 22, 12, false ) );
   description.add_sprite( create_sprite( "a", "s4", 23, 13, true ) );
 
-  TEST( pms::layout::build( false, description ) );
+  sheet.pages.push_back( description );
+
+  TEST( pms::layout::build( false, sheet ) );
+  TEST_EQ( 1, sheet.pages.size() );
+
+  description = sheet.pages[ 0 ];
 
   /*
     4444444444444444444444444.....................
@@ -356,18 +396,25 @@ void bleeding()
 
 void margin_and_bleeding()
 {
+  pms::layout::sprite_sheet sheet;
+  sheet.width = 60;
+  sheet.height = 30;
+  sheet.margin = 1;
+
   pms::layout::description description;
   description.images[ "a" ] = "path/to/a";
-  description.width = 60;
-  description.height = 30;
-  description.margin = 1;
 
   description.add_sprite( create_sprite( "a", "s1", 20, 10, true ) );
   description.add_sprite( create_sprite( "a", "s2", 21, 11, false ) );
   description.add_sprite( create_sprite( "a", "s3", 22, 12, false ) );
   description.add_sprite( create_sprite( "a", "s4", 23, 13, true ) );
 
-  TEST( pms::layout::build( false, description ) );
+  sheet.pages.push_back( description );
+
+  TEST( pms::layout::build( false, sheet ) );
+  TEST_EQ( 1, sheet.pages.size() );
+
+  description = sheet.pages[ 0 ];
 
   /*
    _________________________________________________
@@ -451,18 +498,25 @@ void margin_and_bleeding()
 
 void rotate_and_margin_and_bleeding()
 {
+  pms::layout::sprite_sheet sheet;
+  sheet.width = 40;
+  sheet.height = 40;
+  sheet.margin = 1;
+
   pms::layout::description description;
   description.images[ "a" ] = "path/to/a";
-  description.width = 40;
-  description.height = 40;
-  description.margin = 1;
 
   description.add_sprite( create_sprite( "a", "s1", 20, 10, true ) );
   description.add_sprite( create_sprite( "a", "s2", 11, 21, false ) );
   description.add_sprite( create_sprite( "a", "s3", 22, 12, false ) );
   description.add_sprite( create_sprite( "a", "s4", 13, 23, true ) );
 
-  TEST( pms::layout::build( true, description ) );
+  sheet.pages.push_back( description );
+
+  TEST( pms::layout::build( true, sheet ) );
+  TEST_EQ( 1, sheet.pages.size() );
+
+  description = sheet.pages[ 0 ];
 
   std::vector< pms::layout::description::sprite > sprites
     ( description.sprite_begin(), description.sprite_end() );
@@ -506,6 +560,53 @@ void rotate_and_margin_and_bleeding()
   TEST_EQ( 1, s3.result_box.position.y );
 }
 
+void multiple_output()
+{
+  pms::layout::sprite_sheet sheet;
+  sheet.width = 20;
+  sheet.height = 20;
+  sheet.margin = 0;
+
+  pms::layout::description description;
+  description.images[ "a" ] = "path/to/a";
+
+  description.add_sprite( create_sprite( "a", "s1", 20, 15, false ) );
+  description.add_sprite( create_sprite( "a", "s2", 15, 20, false ) );
+
+  sheet.pages.push_back( description );
+
+  TEST( pms::layout::build( false, sheet ) );
+  TEST_EQ( 2, sheet.pages.size() );
+
+  pms::layout::description d1( sheet.pages[ 0 ] );
+  pms::layout::description d2( sheet.pages[ 1 ] );
+
+  TEST_EQ( 1, d1.images.size() );
+  TEST_EQ( d1.images.size(), d2.images.size() );
+  
+  TEST_EQ( 20, d1.width );
+  TEST_EQ( 15, d1.height );
+
+  TEST_EQ( 15, d2.width );
+  TEST_EQ( 20, d2.height );
+
+  const pms::layout::description::sprite& s1( *d1.sprite_begin() );
+
+  TEST( !s1.rotated );
+  TEST_EQ( 20, s1.result_box.width );
+  TEST_EQ( 15, s1.result_box.height );
+  TEST_EQ( 0, s1.result_box.position.x );
+  TEST_EQ( 0, s1.result_box.position.y );
+  
+  const pms::layout::description::sprite& s2( *d2.sprite_begin() );
+
+  TEST( !s2.rotated );
+  TEST_EQ( 15, s2.result_box.width );
+  TEST_EQ( 20, s2.result_box.height );
+  TEST_EQ( 0, s2.result_box.position.x );
+  TEST_EQ( 0, s2.result_box.position.y );
+}
+
 int main()
 {
   empty();
@@ -520,6 +621,8 @@ int main()
   margin_and_bleeding();
   
   rotate_and_margin_and_bleeding();
-  
+
+  multiple_output();
+    
   return 0;
 }

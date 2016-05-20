@@ -40,8 +40,10 @@ namespace pms
     private:
       void generate_output_with_internal_tool
       ( const detail::working_directory& dir,
-        const resources::image_mapping& images,
-        const layout::description& desc ) const;
+        const layout::sprite_sheet& sheet ) const;
+      void generate_output_with_internal_tool
+      ( const detail::working_directory& dir, std::size_t index,
+        const layout::sprite_sheet& sheet ) const;
     
       void copy_sprite
       ( claw::graphic::image& result, const std::string& file_path,
@@ -54,13 +56,14 @@ namespace pms
 
       void generate_output_with_gimp
       ( const detail::working_directory& dir,
-        const resources::image_mapping& images,
-        const layout::description& desc ) const;
+        const layout::sprite_sheet& sheet ) const;
+      void generate_output_with_gimp
+      ( const detail::working_directory& dir, std::size_t index,
+        const layout::sprite_sheet& sheet ) const;
 
       void generate_scm
       ( std::ostream& os, const detail::working_directory& dir,
-        const resources::image_mapping& images,
-        const layout::description& desc ) const;
+        std::size_t index, const layout::sprite_sheet& sheet ) const;
       
       void generate_scm
       ( std::ostream& os, const resources::image& image,

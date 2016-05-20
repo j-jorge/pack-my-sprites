@@ -40,21 +40,28 @@ void pms::generators::css::generate
 
   claw::logger << claw::log_verbose
                << "Generating CSS file for sprite sheet '"
-               << sheet.description.output_name << "' of '"
+               << sheet.output_name << "' of '"
                << spritedesc_file_path << "'"
                << std::endl;
 
-  generate_css( dir, sheet.description );
+  generate_css( dir, sheet );
 }
 
 void pms::generators::css::generate_css
-( const detail::working_directory& dir, const layout::description& desc ) const
+( const detail::working_directory& dir,
+  const layout::sprite_sheet& sheet ) const
 {
   const std::string filename
-    ( dir.get_output_file_path( desc.output_name, "css" ) );
+    ( dir.get_output_file_path( sheet.output_name, "css" ) );
 
   std::ofstream f( filename.c_str() );
-  generate_css( f, desc, dir.get_output_file_path( desc.output_name, "png" ) );
+
+  const std::size_t page_count( sheet.pages.size() );
+  
+  for ( std::size_t i( 0 ); i != page_count; ++i )
+    generate_css
+      ( f, sheet.pages[ i ],
+        dir.get_output_file_path( sheet.output_name, i, page_count, "png" ) );
 }
 
 void pms::generators::css::generate_css

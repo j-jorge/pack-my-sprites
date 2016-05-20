@@ -170,8 +170,8 @@ program_options_parser::parse( int argc, char** argv )
     result.output = arguments[ "output" ].as< std::string >();
   
   if ( arguments.count( "margin" ) != 0 )
-    result.margin = arguments[ "margin" ].as< std::uint32_t >();
-  
+      result.margin = arguments[ "margin" ].as< std::uint32_t >();
+
   result.strip_paths = ( arguments.count( "strip-paths" ) != 0 );
   
   if ( arguments.count( "size" ) != 0 )
@@ -183,12 +183,24 @@ program_options_parser::parse( int argc, char** argv )
 
   if ( arguments.count( "dry" ) != 0 )
     result.files_dry = arguments[ "dry" ].as< std::vector< std::string > >();
+
+  if ( result.margin >= result.canvas_size.width )
+    {
+      std::cerr << "The margin cannot be larger than the width.\n";
+      return boost::none;
+    }
+  
+  if ( result.margin >= result.canvas_size.height )
+    {
+      std::cerr << "The margin cannot be larger than the height.\n";
+      return boost::none;
+    }
   
   return result;
 }
 
-void configure_description
-( pms::layout::description& result, const program_arguments& arguments )
+void configure_sprite_sheet
+( pms::layout::sprite_sheet& result, const program_arguments& arguments )
 {
   result.width = arguments.canvas_size.width;
   result.height = arguments.canvas_size.height;
@@ -291,12 +303,6 @@ pms::layout::description::sprite create_sprite
 pms::layout::sprite_sheet
 build_sprite_sheet( const program_arguments& arguments )
 {
-  pms::layout::description description;
-
-  configure_description( description, arguments );
-  const file_to_name_mapping file_to_name( identify_input_files( arguments ) );
-  set_description_files( description, file_to_name );
-  
   pms::resources::image_mapping images
     ( ".",
       pms::gimp::system_interface
@@ -305,6 +311,14 @@ build_sprite_sheet( const program_arguments& arguments )
 
   load_images( images, arguments.files_dry );
   load_images( images, arguments.files_bleeding );
+  
+  pms::layout::sprite_sheet result( images );
+  configure_sprite_sheet( result, arguments );
+
+  pms::layout::description description;
+
+  const file_to_name_mapping file_to_name( identify_input_files( arguments ) );
+  set_description_files( description, file_to_name );
   
   for ( const std::string& file : arguments.files_dry )
     description.add_sprite
@@ -316,8 +330,7 @@ build_sprite_sheet( const program_arguments& arguments )
       ( create_sprite
         ( file_to_name.find( file )->second, file, images, true ) );
 
-  pms::layout::sprite_sheet result( images );
-  result.description = description;
+  result.pages.push_back( description );
   
   return result;
 }
@@ -340,6 +353,8 @@ int main( int argc, char** argv )
     {
       if ( pack_from_command_line( argc, argv ) )
         return 0;
+
+      std::cerr << "Could not build the sprite sheets.\n";
     }
   catch( const std::exception& e )
     {

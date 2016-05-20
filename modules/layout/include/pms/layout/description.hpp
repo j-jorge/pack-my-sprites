@@ -67,10 +67,8 @@ namespace pms
       std::string to_string() const;
 
     public:
-      std::string output_name;
       std::size_t width;
       std::size_t height;
-      std::size_t margin;
 
       id_to_file_map images;
 

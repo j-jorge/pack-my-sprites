@@ -31,9 +31,14 @@ namespace pms
       std::string to_string() const;
 
       bool internally_supported() const;
-    
+      
     public:
-      layout::description description;
+      std::string output_name;
+      std::size_t margin;
+      std::size_t width;
+      std::size_t height;
+
+      std::vector< layout::description > pages;
       resources::image_mapping image;
     };
   }

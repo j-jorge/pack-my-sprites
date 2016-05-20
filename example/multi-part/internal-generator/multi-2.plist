@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+<key>frames</key>
+<dict>
+<key>bird-6.png</key>
+<dict>
+<key>aliases</key>
+<array/>
+<key>spriteColorRect</key>
+<string>{{0, 0}, {75, 83}}</string>
+<key>spriteOffset</key>
+<string>{0, 0}</string>
+<key>spriteSize</key>
+<string>{75, 83}</string>
+<key>spriteSourceSize</key>
+<string>{75, 83}</string>
+<key>spriteTrimmed</key>
+<true/>
+<key>textureRect</key>
+<string>{{1, 1}, {75, 83}}</string>
+<key>textureRotated</key>
+<false/>
+</dict>
+<key>bird-7.png</key>
+<dict>
+<key>aliases</key>
+<array/>
+<key>spriteColorRect</key>
+<string>{{0, 0}, {75, 83}}</string>
+<key>spriteOffset</key>
+<string>{0, 0}</string>
+<key>spriteSize</key>
+<string>{75, 83}</string>
+<key>spriteSourceSize</key>
+<string>{75, 83}</string>
+<key>spriteTrimmed</key>
+<true/>
+<key>textureRect</key>
+<string>{{1, 85}, {75, 83}}</string>
+<key>textureRotated</key>
+<false/>
+</dict>
+<key>bird-8.png</key>
+<dict>
+<key>aliases</key>
+<array/>
+<key>spriteColorRect</key>
+<string>{{0, 0}, {75, 83}}</string>
+<key>spriteOffset</key>
+<string>{0, 0}</string>
+<key>spriteSize</key>
+<string>{75, 83}</string>
+<key>spriteSourceSize</key>
+<string>{75, 83}</string>
+<key>spriteTrimmed</key>
+<true/>
+<key>textureRect</key>
+<string>{{1, 169}, {75, 83}}</string>
+<key>textureRotated</key>
+<false/>
+</dict>
+</dict>
+<key>metadata</key>
+<dict>
+<key>version</key>
+<string>1.6.0</string>
+<key>format</key>
+<integer>3</integer>
+<key>size</key>
+<string>{77, 253}</string>
+<key>name</key>
+<string>multi-2</string>
+<key>textureFileName</key>
+<string>multi-2.png</string>
+<key>premultipliedAlpha</key>
+<false/>
+</dict>
+</dict>
+</plist>

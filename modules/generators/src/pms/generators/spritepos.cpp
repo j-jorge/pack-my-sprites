@@ -17,6 +17,8 @@
 
 #include "pms/generators/detail/working_directory.hpp"
 
+#include "pms/layout/sprite_sheet.hpp"
+
 #include <fstream>
 
 #include <claw/logger.hpp>
@@ -29,21 +31,31 @@ void pms::generators::spritepos::generate
 
   claw::logger << claw::log_verbose
                << "Generating spritepos file for sprite sheet '"
-               << sheet.description.output_name << "' of '"
+               << sheet.output_name << "' of '"
                << spritedesc_file_path << "'"
                << std::endl;
 
-  generate_spritepos( dir, sheet.description );
+  const std::size_t page_count( sheet.pages.size() );
+
+  for ( std::size_t i( 0 ); i != page_count; ++i )
+    {
+      claw::logger << claw::log_verbose
+                   << "Page " << ( i + 1 ) << '/' << page_count << "…\n";
+
+      generate_spritepos( dir, i, sheet );
+    }
 }
 
 void pms::generators::spritepos::generate_spritepos
-( const detail::working_directory& dir, const layout::description& desc ) const
+( const detail::working_directory& dir, std::size_t index,
+  const layout::sprite_sheet& sheet ) const
 {
   const std::string filename
-    ( dir.get_output_file_path( desc.output_name, "spritepos" ) );
+    ( dir.get_output_file_path
+      ( sheet.output_name, index, sheet.pages.size(), "spritepos" ) );
 
   std::ofstream f( filename.c_str() );
-  generate_spritepos( f, desc );
+  generate_spritepos( f, sheet.pages[ index ] );
 }
 
 void pms::generators::spritepos::generate_spritepos

@@ -100,6 +100,8 @@ int main( int argc, char** argv )
     {
       if ( pack_from_command_line( argc, argv ) )
         return 0;
+
+      std::cerr << "Could not build the sprite sheets.\n";
     }
   catch( const std::exception& e )
     {

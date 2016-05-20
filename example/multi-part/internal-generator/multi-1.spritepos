@@ -1,0 +1,17 @@
+20x10.png: 2 2 20 10
+11x21.png: 25 2 11 21 r
+22x12.png: 49 2 22 12
+13x23.png: 74 2 13 23 r
+line.png: 100 2 96 16
+checkboard.png: 199 2 32 32
+stripes.png: 2 16 32 32
+dialog-error.png: 37 18 48 48
+dialog-warning.png: 88 21 48 48
+non-starred.png: 139 21 48 48
+starred.png: 190 37 48 48
+bird-9.png: 1 71 94 69
+bird-1.png: 96 71 75 83 r
+bird-2.png: 180 87 75 83
+bird-3.png: 1 141 75 83 r
+bird-4.png: 85 147 75 83 r
+bird-5.png: 169 171 75 83 r

@@ -70,9 +70,47 @@ bool pms::app::packer::run
                << sheet.to_string()
                << " from file '" << source_file_path << "'\n";
 
-  if ( !layout::build( m_options.enable_sprite_rotation, sheet.description ) )
+  if ( !feasible( sheet ) )
     return false;
   
+  if ( !layout::build( m_options.enable_sprite_rotation, sheet ) )
+    return false;
+  
+  generate( source_file_path, sheet );
+  
+  return true;
+}
+
+bool pms::app::packer::feasible( const layout::sprite_sheet& sheet ) const
+{
+  const std::size_t margin( sheet.margin );
+  const std::size_t width( sheet.width );
+  const std::size_t height( sheet.height );
+  
+  for ( const layout::description& p : sheet.pages )
+    for ( layout::description::const_sprite_iterator it( p.sprite_begin() );
+          it != p.sprite_end(); ++it )
+      {
+        const std::size_t w( it->result_box.width + 2 * margin + it->bleed );
+        const std::size_t h( it->result_box.height + 2 * margin + it->bleed );
+        
+        if ( ( ( w > width ) || ( h > height ) )
+             && ( m_options.enable_sprite_rotation
+                  && ( ( w > height ) || ( h > width ) ) ) )
+          {
+            claw::logger << claw::log_error
+                         << "Sprite '" << it->name
+                         << "' is larger than the maximum page dimensions.\n";
+            return false;
+          }
+      }
+
+  return true;
+}
+
+void pms::app::packer::generate
+( const std::string& source_file_path, const layout::sprite_sheet& sheet ) const
+{
   generators::png generator( m_gimp );
   generator.generate( source_file_path, sheet );
 
@@ -93,8 +131,6 @@ bool pms::app::packer::run
       generators::css generator;
       generator.generate( source_file_path, sheet );
     }
-
-  return true;
 }
 
 boost::optional< pms::layout::sprite_sheet >

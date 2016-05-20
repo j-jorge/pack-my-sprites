@@ -29,28 +29,42 @@ void pms::generators::plist::generate
 
   claw::logger << claw::log_verbose
                << "Generating plist file for sprite sheet '"
-               << sheet.description.output_name << "' of '"
+               << sheet.output_name << "' of '"
                << spritedesc_file_path << "'"
                << std::endl;
 
-  generate_plist( dir, sheet.description );
+  const std::size_t page_count( sheet.pages.size() );
+
+  for ( std::size_t i( 0 ); i != page_count; ++i )
+    {
+      claw::logger << claw::log_verbose
+                   << "Page " << ( i + 1 ) << '/' << page_count << "…\n";
+
+      generate_plist( dir, i, sheet );
+    }
 }
 
 void pms::generators::plist::generate_plist
-( const detail::working_directory& dir, const layout::description& desc ) const
+( const detail::working_directory& dir, std::size_t index,
+  const layout::sprite_sheet& sheet ) const
 {
+  const std::size_t page_count( sheet.pages.size() );
   const std::string filename
-    ( dir.get_output_file_path( desc.output_name, "plist" ) );
+    ( dir.get_output_file_path
+      ( sheet.output_name, index, page_count, "plist" ) );
 
   std::ofstream f( filename.c_str() );
-  generate_plist( f, desc );
+  generate_plist
+    ( f, dir.get_output_file_name( sheet.output_name, index, page_count, "" ),
+      sheet.pages[ index ] );
 }
 
 void pms::generators::plist::generate_plist
-( std::ostream& os, const layout::description& desc ) const
+( std::ostream& os, const std::string& base_name,
+  const layout::description& desc ) const
 {
   os << get_plist_header()
-     << get_plist_body( desc );
+     << get_plist_body( base_name, desc );
 }
 
 std::string pms::generators::plist::get_plist_header() const
@@ -61,12 +75,13 @@ std::string pms::generators::plist::get_plist_header() const
 }
 
 std::string
-pms::generators::plist::get_plist_body( const layout::description& desc ) const
+pms::generators::plist::get_plist_body
+( const std::string& base_name, const layout::description& desc ) const
 {
   return std::string( "<plist version=\"1.0\">\n" )
     + "<dict>\n"
     + get_frames_entry( desc )
-    + get_metadata_entry( desc )
+    + get_metadata_entry( base_name, desc )
     + "</dict>\n"
     + "</plist>\n";
 }
@@ -124,7 +139,7 @@ pms::generators::plist::get_sprite_entry
 
 std::string
 pms::generators::plist::get_metadata_entry
-( const layout::description& desc ) const
+( const std::string& base_name, const layout::description& desc ) const
 {
   std::ostringstream result;
   
@@ -137,9 +152,9 @@ pms::generators::plist::get_metadata_entry
     "<key>size</key>\n"
     "<string>{" << desc.width << ", " << desc.height << "}</string>\n"
     "<key>name</key>\n"
-    "<string>" << desc.output_name << "</string>\n"
+    "<string>" << base_name << "</string>\n"
     "<key>textureFileName</key>\n"
-    "<string>" << desc.output_name << ".png</string>\n"
+    "<string>" << base_name << ".png</string>\n"
     "<key>premultipliedAlpha</key>\n"
     "<false/>\n"
     "</dict>\n";

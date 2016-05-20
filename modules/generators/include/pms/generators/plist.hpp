@@ -35,17 +35,20 @@ namespace pms
 
     private:
       void generate_plist
-      ( const detail::working_directory& dir,
-        const layout::description& desc ) const;
+      ( const detail::working_directory& dir, std::size_t index,
+        const layout::sprite_sheet& sheet ) const;
       void generate_plist
-      ( std::ostream& os, const layout::description& desc ) const;
+      ( std::ostream& os, const std::string& base_name,
+        const layout::description& desc ) const;
 
       std::string get_plist_header() const;
-      std::string get_plist_body( const layout::description& desc ) const;
+      std::string get_plist_body
+      ( const std::string& base_name, const layout::description& desc ) const;
       std::string get_frames_entry( const layout::description& desc ) const;
       std::string
       get_sprite_entry( const layout::description::sprite& sprite ) const;
-      std::string get_metadata_entry( const layout::description& desc ) const;
+      std::string get_metadata_entry
+      ( const std::string& base_name, const layout::description& desc ) const;
     };
   }
 }

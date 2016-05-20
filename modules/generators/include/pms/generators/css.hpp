@@ -36,7 +36,7 @@ namespace pms
     private:
       void generate_css
       ( const detail::working_directory& dir,
-        const layout::description& desc ) const;
+        const layout::sprite_sheet& sheet ) const;
       void generate_css
       ( std::ostream& os, const layout::description& desc,
         const std::string& sprite_sheet_name ) const;

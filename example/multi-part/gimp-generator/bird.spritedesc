@@ -1,0 +1,66 @@
+sprite_sheet "bird" 200 x 200
+
+/* The source images. */
+fly "bird-fly.xcf.bz2"
+afraid "bird-afraid.xcf.bz2"
+
+/* The sprites. */
+"afraid" autosize * 0.33 with afraid
+  "eyes"
+  "beak"
+  "body"
+  "tail"
+  ;
+
+"fly 1" autosize * 0.33 with fly
+  "body"
+  "eyes"
+  "back wing 1"
+  "wing 1"
+  ;
+
+"fly 2" autosize * 0.33 with fly
+  "body"
+  "eyes"
+  "back wing 2"
+  "wing 2"
+  ;
+
+"fly 3" autosize * 0.33 with fly
+  "body"
+  "eyes"
+  "back wing 3"
+  "wing 3"
+  ;
+
+"fly 4" autosize * 0.33 with fly
+  "body"
+  "eyes"
+  "wing 4"
+  ;
+
+"fly 5" autosize * 0.33 with fly
+  "body"
+  "eyes"
+  "wing 5"
+  ;
+
+"fly 6" autosize * 0.33 with fly
+  "body"
+  "eyes"
+  "back wing 6"
+  "wing 6"
+  ;
+
+"fly 7" autosize * 0.33 with fly
+  "body"
+  "eyes"
+  "back wing 7"
+  "wing 7"
+  ;
+
+"fly 8" autosize * 0.33 with fly
+  "body"
+  "eyes"
+  "wing 8"
+  ;

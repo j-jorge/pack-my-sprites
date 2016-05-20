@@ -1,0 +1,224 @@
+.20x10 {
+  background-image: url('./multi-1.png');
+  background-position: -2px -2px;
+  width: 20px;
+  height: 10px;
+}
+
+.11x21::before {
+  content: "";
+  position: absolute;
+  width: 21px;
+  height: 11px;
+  top: 21px;
+  left: 0;
+  z-index: -1;
+  background-image: url('./multi-1.png');
+  background-position: -25px -2px;
+  transform: rotate(-90deg);
+  transform-origin: 0 0;
+}
+
+.11x21 {
+  position: relative;
+  width: 11px;
+  height: 21px;
+  z-index: 1;
+}
+
+.22x12 {
+  background-image: url('./multi-1.png');
+  background-position: -49px -2px;
+  width: 22px;
+  height: 12px;
+}
+
+.13x23::before {
+  content: "";
+  position: absolute;
+  width: 23px;
+  height: 13px;
+  top: 23px;
+  left: 0;
+  z-index: -1;
+  background-image: url('./multi-1.png');
+  background-position: -74px -2px;
+  transform: rotate(-90deg);
+  transform-origin: 0 0;
+}
+
+.13x23 {
+  position: relative;
+  width: 13px;
+  height: 23px;
+  z-index: 1;
+}
+
+.line {
+  background-image: url('./multi-1.png');
+  background-position: -100px -2px;
+  width: 96px;
+  height: 16px;
+}
+
+.checkboard {
+  background-image: url('./multi-1.png');
+  background-position: -199px -2px;
+  width: 32px;
+  height: 32px;
+}
+
+.stripes {
+  background-image: url('./multi-1.png');
+  background-position: -2px -16px;
+  width: 32px;
+  height: 32px;
+}
+
+.dialog-error {
+  background-image: url('./multi-1.png');
+  background-position: -37px -18px;
+  width: 48px;
+  height: 48px;
+}
+
+.dialog-warning {
+  background-image: url('./multi-1.png');
+  background-position: -88px -21px;
+  width: 48px;
+  height: 48px;
+}
+
+.non-starred {
+  background-image: url('./multi-1.png');
+  background-position: -139px -21px;
+  width: 48px;
+  height: 48px;
+}
+
+.starred {
+  background-image: url('./multi-1.png');
+  background-position: -190px -37px;
+  width: 48px;
+  height: 48px;
+}
+
+.bird-9 {
+  background-image: url('./multi-1.png');
+  background-position: -1px -71px;
+  width: 94px;
+  height: 69px;
+}
+
+.bird-1::before {
+  content: "";
+  position: absolute;
+  width: 83px;
+  height: 75px;
+  top: 83px;
+  left: 0;
+  z-index: -1;
+  background-image: url('./multi-1.png');
+  background-position: -96px -71px;
+  transform: rotate(-90deg);
+  transform-origin: 0 0;
+}
+
+.bird-1 {
+  position: relative;
+  width: 75px;
+  height: 83px;
+  z-index: 1;
+}
+
+.bird-2 {
+  background-image: url('./multi-1.png');
+  background-position: -180px -87px;
+  width: 75px;
+  height: 83px;
+}
+
+.bird-3::before {
+  content: "";
+  position: absolute;
+  width: 83px;
+  height: 75px;
+  top: 83px;
+  left: 0;
+  z-index: -1;
+  background-image: url('./multi-1.png');
+  background-position: -1px -141px;
+  transform: rotate(-90deg);
+  transform-origin: 0 0;
+}
+
+.bird-3 {
+  position: relative;
+  width: 75px;
+  height: 83px;
+  z-index: 1;
+}
+
+.bird-4::before {
+  content: "";
+  position: absolute;
+  width: 83px;
+  height: 75px;
+  top: 83px;
+  left: 0;
+  z-index: -1;
+  background-image: url('./multi-1.png');
+  background-position: -85px -147px;
+  transform: rotate(-90deg);
+  transform-origin: 0 0;
+}
+
+.bird-4 {
+  position: relative;
+  width: 75px;
+  height: 83px;
+  z-index: 1;
+}
+
+.bird-5::before {
+  content: "";
+  position: absolute;
+  width: 83px;
+  height: 75px;
+  top: 83px;
+  left: 0;
+  z-index: -1;
+  background-image: url('./multi-1.png');
+  background-position: -169px -171px;
+  transform: rotate(-90deg);
+  transform-origin: 0 0;
+}
+
+.bird-5 {
+  position: relative;
+  width: 75px;
+  height: 83px;
+  z-index: 1;
+}
+
+.bird-6 {
+  background-image: url('./multi-2.png');
+  background-position: -1px -1px;
+  width: 75px;
+  height: 83px;
+}
+
+.bird-7 {
+  background-image: url('./multi-2.png');
+  background-position: -1px -85px;
+  width: 75px;
+  height: 83px;
+}
+
+.bird-8 {
+  background-image: url('./multi-2.png');
+  background-position: -1px -169px;
+  width: 75px;
+  height: 83px;
+}
+

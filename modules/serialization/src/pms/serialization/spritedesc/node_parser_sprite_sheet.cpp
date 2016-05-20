@@ -27,24 +27,26 @@ void pms::serialization::spritedesc::node_parser_sprite_sheet::parse_node
 {
   CLAW_PRECOND( node.children.size() > 4 );
 
-  parse_name( sheet.description, node.children[0] );
-  parse_width( sheet.description, node.children[1] );
-  parse_height( sheet.description, node.children[2] );
+  parse_name( sheet, node.children[0] );
+  parse_width( sheet, node.children[1] );
+  parse_height( sheet, node.children[2] );
   
   std::size_t i(3);
 
-  if ( parse_margin( sheet.description, node.children[i] ) )
+  if ( parse_margin( sheet, node.children[i] ) )
     ++i;
 
   // skip order
   if ( node.children[i].value.id() == grammar::id_string )
     ++i;
 
+  layout::description desc;
+  
   while ( (i != node.children.size())
           && ( node.children[i].value.id() == grammar::id_image_declaration ) )
     {
       node_parser_image_entry call;
-      call.parse_node( sheet.image, sheet.description, node.children[i] );
+      call.parse_node( sheet.image, desc, node.children[i] );
       ++i;
     }
 
@@ -53,7 +55,7 @@ void pms::serialization::spritedesc::node_parser_sprite_sheet::parse_node
       if ( node.children[i].value.id() == grammar::id_sprite_declaration )
         {
           node_parser_sprite_declaration call;
-          call.parse_node( sheet.image, sheet.description, node.children[i] );
+          call.parse_node( sheet.image, desc, node.children[i] );
         }
       else
         {
@@ -66,48 +68,50 @@ void pms::serialization::spritedesc::node_parser_sprite_sheet::parse_node
       ++i;
     }
 
-  check_image_usage( sheet.description );
+  check_image_usage( sheet.output_name, desc );
+
+  sheet.pages.push_back( desc );
 }
 
 void pms::serialization::spritedesc::node_parser_sprite_sheet::parse_name
-( layout::description& desc, const tree_node& node ) const
+( layout::sprite_sheet& sheet, const tree_node& node ) const
 {
-  desc.output_name = std::string( node.value.begin(), node.value.end() );
+  sheet.output_name = std::string( node.value.begin(), node.value.end() );
 }
 
 void pms::serialization::spritedesc::node_parser_sprite_sheet::parse_width
-( layout::description& desc, const tree_node& node ) const
+( layout::sprite_sheet& sheet, const tree_node& node ) const
 {
   std::istringstream iss( std::string( node.value.begin(), node.value.end() ) );
-  iss >> desc.width;
+  iss >> sheet.width;
 }
 
 void pms::serialization::spritedesc::node_parser_sprite_sheet::parse_height
-( layout::description& desc, const tree_node& node ) const
+( layout::sprite_sheet& sheet, const tree_node& node ) const
 {
   std::istringstream iss( std::string( node.value.begin(), node.value.end() ) );
-  iss >> desc.height;
+  iss >> sheet.height;
 }
 
 bool pms::serialization::spritedesc::node_parser_sprite_sheet::parse_margin
-( layout::description& desc, const tree_node& node ) const
+( layout::sprite_sheet& sheet, const tree_node& node ) const
 {
   if ( node.value.id() == grammar::id_margin )
     {
       std::istringstream iss
         ( std::string( node.value.begin(), node.value.end() ) );
-      iss >> desc.margin;
+      iss >> sheet.margin;
       return true;
     }
   else
     {
-      desc.margin = 1;
+      sheet.margin = 1;
       return false;
     }
 }
 
 void pms::serialization::spritedesc::node_parser_sprite_sheet::check_image_usage
-( const layout::description& desc ) const
+( const std::string& output_name, const layout::description& desc ) const
 {
   layout::description::id_to_file_map images = desc.images;
   
@@ -119,5 +123,5 @@ void pms::serialization::spritedesc::node_parser_sprite_sheet::check_image_usage
         it != images.end(); ++it )
     std::cerr << "warning: Image file '" << it->second << "' identified as '"
               << it->first << "' is never used in sprite sheet '"
-              << desc.output_name << "'." << std::endl;
+              << output_name << "'." << std::endl;
 }

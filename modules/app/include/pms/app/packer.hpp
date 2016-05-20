@@ -33,6 +33,12 @@ namespace pms
       ( const std::string& source_file_path, layout::sprite_sheet sheet ) const;
 
     private:
+      bool feasible( const layout::sprite_sheet& sheet ) const;
+      
+      void generate
+      ( const std::string& source_file_path,
+        const layout::sprite_sheet& sheet ) const;
+      
       boost::optional< layout::sprite_sheet >
       generate_sprite_sheet( const std::string& file_name ) const;
 

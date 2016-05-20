@@ -38,15 +38,17 @@ namespace pms
 
       private:
         void parse_name
-        ( layout::description& desc, const tree_node& node ) const;
+        ( layout::sprite_sheet& sheet, const tree_node& node ) const;
         void parse_width
-        ( layout::description& desc, const tree_node& node ) const;
+        ( layout::sprite_sheet& sheet, const tree_node& node ) const;
         void parse_height
-        ( layout::description& desc, const tree_node& node ) const;
+        ( layout::sprite_sheet& sheet, const tree_node& node ) const;
         bool parse_margin
-        ( layout::description& desc, const tree_node& node ) const;
+        ( layout::sprite_sheet& sheet, const tree_node& node ) const;
 
-        void check_image_usage( const layout::description& desc ) const;
+        void check_image_usage
+        ( const std::string& output_name,
+          const layout::description& desc ) const;
       };
     }
   }
