@@ -19,6 +19,13 @@ endif()
 
 set( PMS_INSTALL_SCRIPT_DIR "${PMS_INSTALL_RESOURCES_DIR}/script" )
 
+if( NOT PMS_DEFAULT_SCHEME_PATH )
+  set(
+    PMS_DEFAULT_SCHEME_PATH
+    "${CMAKE_INSTALL_PREFIX}/${PMS_INSTALL_SCRIPT_DIR}"
+    )
+endif()
+
 function( install_script SOURCE )
 
   install(

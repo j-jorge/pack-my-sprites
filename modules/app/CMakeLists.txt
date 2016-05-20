@@ -18,6 +18,13 @@ add_library( pms_app STATIC
   src/pms/app/packer_options.cpp
   )
 
+set_target_properties(
+  pms_app
+  PROPERTIES
+  COMPILE_DEFINITIONS
+  "${PMS_COMPILE_DEFINITIONS}"
+  )
+
 target_include_directories(
   pms_app
   PUBLIC include
