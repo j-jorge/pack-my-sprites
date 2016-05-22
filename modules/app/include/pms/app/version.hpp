@@ -20,7 +20,7 @@
 
 #define PMS_MAJOR_VERSION 1
 #define PMS_MINOR_VERSION 0
-#define PMS_RELEASE_NUMBER 3
+#define PMS_RELEASE_NUMBER 4
 #define PMS_VERSION_STRING "Pack My Sprites, "                          \
   PMS_TO_STR(PMS_MAJOR_VERSION) "." PMS_TO_STR(PMS_MINOR_VERSION)       \
   "." PMS_TO_STR(PMS_RELEASE_NUMBER)
