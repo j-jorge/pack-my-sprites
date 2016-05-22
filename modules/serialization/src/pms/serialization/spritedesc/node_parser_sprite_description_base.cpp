@@ -20,7 +20,7 @@
 void
 pms::serialization::spritedesc::node_parser_sprite_description_base
 ::apply_result_box_ratio
-( layout::description::sprite& s, const tree_node& node ) const
+( layout::atlas_page::sprite& s, const tree_node& node ) const
 { 
   const std::string input( node.value.begin(), node.value.end() );
   std::istringstream iss( input );
@@ -36,7 +36,7 @@ pms::serialization::spritedesc::node_parser_sprite_description_base
 void
 pms::serialization::spritedesc::node_parser_sprite_description_base
 ::apply_result_box_ratio
-( layout::description::sprite& s, float ratio ) const
+( layout::atlas_page::sprite& s, float ratio ) const
 { 
   s.result_box.width = s.source_box.width * ratio;
   s.result_box.height = s.source_box.height * ratio;
@@ -45,7 +45,7 @@ pms::serialization::spritedesc::node_parser_sprite_description_base
 void
 pms::serialization::spritedesc::node_parser_sprite_description_base
 ::crop_sprite_to_image_bounds
-( const resources::image& image, layout::description::sprite& s ) const
+( const resources::image& image, layout::atlas_page::sprite& s ) const
 {
   if ( s.source_box.position.x < 0 )
     {
@@ -69,7 +69,7 @@ pms::serialization::spritedesc::node_parser_sprite_description_base
 boost::optional< const pms::resources::image& >
 pms::serialization::spritedesc::node_parser_sprite_description_base
 ::get_image_from_id
-( const resources::image_mapping& images, const layout::description& desc,
+( const resources::image_mapping& images, const layout::atlas_page& desc,
   const std::string& image_id ) const
 {
   // solve the image name from the identifier.

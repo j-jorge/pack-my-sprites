@@ -26,7 +26,7 @@ namespace pms
 {
   namespace layout
   {
-    class description
+    class atlas_page
     {
     public:
       struct sprite

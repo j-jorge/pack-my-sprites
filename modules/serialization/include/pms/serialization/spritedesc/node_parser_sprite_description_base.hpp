@@ -15,7 +15,7 @@
  */
 #pragma once
 
-#include "pms/layout/description.hpp"
+#include "pms/layout/atlas_page.hpp"
 #include "pms/resources/image_mapping.hpp"
 #include "pms/serialization/spritedesc/node_parser.hpp"
 
@@ -30,17 +30,17 @@ namespace pms
       {
       protected:
         void apply_result_box_ratio
-        ( layout::description::sprite& s, const tree_node& node ) const;
+        ( layout::atlas_page::sprite& s, const tree_node& node ) const;
 
         void apply_result_box_ratio
-        ( layout::description::sprite& s, float ratio ) const;
+        ( layout::atlas_page::sprite& s, float ratio ) const;
 
         void crop_sprite_to_image_bounds
-        ( const resources::image& image, layout::description::sprite& s ) const;
+        ( const resources::image& image, layout::atlas_page::sprite& s ) const;
 
         boost::optional< const resources::image& > get_image_from_id
         ( const resources::image_mapping& images,
-          const layout::description& desc,
+          const layout::atlas_page& desc,
           const std::string& image_id ) const;
 
       };

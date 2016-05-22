@@ -20,10 +20,10 @@
 #include <claw/string_algorithm.hpp>
 
 void pms::serialization::spritedesc::node_parser_sprite_declaration::parse_node
-( const resources::image_mapping& images, layout::description& desc,
+( const resources::image_mapping& images, layout::atlas_page& desc,
   const tree_node& node ) const
 {
-  layout::description::sprite s;
+  layout::atlas_page::sprite s;
   s.bleed = false;
 
   std::size_t n( 0 );
@@ -62,7 +62,7 @@ void pms::serialization::spritedesc::node_parser_sprite_declaration::parse_node
 void
 pms::serialization::spritedesc::node_parser_sprite_declaration
 ::apply_sprite_properties
-( layout::description::sprite& result, const tree_node& properties_node ) const
+( layout::atlas_page::sprite& result, const tree_node& properties_node ) const
 {
   const std::vector<std::string> properties
     ( get_properties( properties_node ) );
@@ -100,7 +100,7 @@ pms::serialization::spritedesc::node_parser_sprite_declaration::get_properties
 
 void
 pms::serialization::spritedesc::node_parser_sprite_declaration::get_sprite_name
-( layout::description::sprite& s, const tree_node& node ) const
+( layout::atlas_page::sprite& s, const tree_node& node ) const
 {
   const std::string name( node.value.begin(), node.value.end() );
 
@@ -110,7 +110,7 @@ pms::serialization::spritedesc::node_parser_sprite_declaration::get_sprite_name
 
 void
 pms::serialization::spritedesc::node_parser_sprite_declaration::get_image_id
-( layout::description::sprite& s, const tree_node& node ) const
+( layout::atlas_page::sprite& s, const tree_node& node ) const
 {
   s.image_id = std::string( node.value.begin(), node.value.end() );
 }
@@ -118,7 +118,7 @@ pms::serialization::spritedesc::node_parser_sprite_declaration::get_image_id
 void
 pms::serialization::spritedesc::node_parser_sprite_declaration
 ::get_layers_and_size
-( const resources::image& image, layout::description::sprite& s,
+( const resources::image& image, layout::atlas_page::sprite& s,
   const tree_node& size_node, const tree_node& layer_list_node ) const
 {
   tree_node key_node;
@@ -295,7 +295,7 @@ pms::serialization::spritedesc::node_parser_sprite_declaration::add_single_layer
 void
 pms::serialization::spritedesc::node_parser_sprite_declaration
 ::compute_source_box
-( layout::description::sprite& s ) const
+( layout::atlas_page::sprite& s ) const
 {
   std::vector<resources::layer>::const_iterator it;
   bool initialized( false );

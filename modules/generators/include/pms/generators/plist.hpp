@@ -39,16 +39,16 @@ namespace pms
         const layout::atlas& atlas ) const;
       void generate_plist
       ( std::ostream& os, const std::string& base_name,
-        const layout::description& desc ) const;
+        const layout::atlas_page& desc ) const;
 
       std::string get_plist_header() const;
       std::string get_plist_body
-      ( const std::string& base_name, const layout::description& desc ) const;
-      std::string get_frames_entry( const layout::description& desc ) const;
+      ( const std::string& base_name, const layout::atlas_page& desc ) const;
+      std::string get_frames_entry( const layout::atlas_page& desc ) const;
       std::string
-      get_sprite_entry( const layout::description::sprite& sprite ) const;
+      get_sprite_entry( const layout::atlas_page::sprite& sprite ) const;
       std::string get_metadata_entry
-      ( const std::string& base_name, const layout::description& desc ) const;
+      ( const std::string& base_name, const layout::atlas_page& desc ) const;
     };
   }
 }

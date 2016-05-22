@@ -15,7 +15,7 @@
  */
 #pragma once
 
-#include "pms/layout/description.hpp"
+#include "pms/layout/atlas_page.hpp"
 #include "pms/resources/image_mapping.hpp"
 
 namespace pms
@@ -38,7 +38,7 @@ namespace pms
       std::size_t width;
       std::size_t height;
 
-      std::vector< layout::description > pages;
+      std::vector< layout::atlas_page > pages;
       resources::image_mapping image;
     };
   }

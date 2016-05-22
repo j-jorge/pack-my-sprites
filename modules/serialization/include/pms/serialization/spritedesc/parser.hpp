@@ -15,7 +15,7 @@
  */
 #pragma once
 
-#include "pms/layout/description.hpp"
+#include "pms/layout/atlas_page.hpp"
 
 #include <boost/spirit/include/classic.hpp>
 #include <boost/spirit/include/classic_position_iterator.hpp>

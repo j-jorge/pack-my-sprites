@@ -21,16 +21,16 @@
 #include <tuple>
 
 void print
-( const pms::layout::description& description,
-  const std::vector< pms::layout::description::sprite >& sprites )
+( const pms::layout::atlas_page& atlas_page,
+  const std::vector< pms::layout::atlas_page::sprite >& sprites )
 {
-  for ( std::size_t cy( 0 ); cy != description.height; ++cy )
+  for ( std::size_t cy( 0 ); cy != atlas_page.height; ++cy )
     {
-      for ( std::size_t cx( 0 ); cx != description.width; )
+      for ( std::size_t cx( 0 ); cx != atlas_page.width; )
         {
           bool p( false );
           
-          for ( const pms::layout::description::sprite& sprite : sprites )
+          for ( const pms::layout::atlas_page::sprite& sprite : sprites )
             if ( ( sprite.result_box.position.x == cx )
                  && ( sprite.result_box.position.y <= cy )
                  && ( cy - sprite.result_box.position.y
@@ -54,11 +54,11 @@ void print
     }
 }
 
-pms::layout::description::sprite create_sprite
+pms::layout::atlas_page::sprite create_sprite
 ( const std::string& id, const std::string name, int width, int height,
   bool bleed )
 {
-  pms::layout::description::sprite result;
+  pms::layout::atlas_page::sprite result;
   result.image_id = id;
   result.name = name;
   result.source_box.set( 0, 0, 10, 20 );
@@ -89,18 +89,18 @@ void fit_one()
   atlas.height = 300;
   atlas.margin = 0;
   
-  pms::layout::description description;
-  description.images[ "a" ] = "path/to/a";
-  description.add_sprite( create_sprite( "a", "b", 200, 300, false ) );
+  pms::layout::atlas_page atlas_page;
+  atlas_page.images[ "a" ] = "path/to/a";
+  atlas_page.add_sprite( create_sprite( "a", "b", 200, 300, false ) );
 
-  atlas.pages.push_back( description );
+  atlas.pages.push_back( atlas_page );
   
   TEST( pms::layout::build( false, atlas ) );
   TEST_EQ( 1, atlas.pages.size() );
 
-  description = atlas.pages[ 0 ];
+  atlas_page = atlas.pages[ 0 ];
 
-  const auto it( description.get_sprite_by_name( "b" ) );
+  const auto it( atlas_page.get_sprite_by_name( "b" ) );
   
   TEST( it->result_box.position.x == 0 );
   TEST( it->result_box.position.y == 0 );
@@ -115,11 +115,11 @@ void fit_rotate()
   atlas.height = 200;
   atlas.margin = 0;
   
-  pms::layout::description description;
-  description.images[ "a" ] = "path/to/a";
-  description.add_sprite( create_sprite( "a", "b", 200, 300, false ) );
+  pms::layout::atlas_page atlas_page;
+  atlas_page.images[ "a" ] = "path/to/a";
+  atlas_page.add_sprite( create_sprite( "a", "b", 200, 300, false ) );
   
-  atlas.pages.push_back( description );
+  atlas.pages.push_back( atlas_page );
   
   TEST( pms::layout::build( true, atlas ) );
   TEST_EQ( 1, atlas.pages.size() );
@@ -140,11 +140,11 @@ void forbid_rotate()
   atlas.height = 200;
   atlas.margin = 0;
   
-  pms::layout::description description;
-  description.images[ "a" ] = "path/to/a";
-  description.add_sprite( create_sprite( "a", "b", 200, 300, false ) );
+  pms::layout::atlas_page atlas_page;
+  atlas_page.images[ "a" ] = "path/to/a";
+  atlas_page.add_sprite( create_sprite( "a", "b", 200, 300, false ) );
   
-  atlas.pages.push_back( description );
+  atlas.pages.push_back( atlas_page );
 
   TEST( !pms::layout::build( false, atlas ) );
 }
@@ -156,11 +156,11 @@ void final_size()
   atlas.height = 3000;
   atlas.margin = 0;
   
-  pms::layout::description description;
-  description.images[ "a" ] = "path/to/a";
-  description.add_sprite( create_sprite( "a", "b", 200, 300, false ) );
+  pms::layout::atlas_page atlas_page;
+  atlas_page.images[ "a" ] = "path/to/a";
+  atlas_page.add_sprite( create_sprite( "a", "b", 200, 300, false ) );
   
-  atlas.pages.push_back( description );
+  atlas.pages.push_back( atlas_page );
 
   TEST( pms::layout::build( false, atlas ) );
   TEST_EQ( 1, atlas.pages.size() );
@@ -176,37 +176,37 @@ void rotate()
   atlas.height = 40;
   atlas.margin = 0;
 
-  pms::layout::description description;
-  description.images[ "a" ] = "path/to/a";
+  pms::layout::atlas_page atlas_page;
+  atlas_page.images[ "a" ] = "path/to/a";
 
-  description.add_sprite( create_sprite( "a", "s1", 20, 10, false ) );
-  description.add_sprite( create_sprite( "a", "s2", 11, 21, false ) );
-  description.add_sprite( create_sprite( "a", "s3", 22, 12, false ) );
-  description.add_sprite( create_sprite( "a", "s4", 13, 23, false ) );
+  atlas_page.add_sprite( create_sprite( "a", "s1", 20, 10, false ) );
+  atlas_page.add_sprite( create_sprite( "a", "s2", 11, 21, false ) );
+  atlas_page.add_sprite( create_sprite( "a", "s3", 22, 12, false ) );
+  atlas_page.add_sprite( create_sprite( "a", "s4", 13, 23, false ) );
 
-  atlas.pages.push_back( description );
+  atlas.pages.push_back( atlas_page );
 
   TEST( pms::layout::build( true, atlas ) );
   TEST_EQ( 1, atlas.pages.size() );
 
-  description = atlas.pages[ 0 ];
+  atlas_page = atlas.pages[ 0 ];
 
-  std::vector< pms::layout::description::sprite > sprites
-    ( description.sprite_begin(), description.sprite_end() );
+  std::vector< pms::layout::atlas_page::sprite > sprites
+    ( atlas_page.sprite_begin(), atlas_page.sprite_end() );
   std::sort
     ( sprites.begin(), sprites.end(),
-      []( const pms::layout::description::sprite& a,
-          const pms::layout::description::sprite& b ) -> bool
+      []( const pms::layout::atlas_page::sprite& a,
+          const pms::layout::atlas_page::sprite& b ) -> bool
       {
         return
           std::make_tuple( a.result_box.position.x, a.result_box.position.y )
           < std::make_tuple( b.result_box.position.x, b.result_box.position.y );
       } );
 
-  pms::layout::description::sprite& s1( sprites[ 3 ] );
-  const pms::layout::description::sprite& s2( sprites[ 2 ] );
-  const pms::layout::description::sprite& s3( sprites[ 1 ] );
-  const pms::layout::description::sprite& s4( sprites[ 0 ] );
+  pms::layout::atlas_page::sprite& s1( sprites[ 3 ] );
+  const pms::layout::atlas_page::sprite& s2( sprites[ 2 ] );
+  const pms::layout::atlas_page::sprite& s3( sprites[ 1 ] );
+  const pms::layout::atlas_page::sprite& s4( sprites[ 0 ] );
 
   TEST( s1.rotated );
   TEST( !s2.rotated );
@@ -215,8 +215,8 @@ void rotate()
 
   std::swap( s1.result_box.width, s1.result_box.height );
 
-  TEST_EQ( 34, description.width );
-  TEST_EQ( 35, description.height );
+  TEST_EQ( 34, atlas_page.width );
+  TEST_EQ( 35, atlas_page.height );
 
   TEST_EQ( 10, s1.result_box.width );
   TEST_EQ( 11, s2.result_box.width );
@@ -243,30 +243,30 @@ void margin()
   atlas.height = 60;
   atlas.margin = 2;
 
-  pms::layout::description description;
-  description.images[ "a" ] = "path/to/a";
+  pms::layout::atlas_page atlas_page;
+  atlas_page.images[ "a" ] = "path/to/a";
 
-  description.add_sprite( create_sprite( "a", "s1", 10, 20, false ) );
-  description.add_sprite( create_sprite( "a", "s2", 10, 20, false ) );
-  description.add_sprite( create_sprite( "a", "s3", 10, 20, false ) );
-  description.add_sprite( create_sprite( "a", "s4", 10, 20, false ) );
+  atlas_page.add_sprite( create_sprite( "a", "s1", 10, 20, false ) );
+  atlas_page.add_sprite( create_sprite( "a", "s2", 10, 20, false ) );
+  atlas_page.add_sprite( create_sprite( "a", "s3", 10, 20, false ) );
+  atlas_page.add_sprite( create_sprite( "a", "s4", 10, 20, false ) );
 
-  atlas.pages.push_back( description );
+  atlas.pages.push_back( atlas_page );
 
   TEST( pms::layout::build( false, atlas ) );
   TEST_EQ( 1, atlas.pages.size() );
 
-  description = atlas.pages[ 0 ];
+  atlas_page = atlas.pages[ 0 ];
 
-  TEST_EQ( 26, description.width );
-  TEST_EQ( 46, description.height );
+  TEST_EQ( 26, atlas_page.width );
+  TEST_EQ( 46, atlas_page.height );
 
-  std::vector< pms::layout::description::sprite > sprites
-    ( description.sprite_begin(), description.sprite_end() );
+  std::vector< pms::layout::atlas_page::sprite > sprites
+    ( atlas_page.sprite_begin(), atlas_page.sprite_end() );
   std::sort
     ( sprites.begin(), sprites.end(),
-      []( const pms::layout::description::sprite& a,
-          const pms::layout::description::sprite& b ) -> bool
+      []( const pms::layout::atlas_page::sprite& a,
+          const pms::layout::atlas_page::sprite& b ) -> bool
       {
         return
           std::make_tuple( a.result_box.position.x, a.result_box.position.y )
@@ -302,20 +302,20 @@ void bleeding()
   atlas.height = 30;
   atlas.margin = 0;
 
-  pms::layout::description description;
-  description.images[ "a" ] = "path/to/a";
+  pms::layout::atlas_page atlas_page;
+  atlas_page.images[ "a" ] = "path/to/a";
 
-  description.add_sprite( create_sprite( "a", "s1", 20, 10, true ) );
-  description.add_sprite( create_sprite( "a", "s2", 21, 11, false ) );
-  description.add_sprite( create_sprite( "a", "s3", 22, 12, false ) );
-  description.add_sprite( create_sprite( "a", "s4", 23, 13, true ) );
+  atlas_page.add_sprite( create_sprite( "a", "s1", 20, 10, true ) );
+  atlas_page.add_sprite( create_sprite( "a", "s2", 21, 11, false ) );
+  atlas_page.add_sprite( create_sprite( "a", "s3", 22, 12, false ) );
+  atlas_page.add_sprite( create_sprite( "a", "s4", 23, 13, true ) );
 
-  atlas.pages.push_back( description );
+  atlas.pages.push_back( atlas_page );
 
   TEST( pms::layout::build( false, atlas ) );
   TEST_EQ( 1, atlas.pages.size() );
 
-  description = atlas.pages[ 0 ];
+  atlas_page = atlas.pages[ 0 ];
 
   /*
     4444444444444444444444444.....................
@@ -347,22 +347,22 @@ void bleeding()
     1111111111111111111111......................
   */
 
-  std::vector< pms::layout::description::sprite > sprites
-    ( description.sprite_begin(), description.sprite_end() );
+  std::vector< pms::layout::atlas_page::sprite > sprites
+    ( atlas_page.sprite_begin(), atlas_page.sprite_end() );
   std::sort
     ( sprites.begin(), sprites.end(),
-      []( const pms::layout::description::sprite& a,
-          const pms::layout::description::sprite& b ) -> bool
+      []( const pms::layout::atlas_page::sprite& a,
+          const pms::layout::atlas_page::sprite& b ) -> bool
       {
         return
           std::make_tuple( a.result_box.position.x, a.result_box.position.y )
           < std::make_tuple( b.result_box.position.x, b.result_box.position.y );
       } );
 
-  const pms::layout::description::sprite& s1( sprites[ 1 ] );
-  const pms::layout::description::sprite& s2( sprites[ 3 ] );
-  const pms::layout::description::sprite& s3( sprites[ 2 ] );
-  const pms::layout::description::sprite& s4( sprites[ 0 ] );
+  const pms::layout::atlas_page::sprite& s1( sprites[ 1 ] );
+  const pms::layout::atlas_page::sprite& s2( sprites[ 3 ] );
+  const pms::layout::atlas_page::sprite& s3( sprites[ 2 ] );
+  const pms::layout::atlas_page::sprite& s4( sprites[ 0 ] );
   
   TEST( !s1.result_box.intersects( s2.result_box ) );
   TEST( !s1.result_box.intersects( s3.result_box ) );
@@ -378,8 +378,8 @@ void bleeding()
   TEST_EQ( 22, s3.result_box.width );
   TEST_EQ( 23, s4.result_box.width );
 
-  TEST_EQ( 46, description.width );
-  TEST_EQ( 27, description.height );
+  TEST_EQ( 46, atlas_page.width );
+  TEST_EQ( 27, atlas_page.height );
 
   TEST_EQ( 1, s4.result_box.position.x );
   TEST_EQ( 1, s4.result_box.position.y );
@@ -401,20 +401,20 @@ void margin_and_bleeding()
   atlas.height = 30;
   atlas.margin = 1;
 
-  pms::layout::description description;
-  description.images[ "a" ] = "path/to/a";
+  pms::layout::atlas_page atlas_page;
+  atlas_page.images[ "a" ] = "path/to/a";
 
-  description.add_sprite( create_sprite( "a", "s1", 20, 10, true ) );
-  description.add_sprite( create_sprite( "a", "s2", 21, 11, false ) );
-  description.add_sprite( create_sprite( "a", "s3", 22, 12, false ) );
-  description.add_sprite( create_sprite( "a", "s4", 23, 13, true ) );
+  atlas_page.add_sprite( create_sprite( "a", "s1", 20, 10, true ) );
+  atlas_page.add_sprite( create_sprite( "a", "s2", 21, 11, false ) );
+  atlas_page.add_sprite( create_sprite( "a", "s3", 22, 12, false ) );
+  atlas_page.add_sprite( create_sprite( "a", "s4", 23, 13, true ) );
 
-  atlas.pages.push_back( description );
+  atlas.pages.push_back( atlas_page );
 
   TEST( pms::layout::build( false, atlas ) );
   TEST_EQ( 1, atlas.pages.size() );
 
-  description = atlas.pages[ 0 ];
+  atlas_page = atlas.pages[ 0 ];
 
   /*
    _________________________________________________
@@ -449,22 +449,22 @@ void margin_and_bleeding()
    _________________________________________________
   */
 
-  std::vector< pms::layout::description::sprite > sprites
-    ( description.sprite_begin(), description.sprite_end() );
+  std::vector< pms::layout::atlas_page::sprite > sprites
+    ( atlas_page.sprite_begin(), atlas_page.sprite_end() );
   std::sort
     ( sprites.begin(), sprites.end(),
-      []( const pms::layout::description::sprite& a,
-          const pms::layout::description::sprite& b ) -> bool
+      []( const pms::layout::atlas_page::sprite& a,
+          const pms::layout::atlas_page::sprite& b ) -> bool
       {
         return
           std::make_tuple( a.result_box.position.x, a.result_box.position.y )
           < std::make_tuple( b.result_box.position.x, b.result_box.position.y );
       } );
 
-  const pms::layout::description::sprite& s1( sprites[ 1 ] );
-  const pms::layout::description::sprite& s2( sprites[ 3 ] );
-  const pms::layout::description::sprite& s3( sprites[ 2 ] );
-  const pms::layout::description::sprite& s4( sprites[ 0 ] );
+  const pms::layout::atlas_page::sprite& s1( sprites[ 1 ] );
+  const pms::layout::atlas_page::sprite& s2( sprites[ 3 ] );
+  const pms::layout::atlas_page::sprite& s3( sprites[ 2 ] );
+  const pms::layout::atlas_page::sprite& s4( sprites[ 0 ] );
   
   TEST( !s1.result_box.intersects( s2.result_box ) );
   TEST( !s1.result_box.intersects( s3.result_box ) );
@@ -480,8 +480,8 @@ void margin_and_bleeding()
   TEST_EQ( 22, s3.result_box.width );
   TEST_EQ( 23, s4.result_box.width );
 
-  TEST_EQ( 49, description.width );
-  TEST_EQ( 30, description.height );
+  TEST_EQ( 49, atlas_page.width );
+  TEST_EQ( 30, atlas_page.height );
 
   TEST_EQ( 2, s4.result_box.position.x );
   TEST_EQ( 2, s4.result_box.position.y );
@@ -503,44 +503,44 @@ void rotate_and_margin_and_bleeding()
   atlas.height = 40;
   atlas.margin = 1;
 
-  pms::layout::description description;
-  description.images[ "a" ] = "path/to/a";
+  pms::layout::atlas_page atlas_page;
+  atlas_page.images[ "a" ] = "path/to/a";
 
-  description.add_sprite( create_sprite( "a", "s1", 20, 10, true ) );
-  description.add_sprite( create_sprite( "a", "s2", 11, 21, false ) );
-  description.add_sprite( create_sprite( "a", "s3", 22, 12, false ) );
-  description.add_sprite( create_sprite( "a", "s4", 13, 23, true ) );
+  atlas_page.add_sprite( create_sprite( "a", "s1", 20, 10, true ) );
+  atlas_page.add_sprite( create_sprite( "a", "s2", 11, 21, false ) );
+  atlas_page.add_sprite( create_sprite( "a", "s3", 22, 12, false ) );
+  atlas_page.add_sprite( create_sprite( "a", "s4", 13, 23, true ) );
 
-  atlas.pages.push_back( description );
+  atlas.pages.push_back( atlas_page );
 
   TEST( pms::layout::build( true, atlas ) );
   TEST_EQ( 1, atlas.pages.size() );
 
-  description = atlas.pages[ 0 ];
+  atlas_page = atlas.pages[ 0 ];
 
-  std::vector< pms::layout::description::sprite > sprites
-    ( description.sprite_begin(), description.sprite_end() );
+  std::vector< pms::layout::atlas_page::sprite > sprites
+    ( atlas_page.sprite_begin(), atlas_page.sprite_end() );
   std::sort
     ( sprites.begin(), sprites.end(),
-      []( const pms::layout::description::sprite& a,
-          const pms::layout::description::sprite& b ) -> bool
+      []( const pms::layout::atlas_page::sprite& a,
+          const pms::layout::atlas_page::sprite& b ) -> bool
       {
         return
           std::make_tuple( a.result_box.position.x, a.result_box.position.y )
           < std::make_tuple( b.result_box.position.x, b.result_box.position.y );
       } );
 
-  const pms::layout::description::sprite& s1( sprites[ 1 ] );
-  pms::layout::description::sprite& s2( sprites[ 3 ] );
-  const pms::layout::description::sprite& s3( sprites[ 2 ] );
-  const pms::layout::description::sprite& s4( sprites[ 0 ] );
+  const pms::layout::atlas_page::sprite& s1( sprites[ 1 ] );
+  pms::layout::atlas_page::sprite& s2( sprites[ 3 ] );
+  const pms::layout::atlas_page::sprite& s3( sprites[ 2 ] );
+  const pms::layout::atlas_page::sprite& s4( sprites[ 0 ] );
 
   TEST( s2.rotated );
 
   std::swap( s2.result_box.width, s2.result_box.height );
   
-  TEST_EQ( 40, description.width );
-  TEST_EQ( 40, description.height );
+  TEST_EQ( 40, atlas_page.width );
+  TEST_EQ( 40, atlas_page.height );
 
   TEST_EQ( 20, s1.result_box.width );
   TEST_EQ( 21, s2.result_box.width );
@@ -567,19 +567,19 @@ void multiple_output()
   atlas.height = 20;
   atlas.margin = 0;
 
-  pms::layout::description description;
-  description.images[ "a" ] = "path/to/a";
+  pms::layout::atlas_page atlas_page;
+  atlas_page.images[ "a" ] = "path/to/a";
 
-  description.add_sprite( create_sprite( "a", "s1", 20, 15, false ) );
-  description.add_sprite( create_sprite( "a", "s2", 15, 20, false ) );
+  atlas_page.add_sprite( create_sprite( "a", "s1", 20, 15, false ) );
+  atlas_page.add_sprite( create_sprite( "a", "s2", 15, 20, false ) );
 
-  atlas.pages.push_back( description );
+  atlas.pages.push_back( atlas_page );
 
   TEST( pms::layout::build( false, atlas ) );
   TEST_EQ( 2, atlas.pages.size() );
 
-  pms::layout::description d1( atlas.pages[ 0 ] );
-  pms::layout::description d2( atlas.pages[ 1 ] );
+  pms::layout::atlas_page d1( atlas.pages[ 0 ] );
+  pms::layout::atlas_page d2( atlas.pages[ 1 ] );
 
   TEST_EQ( 1, d1.images.size() );
   TEST_EQ( d1.images.size(), d2.images.size() );
@@ -590,7 +590,7 @@ void multiple_output()
   TEST_EQ( 15, d2.width );
   TEST_EQ( 20, d2.height );
 
-  const pms::layout::description::sprite& s1( *d1.sprite_begin() );
+  const pms::layout::atlas_page::sprite& s1( *d1.sprite_begin() );
 
   TEST( !s1.rotated );
   TEST_EQ( 20, s1.result_box.width );
@@ -598,7 +598,7 @@ void multiple_output()
   TEST_EQ( 0, s1.result_box.position.x );
   TEST_EQ( 0, s1.result_box.position.y );
   
-  const pms::layout::description::sprite& s2( *d2.sprite_begin() );
+  const pms::layout::atlas_page::sprite& s2( *d2.sprite_begin() );
 
   TEST( !s2.rotated );
   TEST_EQ( 15, s2.result_box.width );

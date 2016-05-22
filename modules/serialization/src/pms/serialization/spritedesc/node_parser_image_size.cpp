@@ -15,10 +15,10 @@
  */
 #include "pms/serialization/spritedesc/node_parser_image_size.hpp"
 
-#include "pms/layout/description.hpp"
+#include "pms/layout/atlas_page.hpp"
 
 void pms::serialization::spritedesc::node_parser_image_size::parse_node
-( layout::description::sprite& s, const tree_node& node ) const
+( layout::atlas_page::sprite& s, const tree_node& node ) const
 {
   const std::string input( node.value.begin(), node.value.end() );
   std::istringstream iss( input );

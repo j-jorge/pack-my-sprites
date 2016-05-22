@@ -26,7 +26,7 @@ namespace pms
 
   namespace layout
   {
-    class description;
+    class atlas_page;
   }
 
   namespace serialization
@@ -38,7 +38,7 @@ namespace pms
       {
       public:
         void parse_node
-        ( resources::image_mapping& image, layout::description& desc,
+        ( resources::image_mapping& image, layout::atlas_page& desc,
           const tree_node& node ) const;
 
       };

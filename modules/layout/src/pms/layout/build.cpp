@@ -46,33 +46,33 @@ namespace pms
           named_heuristic( nullptr, rbp::MaxRectsBinPack::RectContactPointRule )
         };
 
-      static description build
-      ( bool allow_rotate, const atlas& atlas, description& desc );
+      static atlas_page build
+      ( bool allow_rotate, const atlas& atlas, atlas_page& desc );
       
-      static description try_all_heuristics
-      ( bool allow_rotate, const atlas& atlas, description& desc );
+      static atlas_page try_all_heuristics
+      ( bool allow_rotate, const atlas& atlas, atlas_page& desc );
 
-      static description try_heuristic
+      static atlas_page try_heuristic
       ( bool allow_rotate, const std::vector<rbp::RectSize>& source,
-        const atlas& atlas, description& desc,
+        const atlas& atlas, atlas_page& desc,
         rbp::MaxRectsBinPack::FreeRectChoiceHeuristic heuristic );
       static std::vector<rbp::Rect> try_heuristic
       ( bool allow_rotate, std::vector<rbp::RectSize> source, int width,
         int height, rbp::MaxRectsBinPack::FreeRectChoiceHeuristic heuristic );
 
-      static description apply_positions
-      ( description& desc, const std::vector<rbp::Rect>& packing,
+      static atlas_page apply_positions
+      ( atlas_page& desc, const std::vector<rbp::Rect>& packing,
         std::size_t margin );
       static void place_sprite_from_packing
-      ( std::vector<description::sprite>& result,
-        claw::math::coordinate_2d<int>& final_size, description& desc,
+      ( std::vector<atlas_page::sprite>& result,
+        claw::math::coordinate_2d<int>& final_size, atlas_page& desc,
         const rbp::Rect& packing, std::size_t margin );
 
       static std::vector<rbp::RectSize>
-      build_sprite_sizes( const description& desc, std::size_t margin );
+      build_sprite_sizes( const atlas_page& desc, std::size_t margin );
     
-      static description::sprite_iterator
-      find_sprite_by_size( description& desc, int width, int height );
+      static atlas_page::sprite_iterator
+      find_sprite_by_size( atlas_page& desc, int width, int height );
     }
   }
 }
@@ -84,13 +84,13 @@ bool pms::layout::build( bool allow_rotate, atlas& atlas )
   if ( atlas.pages[ 0 ].sprite_count() == 0 )
     return true;
 
-  std::vector< description > result;
-  description remaining( atlas.pages[ 0 ] );
+  std::vector< atlas_page > result;
+  atlas_page remaining( atlas.pages[ 0 ] );
   atlas.pages.clear();
   
   while( remaining.sprite_count() != 0 )
     {
-      description packed( detail::build( allow_rotate, atlas, remaining ) );
+      atlas_page packed( detail::build( allow_rotate, atlas, remaining ) );
 
       if ( packed.sprite_count() == 0 )
         return false;
@@ -102,9 +102,9 @@ bool pms::layout::build( bool allow_rotate, atlas& atlas )
   return true;
 }
 
-pms::layout::description
+pms::layout::atlas_page
 pms::layout::detail::build
-( bool allow_rotate, const atlas& atlas, description& desc )
+( bool allow_rotate, const atlas& atlas, atlas_page& desc )
 {
   claw::logger << claw::log_verbose
                << "Setting sprite positions in sprite sheet '"
@@ -113,7 +113,7 @@ pms::layout::detail::build
                << desc.to_string()
                << std::endl;
 
-  const description result
+  const atlas_page result
     ( detail::try_all_heuristics( allow_rotate, atlas, desc ) );
 
   claw::logger << claw::log_verbose
@@ -123,25 +123,25 @@ pms::layout::detail::build
   return result;
 }
 
-pms::layout::description pms::layout::detail::try_all_heuristics
-( bool allow_rotate, const atlas& atlas, description& desc )
+pms::layout::atlas_page pms::layout::detail::try_all_heuristics
+( bool allow_rotate, const atlas& atlas, atlas_page& desc )
 {
-  const description reference( desc );
+  const atlas_page reference( desc );
   const std::vector< rbp::RectSize > regions
     ( build_sprite_sizes( desc, atlas.margin ) );
   const std::size_t reference_count( regions.size() );
   
   std::size_t best_count( 0 );
-  description best_result;
-  description best_remaining;
+  atlas_page best_result;
+  atlas_page best_remaining;
   
   for ( const named_heuristic* h = g_heuristics; h->first != nullptr; ++h )
     {
       claw::logger << claw::log_verbose << "Packing with heuristic \""
                    << h->first << "\".\n";
       
-      description base( reference );
-      const description packed
+      atlas_page base( reference );
+      const atlas_page packed
         ( try_heuristic( allow_rotate, regions, atlas, base, h->second ) );
       const std::size_t sprite_count( packed.sprite_count() );
       
@@ -164,10 +164,10 @@ pms::layout::description pms::layout::detail::try_all_heuristics
   return best_result;
 }
 
-pms::layout::description
+pms::layout::atlas_page
 pms::layout::detail::try_heuristic
 ( bool allow_rotate, const std::vector< rbp::RectSize >& source,
-  const atlas& atlas, description& desc,
+  const atlas& atlas, atlas_page& desc,
   rbp::MaxRectsBinPack::FreeRectChoiceHeuristic heuristic )
 {
   const std::size_t m( atlas.margin );
@@ -192,12 +192,12 @@ std::vector<rbp::Rect> pms::layout::detail::try_heuristic
   return packing;
 }
 
-pms::layout::description
+pms::layout::atlas_page
 pms::layout::detail::apply_positions
-( description& desc, const std::vector< rbp::Rect >& packing,
+( atlas_page& desc, const std::vector< rbp::Rect >& packing,
   std::size_t margin )
 {
-  std::vector< description::sprite > sprites;
+  std::vector< atlas_page::sprite > sprites;
   sprites.reserve( packing.size() );
 
   claw::math::coordinate_2d<int> final_size( 1, 1 );
@@ -206,7 +206,7 @@ pms::layout::detail::apply_positions
     place_sprite_from_packing
       ( sprites, final_size, desc, packing[ i ], margin );
 
-  description result;
+  atlas_page result;
   
   for( const auto& s : sprites )
     {
@@ -221,11 +221,11 @@ pms::layout::detail::apply_positions
 }
 
 void pms::layout::detail::place_sprite_from_packing
-( std::vector< description::sprite >& result,
-  claw::math::coordinate_2d< int >& final_size, description& desc,
+( std::vector< atlas_page::sprite >& result,
+  claw::math::coordinate_2d< int >& final_size, atlas_page& desc,
   const rbp::Rect& packing, std::size_t margin )
 {
-  description::sprite_iterator it
+  atlas_page::sprite_iterator it
     ( find_sprite_by_size
       ( desc, packing.width - margin, packing.height - margin ) );
 
@@ -253,12 +253,12 @@ void pms::layout::detail::place_sprite_from_packing
 
 std::vector< rbp::RectSize >
 pms::layout::detail::build_sprite_sizes
-( const description& desc, std::size_t margin )
+( const atlas_page& desc, std::size_t margin )
 {
   std::vector<rbp::RectSize> result;
   result.reserve( desc.sprite_count() );
 
-  for ( description::const_sprite_iterator it( desc.sprite_begin() );
+  for ( atlas_page::const_sprite_iterator it( desc.sprite_begin() );
         it != desc.sprite_end(); ++it )
     {
       const std::size_t padding( (it->bleed ? 2 : 0) + margin );
@@ -273,11 +273,11 @@ pms::layout::detail::build_sprite_sizes
   return result;
 }
 
-pms::layout::description::sprite_iterator
+pms::layout::atlas_page::sprite_iterator
 pms::layout::detail::find_sprite_by_size
-( description& desc, int width, int height )
+( atlas_page& desc, int width, int height )
 {
-  for ( description::sprite_iterator it( desc.sprite_begin() );
+  for ( atlas_page::sprite_iterator it( desc.sprite_begin() );
         it != desc.sprite_end(); ++it )
     {
       const std::size_t padding( it->bleed ? 2 : 0 );

@@ -19,7 +19,7 @@
 #include "pms/serialization/spritedesc/node_parser_image_entry.hpp"
 #include "pms/serialization/spritedesc/node_parser_sprite_declaration.hpp"
 
-#include "pms/layout/description.hpp"
+#include "pms/layout/atlas_page.hpp"
 #include "pms/layout/atlas.hpp"
 
 void pms::serialization::spritedesc::node_parser_atlas::parse_node
@@ -40,7 +40,7 @@ void pms::serialization::spritedesc::node_parser_atlas::parse_node
   if ( node.children[i].value.id() == grammar::id_string )
     ++i;
 
-  layout::description desc;
+  layout::atlas_page desc;
   
   while ( (i != node.children.size())
           && ( node.children[i].value.id() == grammar::id_image_declaration ) )
@@ -111,15 +111,15 @@ bool pms::serialization::spritedesc::node_parser_atlas::parse_margin
 }
 
 void pms::serialization::spritedesc::node_parser_atlas::check_image_usage
-( const std::string& output_name, const layout::description& desc ) const
+( const std::string& output_name, const layout::atlas_page& desc ) const
 {
-  layout::description::id_to_file_map images = desc.images;
+  layout::atlas_page::id_to_file_map images = desc.images;
   
-  for ( layout::description::const_sprite_iterator it = desc.sprite_begin();
+  for ( layout::atlas_page::const_sprite_iterator it = desc.sprite_begin();
         it != desc.sprite_end(); ++it )
     images.erase( it->image_id );
 
-  for ( layout::description::id_to_file_map::const_iterator it = images.begin();
+  for ( layout::atlas_page::id_to_file_map::const_iterator it = images.begin();
         it != images.end(); ++it )
     std::cerr << "warning: Image file '" << it->second << "' identified as '"
               << it->first << "' is never used in sprite sheet '"

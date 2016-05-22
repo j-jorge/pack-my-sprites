@@ -71,12 +71,12 @@ void pms::generators::png::generate_output_with_internal_tool
 ( const detail::working_directory& dir, std::size_t index,
   const layout::atlas& atlas ) const
 {
-  const layout::description& desc( atlas.pages[ index ] );
+  const layout::atlas_page& desc( atlas.pages[ index ] );
   claw::graphic::image result( desc.width, desc.height );
 
   std::fill( result.begin(), result.end(), claw::graphic::transparent_pixel );
   
-  for ( layout::description::const_sprite_iterator it( desc.sprite_begin() );
+  for ( layout::atlas_page::const_sprite_iterator it( desc.sprite_begin() );
         it != desc.sprite_end(); ++it )
     copy_sprite
       ( result,
@@ -92,7 +92,7 @@ void pms::generators::png::generate_output_with_internal_tool
 
 void pms::generators::png::copy_sprite
 ( claw::graphic::image& result, const std::string& file_path,
-  const layout::description::sprite& sprite ) const
+  const layout::atlas_page::sprite& sprite ) const
 {
   std::ifstream f( file_path );
   claw::graphic::image image( f );
@@ -189,7 +189,7 @@ void pms::generators::png::generate_scm
 ( std::ostream& os, const detail::working_directory& dir, std::size_t index,
   const layout::atlas& atlas ) const
 {
-  const layout::description& desc( atlas.pages[ index ] );
+  const layout::atlas_page& desc( atlas.pages[ index ] );
   
   os << "(let ( ";
 
@@ -223,7 +223,7 @@ void pms::generators::png::generate_scm
 
 void pms::generators::png::generate_scm
 ( std::ostream& os, const resources::image& image,
-  const layout::description::sprite& s, const std::string& target_id ) const
+  const layout::atlas_page::sprite& s, const std::string& target_id ) const
 {
   // starting with version 3 of the format, the XCF files have layer groups.
   if ( image.version >= 3 )

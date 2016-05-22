@@ -83,7 +83,7 @@ pms::serialization::spritedesc::grammar::definition<ScannerT>::definition
          | m_error_size )
     >> !m_margin
     >> !m_order
-    >> *m_image_declaration >> *m_sprite_description;
+    >> *m_image_declaration >> *m_sprite_atlas_page;
 
   m_margin =
     boost::spirit::classic::no_node_d
@@ -100,7 +100,7 @@ pms::serialization::spritedesc::grammar::definition<ScannerT>::definition
   m_image_declaration =
     m_identifier >> (m_string | m_error_string);
 
-  m_sprite_description = m_sprite_declaration;
+  m_sprite_atlas_page = m_sprite_declaration;
 
   m_sprite_declaration =
     !m_properties

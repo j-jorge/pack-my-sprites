@@ -109,7 +109,7 @@ namespace pms
             boost::spirit::classic::parser_tag<id_image_declaration> >
           m_image_declaration;
 
-          boost::spirit::classic::rule<ScannerT> m_sprite_description;
+          boost::spirit::classic::rule<ScannerT> m_sprite_atlas_page;
 
           boost::spirit::classic::rule
           < ScannerT,

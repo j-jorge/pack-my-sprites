@@ -61,7 +61,7 @@ void pms::generators::plist::generate_plist
 
 void pms::generators::plist::generate_plist
 ( std::ostream& os, const std::string& base_name,
-  const layout::description& desc ) const
+  const layout::atlas_page& desc ) const
 {
   os << get_plist_header()
      << get_plist_body( base_name, desc );
@@ -76,7 +76,7 @@ std::string pms::generators::plist::get_plist_header() const
 
 std::string
 pms::generators::plist::get_plist_body
-( const std::string& base_name, const layout::description& desc ) const
+( const std::string& base_name, const layout::atlas_page& desc ) const
 {
   return std::string( "<plist version=\"1.0\">\n" )
     + "<dict>\n"
@@ -88,7 +88,7 @@ pms::generators::plist::get_plist_body
 
 std::string
 pms::generators::plist::get_frames_entry
-( const layout::description& desc ) const
+( const layout::atlas_page& desc ) const
 {
   std::string result( "<key>frames</key>\n" );
 
@@ -104,7 +104,7 @@ pms::generators::plist::get_frames_entry
 
 std::string
 pms::generators::plist::get_sprite_entry
-( const layout::description::sprite& sprite ) const
+( const layout::atlas_page::sprite& sprite ) const
 {
   const int x( sprite.result_box.position.x );
   const int y( sprite.result_box.position.y );
@@ -139,7 +139,7 @@ pms::generators::plist::get_sprite_entry
 
 std::string
 pms::generators::plist::get_metadata_entry
-( const std::string& base_name, const layout::description& desc ) const
+( const std::string& base_name, const layout::atlas_page& desc ) const
 {
   std::ostringstream result;
   

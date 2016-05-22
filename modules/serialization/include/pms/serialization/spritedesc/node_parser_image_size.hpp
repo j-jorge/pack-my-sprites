@@ -17,7 +17,7 @@
 
 #include "pms/serialization/spritedesc/node_parser.hpp"
 
-#include "pms/layout/description.hpp"
+#include "pms/layout/atlas_page.hpp"
 
 namespace pms
 {
@@ -35,7 +35,7 @@ namespace pms
       {
       public:
         void parse_node
-        ( layout::description::sprite& s, const tree_node& node ) const;
+        ( layout::atlas_page::sprite& s, const tree_node& node ) const;
 
       };
     }

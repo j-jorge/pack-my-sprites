@@ -265,11 +265,11 @@ file_to_name_mapping identify_input_files( const program_arguments& arguments )
     return build_file_identifiers( arguments );
 }
 
-void set_description_files
-( pms::layout::description& description, const file_to_name_mapping& names )
+void set_atlas_page_files
+( pms::layout::atlas_page& atlas_page, const file_to_name_mapping& names )
 {
   for ( const auto& e : names )
-    description.images[ e.second ] = e.first;
+    atlas_page.images[ e.second ] = e.first;
 }
 
 void load_images
@@ -280,11 +280,11 @@ void load_images
     images.load( s );
 }
 
-pms::layout::description::sprite create_sprite
+pms::layout::atlas_page::sprite create_sprite
 ( const std::string& name, const std::string& file,
   const pms::resources::image_mapping& images, bool bleeding )
 {
-  pms::layout::description::sprite result;
+  pms::layout::atlas_page::sprite result;
 
   result.image_id = result.name = name;
   result.bleed = bleeding;
@@ -315,22 +315,22 @@ build_atlas( const program_arguments& arguments )
   pms::layout::atlas result( images );
   configure_atlas( result, arguments );
 
-  pms::layout::description description;
+  pms::layout::atlas_page atlas_page;
 
   const file_to_name_mapping file_to_name( identify_input_files( arguments ) );
-  set_description_files( description, file_to_name );
+  set_atlas_page_files( atlas_page, file_to_name );
   
   for ( const std::string& file : arguments.files_dry )
-    description.add_sprite
+    atlas_page.add_sprite
       ( create_sprite
         ( file_to_name.find( file )->second, file, images, false ) );
   
   for ( const std::string& file : arguments.files_bleeding )
-    description.add_sprite
+    atlas_page.add_sprite
       ( create_sprite
         ( file_to_name.find( file )->second, file, images, true ) );
 
-  result.pages.push_back( description );
+  result.pages.push_back( atlas_page );
   
   return result;
 }

@@ -50,7 +50,8 @@ namespace pms
 
       std::string execute_xcfinfo_process( const std::string& file_path ) const;
 
-      void parse_xcf_info_header( image& info, const std::string& header ) const;
+      void parse_xcf_info_header
+      ( image& info, const std::string& header ) const;
       void parse_xcf_info_layer
       ( image& info, const std::string& layer_info ) const;
 

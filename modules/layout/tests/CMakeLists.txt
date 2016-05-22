@@ -1,6 +1,6 @@
 declare_test(
-  pms/layout/description.cpp
-  layout-description
+  pms/layout/atlas_page.cpp
+  layout-atlas-page
   pms_layout
 )
 

@@ -13,12 +13,12 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "pms/layout/description.hpp"
+#include "pms/layout/atlas_page.hpp"
 
 #include <sstream>
 
-pms::layout::description::const_sprite_iterator
-pms::layout::description::get_sprite_by_name( const std::string& n ) const
+pms::layout::atlas_page::const_sprite_iterator
+pms::layout::atlas_page::get_sprite_by_name( const std::string& n ) const
 {
   return
     std::find_if
@@ -29,7 +29,7 @@ pms::layout::description::get_sprite_by_name( const std::string& n ) const
       } );
 }
 
-void pms::layout::description::add_sprite( const sprite& s )
+void pms::layout::atlas_page::add_sprite( const sprite& s )
 {
   if ( (s.source_box.width <= 0) || (s.source_box.height <= 0) )
     std::cerr << "Sprite '" << s.name << "' is not visible. Skipping."
@@ -38,41 +38,41 @@ void pms::layout::description::add_sprite( const sprite& s )
     sprites.push_back( s );
 }
 
-pms::layout::description::const_sprite_iterator
-pms::layout::description::sprite_begin() const
+pms::layout::atlas_page::const_sprite_iterator
+pms::layout::atlas_page::sprite_begin() const
 {
   return sprites.begin();
 }
 
-pms::layout::description::const_sprite_iterator
-pms::layout::description::sprite_end() const
+pms::layout::atlas_page::const_sprite_iterator
+pms::layout::atlas_page::sprite_end() const
 {
   return sprites.end();
 }
 
-pms::layout::description::sprite_iterator
-pms::layout::description::sprite_begin()
+pms::layout::atlas_page::sprite_iterator
+pms::layout::atlas_page::sprite_begin()
 {
   return sprites.begin();
 }
 
-pms::layout::description::sprite_iterator
-pms::layout::description::sprite_end()
+pms::layout::atlas_page::sprite_iterator
+pms::layout::atlas_page::sprite_end()
 {
   return sprites.end();
 }
 
-std::size_t pms::layout::description::sprite_count() const
+std::size_t pms::layout::atlas_page::sprite_count() const
 {
   return sprites.size();
 }
 
-void pms::layout::description::erase_sprite( const sprite_iterator& it )
+void pms::layout::atlas_page::erase_sprite( const sprite_iterator& it )
 {
   sprites.erase( it );
 }
 
-std::string pms::layout::description::to_string() const
+std::string pms::layout::atlas_page::to_string() const
 {
   std::ostringstream oss;
 

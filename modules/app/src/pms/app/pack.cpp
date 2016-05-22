@@ -21,7 +21,7 @@ void pms::app::pack
 ( const packer_options& options, const std::string& source_file_path,
   layout::atlas desc ) const
 {
-  if ( !layout::build( options.enable_sprite_rotation, desc.description ) )
+  if ( !layout::build( options.enable_sprite_rotation, desc.atlas_page ) )
     {
       std::cerr << "Failed to build sprite sheet '" << source_file_path
                 << "'.\n";

@@ -49,8 +49,8 @@ bool pms::layout::atlas::internally_supported() const
 {
   std::unordered_set< std::string > image_names;
 
-  for ( const description& p : pages )
-    for ( description::const_sprite_iterator it( p.sprite_begin() );
+  for ( const atlas_page& p : pages )
+    for ( atlas_page::const_sprite_iterator it( p.sprite_begin() );
           it != p.sprite_end(); ++it )
       image_names.insert( p.images.find( it->image_id )->second );
   

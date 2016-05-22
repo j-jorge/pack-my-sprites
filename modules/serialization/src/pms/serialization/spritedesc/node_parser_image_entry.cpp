@@ -15,11 +15,11 @@
  */
 #include "pms/serialization/spritedesc/node_parser_image_entry.hpp"
 
-#include "pms/layout/description.hpp"
+#include "pms/layout/atlas_page.hpp"
 #include "pms/resources/image_mapping.hpp"
 
 void pms::serialization::spritedesc::node_parser_image_entry::parse_node
-( resources::image_mapping& images, layout::description& desc,
+( resources::image_mapping& images, layout::atlas_page& desc,
   const tree_node& node ) const
 {
   assert( node.children.size() == 2 );

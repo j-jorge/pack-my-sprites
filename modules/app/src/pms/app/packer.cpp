@@ -87,8 +87,8 @@ bool pms::app::packer::feasible( const layout::atlas& atlas ) const
   const std::size_t width( atlas.width );
   const std::size_t height( atlas.height );
   
-  for ( const layout::description& p : atlas.pages )
-    for ( layout::description::const_sprite_iterator it( p.sprite_begin() );
+  for ( const layout::atlas_page& p : atlas.pages )
+    for ( layout::atlas_page::const_sprite_iterator it( p.sprite_begin() );
           it != p.sprite_end(); ++it )
       {
         const std::size_t w( it->result_box.width + 2 * margin + it->bleed );

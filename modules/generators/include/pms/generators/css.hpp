@@ -38,16 +38,16 @@ namespace pms
       ( const detail::working_directory& dir,
         const layout::atlas& atlas ) const;
       void generate_css
-      ( std::ostream& os, const layout::description& desc,
+      ( std::ostream& os, const layout::atlas_page& desc,
         const std::string& atlas_name ) const;
       void generate_css_class
-      ( std::ostream& os, const layout::description::sprite& sprite,
+      ( std::ostream& os, const layout::atlas_page::sprite& sprite,
         const std::string& image_path ) const;
       void generate_css_class_rotated
-      ( std::ostream& os, const layout::description::sprite& sprite,
+      ( std::ostream& os, const layout::atlas_page::sprite& sprite,
         const std::string& image_path ) const;
       void generate_css_class_normal
-      ( std::ostream& os, const layout::description::sprite& sprite,
+      ( std::ostream& os, const layout::atlas_page::sprite& sprite,
         const std::string& image_path ) const;
     };
   }

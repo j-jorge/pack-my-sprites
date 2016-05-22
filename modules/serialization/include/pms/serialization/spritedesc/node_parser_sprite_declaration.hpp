@@ -28,22 +28,22 @@ namespace pms
       {
       public:
         void parse_node
-        ( const resources::image_mapping& images, layout::description& s,
+        ( const resources::image_mapping& images, layout::atlas_page& s,
           const tree_node& node ) const;
 
       private:
         void apply_sprite_properties
-        ( layout::description::sprite& result,
+        ( layout::atlas_page::sprite& result,
           const tree_node& properties_node ) const;
         std::vector<std::string>
         get_properties( const tree_node& properties_node ) const;
     
         void get_sprite_name
-        ( layout::description::sprite& s, const tree_node& node ) const;
+        ( layout::atlas_page::sprite& s, const tree_node& node ) const;
         void get_image_id
-        ( layout::description::sprite& s, const tree_node& node ) const;
+        ( layout::atlas_page::sprite& s, const tree_node& node ) const;
         void get_layers_and_size
-        ( const resources::image& image, layout::description::sprite& s,
+        ( const resources::image& image, layout::atlas_page::sprite& s,
           const tree_node& size_node, const tree_node& layer_list_node ) const;
 
         std::vector<resources::layer> get_layers
@@ -67,7 +67,7 @@ namespace pms
         ( const resources::image& image, std::vector<resources::layer>& result,
           const tree_node& node ) const;
 
-        void compute_source_box( layout::description::sprite& s ) const;
+        void compute_source_box( layout::atlas_page::sprite& s ) const;
 
         void get_layer_info
         ( const resources::image& images, resources::layer& layer,

@@ -65,7 +65,7 @@ void pms::generators::css::generate_css
 }
 
 void pms::generators::css::generate_css
-( std::ostream& os, const layout::description& desc,
+( std::ostream& os, const layout::atlas_page& desc,
   const std::string& atlas_name ) const
 {
   for ( auto it( desc.sprite_begin() ); it != desc.sprite_end(); ++it )
@@ -76,7 +76,7 @@ void pms::generators::css::generate_css
 }
 
 void pms::generators::css::generate_css_class
-( std::ostream& os, const layout::description::sprite& sprite,
+( std::ostream& os, const layout::atlas_page::sprite& sprite,
   const std::string& image_path ) const
 {
   if ( sprite.rotated )
@@ -86,7 +86,7 @@ void pms::generators::css::generate_css_class
 }
 
 void pms::generators::css::generate_css_class_rotated
-( std::ostream& os, const layout::description::sprite& sprite,
+( std::ostream& os, const layout::atlas_page::sprite& sprite,
   const std::string& image_path ) const
 {
   const int x( sprite.result_box.position.x );
@@ -118,7 +118,7 @@ void pms::generators::css::generate_css_class_rotated
 }
 
 void pms::generators::css::generate_css_class_normal
-( std::ostream& os, const layout::description::sprite& sprite,
+( std::ostream& os, const layout::atlas_page::sprite& sprite,
   const std::string& image_path ) const
 {
   const int x( sprite.result_box.position.x );

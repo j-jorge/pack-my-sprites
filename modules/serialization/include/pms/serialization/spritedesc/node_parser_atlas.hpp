@@ -21,7 +21,7 @@ namespace pms
 {
   namespace layout
   {
-    class description;
+    class atlas_page;
     class atlas;
   }
 
@@ -48,7 +48,7 @@ namespace pms
 
         void check_image_usage
         ( const std::string& output_name,
-          const layout::description& desc ) const;
+          const layout::atlas_page& desc ) const;
       };
     }
   }

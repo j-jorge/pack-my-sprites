@@ -59,7 +59,7 @@ void pms::generators::spritepos::generate_spritepos
 }
 
 void pms::generators::spritepos::generate_spritepos
-( std::ostream& os, const layout::description& desc ) const
+( std::ostream& os, const layout::atlas_page& desc ) const
 {
   for ( auto it( desc.sprite_begin() ); it != desc.sprite_end(); ++it )
     {

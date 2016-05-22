@@ -47,7 +47,7 @@ namespace pms
     
       void copy_sprite
       ( claw::graphic::image& result, const std::string& file_path,
-        const layout::description::sprite& sprite ) const;
+        const layout::atlas_page::sprite& sprite ) const;
 
       void rotate( claw::graphic::image& image ) const;
       void bleed
@@ -67,7 +67,7 @@ namespace pms
       
       void generate_scm
       ( std::ostream& os, const resources::image& image,
-        const layout::description::sprite& s,
+        const layout::atlas_page::sprite& s,
         const std::string& target_id ) const;
       
       std::string make_image_varname( const std::string& id ) const;
