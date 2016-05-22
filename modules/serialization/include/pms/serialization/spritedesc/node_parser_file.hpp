@@ -21,7 +21,7 @@ namespace pms
 {
   namespace layout
   {
-    class sprite_sheet;
+    class atlas;
   }
   
   namespace serialization
@@ -33,11 +33,11 @@ namespace pms
       {
       public:
         void parse_node
-        ( layout::sprite_sheet& sheet, const tree_node& node ) const;
+        ( layout::atlas& atlas, const tree_node& node ) const;
 
       private:
-        void process_sprite_sheet
-        ( layout::sprite_sheet& sheet, const tree_node& node ) const;
+        void process_atlas
+        ( layout::atlas& atlas, const tree_node& node ) const;
 
       };
     }

@@ -19,7 +19,7 @@
 
 void pms::app::pack
 ( const packer_options& options, const std::string& source_file_path,
-  layout::sprite_sheet desc ) const
+  layout::atlas desc ) const
 {
   if ( !layout::build( options.enable_sprite_rotation, desc.description ) )
     {

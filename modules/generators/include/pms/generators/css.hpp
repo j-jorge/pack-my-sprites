@@ -15,7 +15,7 @@
  */
 #pragma once
 
-#include "pms/layout/sprite_sheet.hpp"
+#include "pms/layout/atlas.hpp"
 
 namespace pms
 {
@@ -31,15 +31,15 @@ namespace pms
     public:
       void generate
       ( const std::string& spritedesc_file_path,
-        const layout::sprite_sheet& sheet ) const;
+        const layout::atlas& atlas ) const;
 
     private:
       void generate_css
       ( const detail::working_directory& dir,
-        const layout::sprite_sheet& sheet ) const;
+        const layout::atlas& atlas ) const;
       void generate_css
       ( std::ostream& os, const layout::description& desc,
-        const std::string& sprite_sheet_name ) const;
+        const std::string& atlas_name ) const;
       void generate_css_class
       ( std::ostream& os, const layout::description::sprite& sprite,
         const std::string& image_path ) const;

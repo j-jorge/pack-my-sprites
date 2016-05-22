@@ -34,43 +34,43 @@ namespace pms
 
 void pms::generators::css::generate
 ( const std::string& spritedesc_file_path,
-  const layout::sprite_sheet& sheet ) const
+  const layout::atlas& atlas ) const
 {
   const detail::working_directory dir( spritedesc_file_path );
 
   claw::logger << claw::log_verbose
                << "Generating CSS file for sprite sheet '"
-               << sheet.output_name << "' of '"
+               << atlas.output_name << "' of '"
                << spritedesc_file_path << "'"
                << std::endl;
 
-  generate_css( dir, sheet );
+  generate_css( dir, atlas );
 }
 
 void pms::generators::css::generate_css
 ( const detail::working_directory& dir,
-  const layout::sprite_sheet& sheet ) const
+  const layout::atlas& atlas ) const
 {
   const std::string filename
-    ( dir.get_output_file_path( sheet.output_name, "css" ) );
+    ( dir.get_output_file_path( atlas.output_name, "css" ) );
 
   std::ofstream f( filename.c_str() );
 
-  const std::size_t page_count( sheet.pages.size() );
+  const std::size_t page_count( atlas.pages.size() );
   
   for ( std::size_t i( 0 ); i != page_count; ++i )
     generate_css
-      ( f, sheet.pages[ i ],
-        dir.get_output_file_path( sheet.output_name, i, page_count, "png" ) );
+      ( f, atlas.pages[ i ],
+        dir.get_output_file_path( atlas.output_name, i, page_count, "png" ) );
 }
 
 void pms::generators::css::generate_css
 ( std::ostream& os, const layout::description& desc,
-  const std::string& sprite_sheet_name ) const
+  const std::string& atlas_name ) const
 {
   for ( auto it( desc.sprite_begin() ); it != desc.sprite_end(); ++it )
     {
-      generate_css_class( os, *it, sprite_sheet_name );
+      generate_css_class( os, *it, atlas_name );
       os << '\n';
     }
 }

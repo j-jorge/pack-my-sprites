@@ -23,7 +23,7 @@ namespace pms
   namespace layout
   {
     class description;
-    class sprite_sheet;
+    class atlas;
   }
   
   namespace generators
@@ -38,12 +38,12 @@ namespace pms
     public:
       void generate
       ( const std::string& spritedesc_file_path,
-        const layout::sprite_sheet& sheet ) const;
+        const layout::atlas& atlas ) const;
 
     private:
       void generate_spritepos
       ( const detail::working_directory& dir, std::size_t index,
-        const layout::sprite_sheet& sheet ) const;
+        const layout::atlas& atlas ) const;
       void generate_spritepos
       ( std::ostream& os, const layout::description& desc ) const;
     };

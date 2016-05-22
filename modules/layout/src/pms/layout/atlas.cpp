@@ -13,23 +13,23 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "pms/layout/sprite_sheet.hpp"
+#include "pms/layout/atlas.hpp"
 
 #include <sstream>
 #include <unordered_set>
 
-pms::layout::sprite_sheet::sprite_sheet()
+pms::layout::atlas::atlas()
 {
 
 }
 
-pms::layout::sprite_sheet::sprite_sheet( const resources::image_mapping& m )
+pms::layout::atlas::atlas( const resources::image_mapping& m )
   : image( m )
 {
 
 }
 
-std::string pms::layout::sprite_sheet::to_string() const
+std::string pms::layout::atlas::to_string() const
 {
   std::ostringstream oss;
   oss << "Image:\n" << image.to_string();
@@ -45,7 +45,7 @@ std::string pms::layout::sprite_sheet::to_string() const
   return oss.str();
 }
 
-bool pms::layout::sprite_sheet::internally_supported() const
+bool pms::layout::atlas::internally_supported() const
 {
   std::unordered_set< std::string > image_names;
 

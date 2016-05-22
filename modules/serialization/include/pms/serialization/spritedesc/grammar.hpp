@@ -28,7 +28,7 @@ namespace pms
       {
       public:
         static const int id_file = 10;
-        static const int id_sprite_sheet = 15;
+        static const int id_atlas = 15;
         static const int id_margin = 17;
         static const int id_image_declaration = 20;
         static const int id_sprite_declaration = 40;
@@ -96,8 +96,8 @@ namespace pms
 
           boost::spirit::classic::rule
           < ScannerT,
-            boost::spirit::classic::parser_tag<id_sprite_sheet> >
-          m_sprite_sheet;
+            boost::spirit::classic::parser_tag<id_atlas> >
+          m_atlas;
 
           boost::spirit::classic::rule
           < ScannerT, boost::spirit::classic::parser_tag<id_margin> > m_margin;
@@ -146,7 +146,7 @@ namespace pms
           < ScannerT, boost::spirit::classic::parser_tag<id_exclude> >
           m_exclude;
 
-          generic_error m_error_sprite_sheet;
+          generic_error m_error_atlas;
           generic_error m_error_autosize;
           generic_error m_error_identifier;
           generic_error m_error_string;

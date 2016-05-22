@@ -15,21 +15,21 @@
  */
 #include "pms/serialization/spritedesc/node_parser_file.hpp"
 
-#include "pms/serialization/spritedesc/node_parser_sprite_sheet.hpp"
+#include "pms/serialization/spritedesc/node_parser_atlas.hpp"
 
 #include "pms/serialization/spritedesc/grammar.hpp"
 
 void pms::serialization::spritedesc::node_parser_file::parse_node
-( layout::sprite_sheet& sheet, const tree_node& node ) const
+( layout::atlas& atlas, const tree_node& node ) const
 {
-  assert( node.value.id() == grammar::id_sprite_sheet );
-  process_sprite_sheet( sheet, node );
+  assert( node.value.id() == grammar::id_atlas );
+  process_atlas( atlas, node );
 }
 
-void pms::serialization::spritedesc::node_parser_file::process_sprite_sheet
-( layout::sprite_sheet& sheet, const tree_node& node ) const
+void pms::serialization::spritedesc::node_parser_file::process_atlas
+( layout::atlas& atlas, const tree_node& node ) const
 {
-  node_parser_sprite_sheet parser;
+  node_parser_atlas parser;
 
-  parser.parse_node( sheet, node );
+  parser.parse_node( atlas, node );
 }

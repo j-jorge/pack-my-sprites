@@ -199,8 +199,8 @@ program_options_parser::parse( int argc, char** argv )
   return result;
 }
 
-void configure_sprite_sheet
-( pms::layout::sprite_sheet& result, const program_arguments& arguments )
+void configure_atlas
+( pms::layout::atlas& result, const program_arguments& arguments )
 {
   result.width = arguments.canvas_size.width;
   result.height = arguments.canvas_size.height;
@@ -300,8 +300,8 @@ pms::layout::description::sprite create_sprite
   return result;
 }
 
-pms::layout::sprite_sheet
-build_sprite_sheet( const program_arguments& arguments )
+pms::layout::atlas
+build_atlas( const program_arguments& arguments )
 {
   pms::resources::image_mapping images
     ( ".",
@@ -312,8 +312,8 @@ build_sprite_sheet( const program_arguments& arguments )
   load_images( images, arguments.files_dry );
   load_images( images, arguments.files_bleeding );
   
-  pms::layout::sprite_sheet result( images );
-  configure_sprite_sheet( result, arguments );
+  pms::layout::atlas result( images );
+  configure_atlas( result, arguments );
 
   pms::layout::description description;
 
@@ -344,7 +344,7 @@ bool pack_from_command_line( int argc, char** argv )
     return false;
 
   pms::app::packer packer( arguments->packer_options );
-  return packer.run( "memory", build_sprite_sheet( *arguments ) );
+  return packer.run( "memory", build_atlas( *arguments ) );
 }
 
 int main( int argc, char** argv )

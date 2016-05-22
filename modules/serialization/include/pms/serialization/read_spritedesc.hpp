@@ -15,7 +15,7 @@
  */
 #pragma once
 
-#include "pms/layout/sprite_sheet.hpp"
+#include "pms/layout/atlas.hpp"
 
 namespace pms
 {
@@ -26,7 +26,7 @@ namespace pms
   
   namespace serialization
   {
-    layout::sprite_sheet read_spritedesc
+    layout::atlas read_spritedesc
     ( const resources::image_mapping& images, std::istream& is );
   }
 }

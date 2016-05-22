@@ -21,7 +21,7 @@ namespace pms
   {
     void pack
     ( const packer_options& options, const std::string& source_file_path,
-      layout::sprite_sheet desc ) const;
+      layout::atlas desc ) const;
   }
 }
   

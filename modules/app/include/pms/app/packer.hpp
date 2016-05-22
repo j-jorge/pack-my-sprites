@@ -16,7 +16,7 @@
 #pragma once
 
 #include "pms/app/packer_options.hpp"
-#include "pms/layout/sprite_sheet.hpp"
+#include "pms/layout/atlas.hpp"
 
 namespace pms
 {
@@ -30,19 +30,19 @@ namespace pms
       bool run( const std::vector< std::string >& files ) const;
       bool run( const std::string& file ) const;
       bool run
-      ( const std::string& source_file_path, layout::sprite_sheet sheet ) const;
+      ( const std::string& source_file_path, layout::atlas atlas ) const;
 
     private:
-      bool feasible( const layout::sprite_sheet& sheet ) const;
+      bool feasible( const layout::atlas& atlas ) const;
       
       void generate
       ( const std::string& source_file_path,
-        const layout::sprite_sheet& sheet ) const;
+        const layout::atlas& atlas ) const;
       
-      boost::optional< layout::sprite_sheet >
-      generate_sprite_sheet( const std::string& file_name ) const;
+      boost::optional< layout::atlas >
+      generate_atlas( const std::string& file_name ) const;
 
-      layout::sprite_sheet generate_sprite_sheet
+      layout::atlas generate_atlas
       ( const std::string& directory, std::istream& n ) const;
 
     public:

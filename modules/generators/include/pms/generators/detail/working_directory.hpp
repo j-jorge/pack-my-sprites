@@ -32,12 +32,12 @@ namespace pms
         std::string get_image_path( const std::string& image_name ) const;
 
         std::string get_output_file_path
-        ( const std::string& sheet_name, const std::string& extension ) const;
+        ( const std::string& atlas_name, const std::string& extension ) const;
         std::string get_output_file_path
-        ( const std::string& sheet_name, std::size_t index, std::size_t range,
+        ( const std::string& atlas_name, std::size_t index, std::size_t range,
           const std::string& extension ) const;
         std::string get_output_file_name
-        ( const std::string& sheet_name, std::size_t index, std::size_t range,
+        ( const std::string& atlas_name, std::size_t index, std::size_t range,
           const std::string& extension ) const;
 
       private:

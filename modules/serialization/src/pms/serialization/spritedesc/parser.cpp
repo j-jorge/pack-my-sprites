@@ -21,16 +21,16 @@
 #include <sstream>
 
 bool pms::serialization::spritedesc::parser::run
-( layout::sprite_sheet& sheet, std::istream& in )
+( layout::atlas& atlas, std::istream& in )
 {
   std::stringstream file_data;
   file_data << in.rdbuf();
   
-  return run( sheet, file_data.str().c_str(), file_data.str().size() );
+  return run( atlas, file_data.str().c_str(), file_data.str().size() );
 }
 
 bool pms::serialization::spritedesc::parser::run
-( layout::sprite_sheet& sheet, const char* file_data, unsigned int file_size )
+( layout::atlas& atlas, const char* file_data, unsigned int file_size )
 {
   bool ok;
 
@@ -45,15 +45,15 @@ bool pms::serialization::spritedesc::parser::run
 
   ok = info.match;
 
-  scan_tree( sheet, info.trees[0] );
+  scan_tree( atlas, info.trees[0] );
 
   return ok;
 }
 
 void pms::serialization::spritedesc::parser::scan_tree
-( layout::sprite_sheet& sheet, const tree_node& node ) const
+( layout::atlas& atlas, const tree_node& node ) const
 {
   node_parser_file file;
 
-  file.parse_node( sheet, node );
+  file.parse_node( atlas, node );
 }

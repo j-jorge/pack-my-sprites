@@ -13,27 +13,27 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "pms/serialization/spritedesc/node_parser_sprite_sheet.hpp"
+#include "pms/serialization/spritedesc/node_parser_atlas.hpp"
 
 #include "pms/serialization/spritedesc/grammar.hpp"
 #include "pms/serialization/spritedesc/node_parser_image_entry.hpp"
 #include "pms/serialization/spritedesc/node_parser_sprite_declaration.hpp"
 
 #include "pms/layout/description.hpp"
-#include "pms/layout/sprite_sheet.hpp"
+#include "pms/layout/atlas.hpp"
 
-void pms::serialization::spritedesc::node_parser_sprite_sheet::parse_node
-( layout::sprite_sheet& sheet, const tree_node& node ) const
+void pms::serialization::spritedesc::node_parser_atlas::parse_node
+( layout::atlas& atlas, const tree_node& node ) const
 {
   CLAW_PRECOND( node.children.size() > 4 );
 
-  parse_name( sheet, node.children[0] );
-  parse_width( sheet, node.children[1] );
-  parse_height( sheet, node.children[2] );
+  parse_name( atlas, node.children[0] );
+  parse_width( atlas, node.children[1] );
+  parse_height( atlas, node.children[2] );
   
   std::size_t i(3);
 
-  if ( parse_margin( sheet, node.children[i] ) )
+  if ( parse_margin( atlas, node.children[i] ) )
     ++i;
 
   // skip order
@@ -46,7 +46,7 @@ void pms::serialization::spritedesc::node_parser_sprite_sheet::parse_node
           && ( node.children[i].value.id() == grammar::id_image_declaration ) )
     {
       node_parser_image_entry call;
-      call.parse_node( sheet.image, desc, node.children[i] );
+      call.parse_node( atlas.image, desc, node.children[i] );
       ++i;
     }
 
@@ -55,7 +55,7 @@ void pms::serialization::spritedesc::node_parser_sprite_sheet::parse_node
       if ( node.children[i].value.id() == grammar::id_sprite_declaration )
         {
           node_parser_sprite_declaration call;
-          call.parse_node( sheet.image, desc, node.children[i] );
+          call.parse_node( atlas.image, desc, node.children[i] );
         }
       else
         {
@@ -68,49 +68,49 @@ void pms::serialization::spritedesc::node_parser_sprite_sheet::parse_node
       ++i;
     }
 
-  check_image_usage( sheet.output_name, desc );
+  check_image_usage( atlas.output_name, desc );
 
-  sheet.pages.push_back( desc );
+  atlas.pages.push_back( desc );
 }
 
-void pms::serialization::spritedesc::node_parser_sprite_sheet::parse_name
-( layout::sprite_sheet& sheet, const tree_node& node ) const
+void pms::serialization::spritedesc::node_parser_atlas::parse_name
+( layout::atlas& atlas, const tree_node& node ) const
 {
-  sheet.output_name = std::string( node.value.begin(), node.value.end() );
+  atlas.output_name = std::string( node.value.begin(), node.value.end() );
 }
 
-void pms::serialization::spritedesc::node_parser_sprite_sheet::parse_width
-( layout::sprite_sheet& sheet, const tree_node& node ) const
-{
-  std::istringstream iss( std::string( node.value.begin(), node.value.end() ) );
-  iss >> sheet.width;
-}
-
-void pms::serialization::spritedesc::node_parser_sprite_sheet::parse_height
-( layout::sprite_sheet& sheet, const tree_node& node ) const
+void pms::serialization::spritedesc::node_parser_atlas::parse_width
+( layout::atlas& atlas, const tree_node& node ) const
 {
   std::istringstream iss( std::string( node.value.begin(), node.value.end() ) );
-  iss >> sheet.height;
+  iss >> atlas.width;
 }
 
-bool pms::serialization::spritedesc::node_parser_sprite_sheet::parse_margin
-( layout::sprite_sheet& sheet, const tree_node& node ) const
+void pms::serialization::spritedesc::node_parser_atlas::parse_height
+( layout::atlas& atlas, const tree_node& node ) const
+{
+  std::istringstream iss( std::string( node.value.begin(), node.value.end() ) );
+  iss >> atlas.height;
+}
+
+bool pms::serialization::spritedesc::node_parser_atlas::parse_margin
+( layout::atlas& atlas, const tree_node& node ) const
 {
   if ( node.value.id() == grammar::id_margin )
     {
       std::istringstream iss
         ( std::string( node.value.begin(), node.value.end() ) );
-      iss >> sheet.margin;
+      iss >> atlas.margin;
       return true;
     }
   else
     {
-      sheet.margin = 1;
+      atlas.margin = 1;
       return false;
     }
 }
 
-void pms::serialization::spritedesc::node_parser_sprite_sheet::check_image_usage
+void pms::serialization::spritedesc::node_parser_atlas::check_image_usage
 ( const std::string& output_name, const layout::description& desc ) const
 {
   layout::description::id_to_file_map images = desc.images;

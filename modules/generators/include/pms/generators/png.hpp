@@ -16,7 +16,7 @@
 #pragma once
 
 #include "pms/gimp/system_interface.hpp"
-#include "pms/layout/sprite_sheet.hpp"
+#include "pms/layout/atlas.hpp"
 
 #include <claw/image.hpp>
 
@@ -35,15 +35,15 @@ namespace pms
       explicit png( const gimp::system_interface& gimp );
 
       void generate
-      ( const std::string& source, const layout::sprite_sheet& sheet ) const;
+      ( const std::string& source, const layout::atlas& atlas ) const;
       
     private:
       void generate_output_with_internal_tool
       ( const detail::working_directory& dir,
-        const layout::sprite_sheet& sheet ) const;
+        const layout::atlas& atlas ) const;
       void generate_output_with_internal_tool
       ( const detail::working_directory& dir, std::size_t index,
-        const layout::sprite_sheet& sheet ) const;
+        const layout::atlas& atlas ) const;
     
       void copy_sprite
       ( claw::graphic::image& result, const std::string& file_path,
@@ -56,14 +56,14 @@ namespace pms
 
       void generate_output_with_gimp
       ( const detail::working_directory& dir,
-        const layout::sprite_sheet& sheet ) const;
+        const layout::atlas& atlas ) const;
       void generate_output_with_gimp
       ( const detail::working_directory& dir, std::size_t index,
-        const layout::sprite_sheet& sheet ) const;
+        const layout::atlas& atlas ) const;
 
       void generate_scm
       ( std::ostream& os, const detail::working_directory& dir,
-        std::size_t index, const layout::sprite_sheet& sheet ) const;
+        std::size_t index, const layout::atlas& atlas ) const;
       
       void generate_scm
       ( std::ostream& os, const resources::image& image,

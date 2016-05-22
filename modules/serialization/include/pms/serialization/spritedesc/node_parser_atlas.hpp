@@ -22,29 +22,29 @@ namespace pms
   namespace layout
   {
     class description;
-    class sprite_sheet;
+    class atlas;
   }
 
   namespace serialization
   {
     namespace spritedesc
     {
-      class node_parser_sprite_sheet:
+      class node_parser_atlas:
         public node_parser
       {
       public:
         void parse_node
-        ( layout::sprite_sheet& sheet, const tree_node& node ) const;
+        ( layout::atlas& atlas, const tree_node& node ) const;
 
       private:
         void parse_name
-        ( layout::sprite_sheet& sheet, const tree_node& node ) const;
+        ( layout::atlas& atlas, const tree_node& node ) const;
         void parse_width
-        ( layout::sprite_sheet& sheet, const tree_node& node ) const;
+        ( layout::atlas& atlas, const tree_node& node ) const;
         void parse_height
-        ( layout::sprite_sheet& sheet, const tree_node& node ) const;
+        ( layout::atlas& atlas, const tree_node& node ) const;
         bool parse_margin
-        ( layout::sprite_sheet& sheet, const tree_node& node ) const;
+        ( layout::atlas& atlas, const tree_node& node ) const;
 
         void check_image_usage
         ( const std::string& output_name,

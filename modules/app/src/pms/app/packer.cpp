@@ -47,13 +47,13 @@ bool pms::app::packer::run( const std::vector< std::string >& files ) const
 
 bool pms::app::packer::run( const std::string& file ) const
 {
-  const boost::optional< layout::sprite_sheet > sheet
-    ( generate_sprite_sheet( file ) );
+  const boost::optional< layout::atlas > atlas
+    ( generate_atlas( file ) );
 
-  if ( !sheet )
+  if ( !atlas )
     return false;
   
-  if ( !run( file, *sheet ) )
+  if ( !run( file, *atlas ) )
     {
       std::cerr << "Failed to build sprite sheet '" << file << "'.\n";
       return false;
@@ -63,31 +63,31 @@ bool pms::app::packer::run( const std::string& file ) const
 }
 
 bool pms::app::packer::run
-( const std::string& source_file_path, layout::sprite_sheet sheet ) const
+( const std::string& source_file_path, layout::atlas atlas ) const
 {
   claw::logger << claw::log_verbose
                << "Generating sprite sheet:\n"
-               << sheet.to_string()
+               << atlas.to_string()
                << " from file '" << source_file_path << "'\n";
 
-  if ( !feasible( sheet ) )
+  if ( !feasible( atlas ) )
     return false;
   
-  if ( !layout::build( m_options.enable_sprite_rotation, sheet ) )
+  if ( !layout::build( m_options.enable_sprite_rotation, atlas ) )
     return false;
   
-  generate( source_file_path, sheet );
+  generate( source_file_path, atlas );
   
   return true;
 }
 
-bool pms::app::packer::feasible( const layout::sprite_sheet& sheet ) const
+bool pms::app::packer::feasible( const layout::atlas& atlas ) const
 {
-  const std::size_t margin( sheet.margin );
-  const std::size_t width( sheet.width );
-  const std::size_t height( sheet.height );
+  const std::size_t margin( atlas.margin );
+  const std::size_t width( atlas.width );
+  const std::size_t height( atlas.height );
   
-  for ( const layout::description& p : sheet.pages )
+  for ( const layout::description& p : atlas.pages )
     for ( layout::description::const_sprite_iterator it( p.sprite_begin() );
           it != p.sprite_end(); ++it )
       {
@@ -109,35 +109,35 @@ bool pms::app::packer::feasible( const layout::sprite_sheet& sheet ) const
 }
 
 void pms::app::packer::generate
-( const std::string& source_file_path, const layout::sprite_sheet& sheet ) const
+( const std::string& source_file_path, const layout::atlas& atlas ) const
 {
   generators::png generator( m_gimp );
-  generator.generate( source_file_path, sheet );
+  generator.generate( source_file_path, atlas );
 
   if ( m_options.generate_spritepos )
     {
       generators::spritepos generator;
-      generator.generate( source_file_path, sheet );
+      generator.generate( source_file_path, atlas );
     }
 
   if ( m_options.generate_plist )
     {
       generators::plist generator;
-      generator.generate( source_file_path, sheet );
+      generator.generate( source_file_path, atlas );
     }
 
   if ( m_options.generate_css )
     {
       generators::css generator;
-      generator.generate( source_file_path, sheet );
+      generator.generate( source_file_path, atlas );
     }
 }
 
-boost::optional< pms::layout::sprite_sheet >
-pms::app::packer::generate_sprite_sheet( const std::string& file_name ) const
+boost::optional< pms::layout::atlas >
+pms::app::packer::generate_atlas( const std::string& file_name ) const
 {
   if ( file_name == "-" )
-    return generate_sprite_sheet( ".", std::cin );
+    return generate_atlas( ".", std::cin );
   
   std::ifstream f( file_name );
 
@@ -150,15 +150,15 @@ pms::app::packer::generate_sprite_sheet( const std::string& file_name ) const
   const boost::filesystem::path file_path( file_name );
   const boost::filesystem::path file_directory( file_path.parent_path() );
 
-  return generate_sprite_sheet( file_directory.string(), f );
+  return generate_atlas( file_directory.string(), f );
 }
 
-pms::layout::sprite_sheet
-pms::app::packer::generate_sprite_sheet
+pms::layout::atlas
+pms::app::packer::generate_atlas
 ( const std::string& directory, std::istream& in ) const
 {
   const resources::image_mapping images( directory, m_gimp );
 
-  return layout::sprite_sheet
+  return layout::atlas
     ( serialization::read_spritedesc( images, in ) );
 }

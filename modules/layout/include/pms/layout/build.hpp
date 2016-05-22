@@ -15,12 +15,12 @@
  */
 #pragma once
 
-#include "pms/layout/sprite_sheet.hpp"
+#include "pms/layout/atlas.hpp"
 
 namespace pms
 {
   namespace layout
   {
-    bool build( bool allow_rotate, sprite_sheet& desc );
+    bool build( bool allow_rotate, atlas& desc );
   }
 }

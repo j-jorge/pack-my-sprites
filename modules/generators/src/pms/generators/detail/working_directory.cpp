@@ -51,29 +51,29 @@ pms::generators::detail::working_directory::get_image_path
 
 std::string
 pms::generators::detail::working_directory::get_output_file_path
-( const std::string& sheet_name, const std::string& extension ) const
+( const std::string& atlas_name, const std::string& extension ) const
 {
-  return m_directory + '/' + sheet_name + '.' + extension;
+  return m_directory + '/' + atlas_name + '.' + extension;
 }
 
 std::string
 pms::generators::detail::working_directory::get_output_file_path
-( const std::string& sheet_name, std::size_t index, std::size_t range,
+( const std::string& atlas_name, std::size_t index, std::size_t range,
   const std::string& extension ) const
 {
   return
     m_directory + '/'
-    + get_output_file_name( sheet_name, index, range, extension );
+    + get_output_file_name( atlas_name, index, range, extension );
 }
 
 std::string
 pms::generators::detail::working_directory::get_output_file_name
-( const std::string& sheet_name, std::size_t index, std::size_t range,
+( const std::string& atlas_name, std::size_t index, std::size_t range,
   const std::string& extension ) const
 {
   assert( index <= range );
   
-  std::string result( sheet_name );
+  std::string result( atlas_name );
 
   if ( range != 1 )
     result += '-' + boost::lexical_cast< std::string >( index + 1 );

@@ -17,13 +17,13 @@
 
 #include "pms/serialization/spritedesc/parser.hpp"
 
-#include "pms/layout/sprite_sheet.hpp"
+#include "pms/layout/atlas.hpp"
 
-pms::layout::sprite_sheet
+pms::layout::atlas
 pms::serialization::read_spritedesc
 ( const resources::image_mapping& images, std::istream& is )
 {
-  layout::sprite_sheet result( images );
+  layout::atlas result( images );
   
   spritedesc::parser p;
   p.run( result, is );

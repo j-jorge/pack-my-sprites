@@ -70,12 +70,12 @@ pms::serialization::spritedesc::grammar::definition<ScannerT>::definition
 {
   initialize_error_parsers();
 
-  m_file = m_sprite_sheet;
+  m_file = m_atlas;
 
-  m_sprite_sheet =
+  m_atlas =
     boost::spirit::classic::no_node_d
-    [ boost::spirit::classic::strlit<>("sprite_sheet") ]
-    >> ( m_string | m_error_sprite_sheet )
+    [ boost::spirit::classic::strlit<>("atlas") ]
+    >> ( m_string | m_error_atlas )
     >> ( ( boost::spirit::classic::uint_p
            >> boost::spirit::classic::no_node_d
            [ boost::spirit::classic::ch_p('x') ]
@@ -177,7 +177,7 @@ initialize_error_parsers()
   m_error_not_terminated_string =
     error_report_parser( "Not terminated string." );
 
-  m_error_sprite_sheet = error_report_parser( "sprite_sheet expected" );
+  m_error_atlas = error_report_parser( "atlas expected" );
   m_error_size = error_report_parser( "Size expected (width x height)." );
 
   m_error_semicolon = char_error_report_parser( ';' );

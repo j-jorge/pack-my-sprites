@@ -1,9 +1,9 @@
 project( libpms_layout )
 
 add_library( pms_layout STATIC
+  src/pms/layout/atlas.cpp
   src/pms/layout/build.cpp
   src/pms/layout/description.cpp
-  src/pms/layout/sprite_sheet.cpp
   )
 
 target_include_directories(

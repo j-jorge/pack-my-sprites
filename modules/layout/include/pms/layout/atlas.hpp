@@ -22,11 +22,11 @@ namespace pms
 {
   namespace layout
   {
-    class sprite_sheet
+    class atlas
     {
     public:
-      sprite_sheet();
-      explicit sprite_sheet( const resources::image_mapping& m );
+      atlas();
+      explicit atlas( const resources::image_mapping& m );
 
       std::string to_string() const;
 

@@ -27,7 +27,7 @@ namespace pms
 {
   namespace layout
   {
-    class sprite_sheet;
+    class atlas;
   }
 
   namespace serialization
@@ -48,14 +48,14 @@ namespace pms
         typedef boost::spirit::classic::scanner<iterator> scanner;
         
       public:
-        bool run( layout::sprite_sheet& sheet, std::istream& in );
+        bool run( layout::atlas& atlas, std::istream& in );
         bool run
-        ( layout::sprite_sheet& sheet, const char* file_data,
+        ( layout::atlas& atlas, const char* file_data,
           unsigned int file_size );
 
       private:
         void scan_tree
-        ( layout::sprite_sheet& sheet, const tree_node& node ) const;
+        ( layout::atlas& atlas, const tree_node& node ) const;
       };
     }
   }

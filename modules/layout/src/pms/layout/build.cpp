@@ -47,14 +47,14 @@ namespace pms
         };
 
       static description build
-      ( bool allow_rotate, const sprite_sheet& sheet, description& desc );
+      ( bool allow_rotate, const atlas& atlas, description& desc );
       
       static description try_all_heuristics
-      ( bool allow_rotate, const sprite_sheet& sheet, description& desc );
+      ( bool allow_rotate, const atlas& atlas, description& desc );
 
       static description try_heuristic
       ( bool allow_rotate, const std::vector<rbp::RectSize>& source,
-        const sprite_sheet& sheet, description& desc,
+        const atlas& atlas, description& desc,
         rbp::MaxRectsBinPack::FreeRectChoiceHeuristic heuristic );
       static std::vector<rbp::Rect> try_heuristic
       ( bool allow_rotate, std::vector<rbp::RectSize> source, int width,
@@ -77,20 +77,20 @@ namespace pms
   }
 }
 
-bool pms::layout::build( bool allow_rotate, sprite_sheet& sheet )
+bool pms::layout::build( bool allow_rotate, atlas& atlas )
 {
-  assert( sheet.pages.size() == 1 );
+  assert( atlas.pages.size() == 1 );
   
-  if ( sheet.pages[ 0 ].sprite_count() == 0 )
+  if ( atlas.pages[ 0 ].sprite_count() == 0 )
     return true;
 
   std::vector< description > result;
-  description remaining( sheet.pages[ 0 ] );
-  sheet.pages.clear();
+  description remaining( atlas.pages[ 0 ] );
+  atlas.pages.clear();
   
   while( remaining.sprite_count() != 0 )
     {
-      description packed( detail::build( allow_rotate, sheet, remaining ) );
+      description packed( detail::build( allow_rotate, atlas, remaining ) );
 
       if ( packed.sprite_count() == 0 )
         return false;
@@ -98,23 +98,23 @@ bool pms::layout::build( bool allow_rotate, sprite_sheet& sheet )
       result.push_back( packed );
     }
 
-  sheet.pages = result;
+  atlas.pages = result;
   return true;
 }
 
 pms::layout::description
 pms::layout::detail::build
-( bool allow_rotate, const sprite_sheet& sheet, description& desc )
+( bool allow_rotate, const atlas& atlas, description& desc )
 {
   claw::logger << claw::log_verbose
                << "Setting sprite positions in sprite sheet '"
-               << sheet.output_name << "', with " << desc.sprite_count()
+               << atlas.output_name << "', with " << desc.sprite_count()
                << " sprites:\n"
                << desc.to_string()
                << std::endl;
 
   const description result
-    ( detail::try_all_heuristics( allow_rotate, sheet, desc ) );
+    ( detail::try_all_heuristics( allow_rotate, atlas, desc ) );
 
   claw::logger << claw::log_verbose
                << "Final sprite sheet is:\n"
@@ -124,11 +124,11 @@ pms::layout::detail::build
 }
 
 pms::layout::description pms::layout::detail::try_all_heuristics
-( bool allow_rotate, const sprite_sheet& sheet, description& desc )
+( bool allow_rotate, const atlas& atlas, description& desc )
 {
   const description reference( desc );
   const std::vector< rbp::RectSize > regions
-    ( build_sprite_sizes( desc, sheet.margin ) );
+    ( build_sprite_sizes( desc, atlas.margin ) );
   const std::size_t reference_count( regions.size() );
   
   std::size_t best_count( 0 );
@@ -142,7 +142,7 @@ pms::layout::description pms::layout::detail::try_all_heuristics
       
       description base( reference );
       const description packed
-        ( try_heuristic( allow_rotate, regions, sheet, base, h->second ) );
+        ( try_heuristic( allow_rotate, regions, atlas, base, h->second ) );
       const std::size_t sprite_count( packed.sprite_count() );
       
       if ( sprite_count == reference_count )
@@ -167,14 +167,14 @@ pms::layout::description pms::layout::detail::try_all_heuristics
 pms::layout::description
 pms::layout::detail::try_heuristic
 ( bool allow_rotate, const std::vector< rbp::RectSize >& source,
-  const sprite_sheet& sheet, description& desc,
+  const atlas& atlas, description& desc,
   rbp::MaxRectsBinPack::FreeRectChoiceHeuristic heuristic )
 {
-  const std::size_t m( sheet.margin );
+  const std::size_t m( atlas.margin );
 
   const std::vector< rbp::Rect > packing
     ( try_heuristic
-      ( allow_rotate, source, sheet.width - m, sheet.height - m, heuristic ) );
+      ( allow_rotate, source, atlas.width - m, atlas.height - m, heuristic ) );
 
   return apply_positions( desc, packing, m );
 }
