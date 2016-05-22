@@ -1,0 +1,17 @@
+Pack My Sprites 1.0.4
+
+	* Add the auto-pack-my-sprites tool to build the sprite sheets from a
+	  set of images.
+	* Use an internal tool to build the sprite sheets made of common image
+	  types (png, jpg, tga, bmp, pcx, non-animated gif and xbm).
+	* Use the algorithms of Jukka Jylänki to place the sprites.
+	* The sprites can be rotated in the sprite sheets.
+	* Add an option to make some sprites bleeding one pixel outside their
+	  bounding box.
+	* Add the generation of CSS sprite sheets.
+	* Accept the atlas description from stdin.
+	* Update the man pages to explain the --plist option.
+	* Generating the spritepos file is not the default anymore.
+	* Remove the makefile generator.
+	* Remove the sprite sheet generation from XCF layers.
+	* Input files cannot contain several sprite sheets anymore.
