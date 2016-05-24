@@ -1,80 +1,144 @@
-**Pack My Sprites** is a program that generates sprite sheets from a
-collection of images made with the [GIMP](http://www.gimp.org/).
+**Pack My Sprites** is a collection of command line tools for creating
+sprite sheets.
 
-DESCRIPTION
-====
+The purpose of these tools is to reduce the time required to integrate
+graphic updates into the final product. In order to achieve this goal,
+Pack My Sprites automates the generation of the sprites and the
+atlases in an way that can be easily integrated in the build process
+of the product.
 
-The purpose of the software is to reduce the time required to
-integrate graphic updates into the final product. In order to achieve
-this goal, Pack My Sprites automates the generation of the sprites and
-helps its integration in the build process of the product.
+There are currently two tools to generate a sprite sheet. The first
+one is `auto-pack-my-sprites`. As simple as it can be, it takes a list
+of images as its arguments and produces a sprite sheet with all of
+them.
 
-The default behavior of the program is to parse an input text file to
-generate some sprite sheets and a listing of the localization of their
-sprites. The input file must describe each sprite with a unique name,
-the layers to show to build them, and their final size in the sprite
-sheet. The output is a PNG file containing each sprite and a text file
-associating the position and the size of each sprite with its
-name. See INPUT FORMAT for details about the syntax of the input file.
+The second tool is `pack-my-sprites`; which allows to generate the
+sprites by picking specified layers from an XCF image made with the
+[GIMP](http://www.gimp.org/) then to place these sprites in a sprite
+sheet.
 
-When invoked with the `--no-spritepos` argument, only the PNG file is
-generated.
+Both tools support the creation of sprite atlases in CSS and Zwoptex
+formats.
 
-When invoked with the `--plist argument`, a property list XML file is
-generated for each sprite sheet described in each input file. The
-generated file can be immediately used in [Cocos2d-X](http://www.cocos2d-x.org/) projects.
-
-When invoked with the `--makefile` argument, the program generates a
-makefile whose rules build the sprite sheets, with dependencies on the
-XCF files and the input text file. No sprite sheet will be generated
-when using this option.
-
-The software relies upon the `gimp-console` program for the
-generation of the sprite sheets.
-
-LICENSE
-====
+# License
 
 Pack My Sprites is written by Julien Jorge <julien.jorge@stuff-o-matic.com>.
-It is hereby licenced under the terms of the version 3 of the GNU
+It is hereby licensed under the terms of the version 3 of the GNU Affero
 General Public Licence. See the file COPYING for details.
 
-INPUT FORMAT
-====
+# Using `auto-pack-my-sprites`
 
-The input files can contain one or several sprite sheets. Each one
-begins with the `sprite_sheet` keyword, followed by the name of the
-sprite sheet and the maximum size of the output image, according to
-the following syntax:
+Creating a sprite sheet with `auto-pack-my-sprites` cannot be simpler:
 
-    sprite_sheet "name" width x height [margin M] [order "O"]
+```sh
+$ auto-pack-my-sprites sprites/*.png
+```
+
+This command will create a file named `sprite-sheet.png` with all the
+PNG images from the `sprites` folder. The sprite sheet is limited to
+1024 pixels both in width and height. If all the sprites cannot fit
+in the same sheet then a series of numbered output files will be
+created: `sprite-sheet-1.png`, `sprite-sheet-2.png`, and so on. The
+name of the output can be modified with the `--output` argument.
+
+The sprites will be packed by leaving a margin of one pixel between
+them. The width of the margin can be modified with the `--margin M`
+argument, which sets the margin to `M` pixels.
+
+Some sprites need to have their edges cloned around them into the
+sprite sheet to avoid visual artifacts. This can be accomplished by
+preceeding their names with the `--bleeding` argument:
+
+```sh
+$ auto-pack-my-sprites dry/*.png --bleeding bleed/*.png
+```
+
+The size of the output file can be controled with the `--size WxH`
+argument to set the maximum width to `W` pixels and the maximum height
+to `H` pixels.
+
+By default the name of the sprites in the generated atlas will be the
+name passed on the command line, path included. This behavior is
+modified by the `--strip-paths` argument, which removes any folder from
+the name of the sprites.
+
+All arguments of `pack-my-sprites` are supported by
+`auto-pack-my-sprites`. They are listed in the following section.
+
+# Using `pack-my-sprites`
+
+The default behavior of `pack-my-sprites` is to generate the sprite
+sheets from an input text file describing how to build the sprites.
+
+The input file contains the name and the maximum size of the sprite
+sheet, followed by a description of each sprite with a unique name,
+the layers to use to build them, and the size to scale them to in the
+the sheet. See [Input Format](#input-format) for details about the
+syntax of the input file.
+
+The output is a PNG file containing each sprite. If all the sprites
+cannot fit in the same sheet then a series of numbered output files
+will be created by appending the string `-N` to the provided output
+name, where `N` ranges from 1 to the number of files required to pack
+all the sprites.
+
+The sprites may be rotated a quarter turn anticlockwise if it helps to
+produce a better packing. This behavior can be prevented with the
+`--no-rotation` argument, in which case no rotation will occur.
+
+When invoked with the `--css` argument, a css file with the same name
+than the sprite sheet will be created, containing a class for each
+sprite.
+
+When invoked with the `--plist` argument, a property list XML file is
+generated for the sprite sheet. The generated file can be immediately
+used in [Cocos2d-X](http://www.cocos2d-x.org/) projects.
+
+When invoked with the `--spritepos` argument, a plain text file with
+the same name than the sprite sheet will be created, containing a
+listing of all the sprites.
+
+The software processes PNG, JPG, TGA, BMP, PCX, XBM and non-animated
+GIF files internally. On other input formats, it relies upon the
+`gimp-console` program for the generation of the sprite sheets. The
+location of this program can be set with the `--gimp-console path` argument.
+
+## Input Format
+
+The input file begins with the `sprite_sheet` keyword, followed by the
+name of the sprite sheet and the maximum size of the output image,
+according to the following syntax:
+
+    sprite_sheet "name" width x height [margin M]
 
 The `margin M` optional argument allows to define the spacing
 between the sprites in the output. The default value is 1.
 
-The `order "O"` optional argument allows to force a given heuristic
-for the placement of the sprites in the output. The default value is
-`"area"`, which considers the sprites in decreasing order of their
-area. Other possible values are `"height"` to select the sprites by
-decreasing order of their height or `"none"` to consider the sprites in
-their declaration order.
-
-Following the header is a list of XCF files used to build the sprites:
+Following the header is a list of image files used to build the sprites:
 
     image_name_1 "file_name_1"
     image_name_2 "file_name_2"
     ...
 
 Then come the sprites, defined by a name, a size, a source image, a
-selection of layers and an optional mask. The selection of layers can
-be prefixed by some properties to apply to the selected layers:
+selection of layers and an optional mask. The name of the sprite and
+the selection of layers can be prefixed by some properties to modify
+how they are considered in the sprite sheet:
 
-    "name" reference_box * scale_factor with image_name
+    [sprite_properties] "name" reference_box * scale_factor with image_name
       [layer_properties] layer_selection_1
       [layer_properties] layer_selection_2
       ...
       [mask "layer_name"]
       ;
+
+The sprite name can be prefixed by a list of properties to change how
+it appears in the generated sheet. The current only property is
+`bleed`; it tells the program to copy the edges of the sprite one
+pixel around it. The properties are optional and must be separated by
+spaces and put between brackets, according to the following syntax:
+
+    [ property_1 property_2 ... ]
 
 The reference box can be the name of a layer from the source image, or
 one of the following special values:
@@ -127,11 +191,6 @@ as a mask in the resulting sprite. The white parts of the layer will
 be opaque in the resulting sprite, while the black parts will be fully
 transparent. Intermediate grey values will be partially transparent.
 
-EXAMPLE
-====
+# Examples
 
-See the `example/` folder for a sample script. You can process it with
-the following command:
-
-    ./bin/pack-my-sprites --scheme-directory=src/script/ example/bird.spritedesc
- 
+See the `example/` folder for sample projects.
