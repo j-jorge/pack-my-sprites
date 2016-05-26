@@ -20,7 +20,7 @@ manpage.1: manpage.sgml
   <!ENTITY dhfirstname "<firstname>Julien</firstname>">
   <!ENTITY dhsurname   "<surname>Jorge</surname>">
   <!-- Please adjust the date whenever revising the manpage. -->
-  <!ENTITY dhdate      "<date>april 30, 2015</date>">
+  <!ENTITY dhdate      "<date>may 26, 2016</date>">
   <!-- SECTION should be 1-8, maybe w/ subsection other parameters are
        allowed: see man(7), man(1). -->
   <!ENTITY dhsection   "<manvolnum>1</manvolnum>">
@@ -55,13 +55,18 @@ manpage.1: manpage.sgml
     <cmdsynopsis>
       <command>&dhpackage;</command>
 
-      <arg><option>--dump</option></arg>
-      <arg><option>-f</option></arg>
+      <arg><option>--css</option></arg>
+      <arg><option>-g <replaceable>file</replaceable></option></arg>
       <arg><option>-h</option></arg>
       <arg><option>-m</option></arg>
-      <arg><option>-o=<replaceable>file</replaceable></option></arg>
+      <arg><option>-o <replaceable>file</replaceable></option></arg>
       <arg><option>-p</option></arg>
-      <arg><option>-z=<replaceable>WxH</replaceable></option></arg>
+      <arg><option>--plist</option></arg>
+      <arg rep="repeat"><option>-s <replaceable>directory</replaceable></option></arg>
+      <arg><option>--spritepos</option></arg>
+      <arg><option>--verbose</option></arg>
+      <arg><option>--version</option></arg>
+      <arg><option>-z <replaceable>WxH</replaceable></option></arg>
       <arg rep="repeat"><option><replaceable>pms-arg</replaceable></option></arg>
       <arg rep="repeat"><option><replaceable>file</replaceable></option></arg>
       <arg><option>--bleeding</option></arg>
@@ -72,53 +77,82 @@ manpage.1: manpage.sgml
   <refsect1>
     <title>DESCRIPTION</title>
 
-    <para><command>&dhpackage;</command> is a program which generates
-      sprite sheets from a collection of images. It serves as a front end
-      to
-      <citerefentry>
-        <refentrytitle>pack-my-sprites</refentrytitle>
-        <manvolnum>1</manvolnum>
-      </citerefentry></para>
+    <para><command>&dhpackage;</command> is a program which generates a
+      sprite sheet from a collection of images.
 
-    <para>The purpose of the software is to reduce the time required
-      to integrate graphic updates into the final product. In order to
+    <para>The purpose of the software is to reduce the time required to
+      integrate graphic updates into the final product. In order to
       achieve this goal, <command>&dhpackage;</command> automates the
-      generation of the sprites and helps its integration in the build
-      process of the product.</para>
+      generation of the sprites and the atlases in an way that can be
+      easily integrated in the build process of the product.</para>
 
     <para>The default behavior of the program is to build a sprite sheet
       containing the images passed on the command line, with a width
       and height both limited to 1024 pixels in the resulting image.</para>
 
-    <para>The size limit of the output file can be controled with the
-      <option>--size=</option><replaceable>WxH</replaceable> argument, where
-      <replaceable>W</replaceable> and <replaceable>H</replaceable> are
-      respectively the limit on the width and the height.</para>
+    <para>The size of the output file can be controled with
+      the <option>--size</option> <replaceable>WxH</replaceable> argument
+      to set the maximum width to <replaceable>W</replaceable> pixels
+      and the maximum height
+      to <replaceable>H</replaceable> pixels.</para>
 
-    <para>The name of the output file can be set with the
-      <option>--output=</option><replaceable>file</replaceable> argument.
-      If not set then the name sprite-sheet.png is used.</para>
+    <para>By default, the command creates a file named
+      sprite-sheet.png. This name can be modified with
+      the <option>--output</option> <replaceable>file</replaceable>
+      argument.</para>
+    
+    <para>If all the sprites cannot fit in the same sheet then a
+      series of numbered output files will be created:
+      sprite-sheet-1.png, sprite-sheet-2.png, and so on.</para>
 
-    <para>The sprites are placed with a default transparent margin of
-      one pixel between them. This value can be adjusted with
-      the <option>--margin</option> option.</para>
+    <para>The sprites will be packed by leaving a margin of one pixel
+      between them. The width of the margin can be modified with
+      the <option>--margin</option> <replaceable>M</replaceable> argument,
+      which sets the margin
+      to <replaceable>M</replaceable> pixels.</para>
 
     <para>The sprites produced from the images following
-      a <option>--bleeding</option> opton will have their edges cloned
+      the <option>--bleeding</option> opton will have their edges cloned
       outside their bounds (i.e. the topmost pixel row is duplicated above
       the sprite, the rightmost pixel column on its right and so
       on).</para>
     
-    <para>The program accepts all the command line options of <citerefentry>
-        <refentrytitle>pack-my-sprites</refentrytitle>
+    <para>The sprites may be rotated a quarter turn anticlockwise if
+      it helps to produce a better packing. This behavior can be
+      prevented with the <option>--no-rotation</option> argument, in
+      which case no rotation will occur.</para>
+    
+    <para>When invoked with the <option>--css</option> argument, a css
+      file with the same name than the sprite sheet will be created,
+      containing a class for each sprite.</para>
+
+    <para>When invoked with the <option>--plist</option> argument, a
+      property list XML file is generated for the sprite sheet. The
+      generated file follows the format used by Zwoptex and can be
+      immediately used in Cocos2d-X projects. See
+      <xref linkend="sect-plist"/> for details about this format.</para>
+
+    <para>When invoked with the <option>--spritepos</option> argument,
+      a plain text file with the same name than the sprite sheet is
+      created, containing a listing of all the sprites. See
+      <xref linkend="sect-spritepos"/> for details about this
+      format.</para>
+
+    <para>The software processes PNG, JPG, TGA, BMP, PCX, XBM and
+      non-animated GIF input files internally. For other input formats,
+      it relies upon the
+      <citerefentry>
+        <refentrytitle>gimp-console</refentrytitle>
         <manvolnum>1</manvolnum>
-      </citerefentry>. If the <option>--plist</option> or
-    <option>--spritepos</option> options are used then the name of the
-    sprites in the associated files will be the name of the
-    corresponding image as passed on the command line, including its
-    path if any. The <option>--strip-paths</option> option allows to override
-    this behavior and to only use the image's file name as the key in the
-    descripton of the sprite sheet.</para>
+      </citerefentry> program for the generation of the sprite
+      sheets. The location of this program can be set with the
+      <option>--gimp-console</option> <replaceable>path</replaceable> argument.</para>
+    
+    <para>By default the name of the sprites in the generated atlas
+      will be the name passed on the command line, path included. This
+      behavior is modified by
+      the <option>--strip-paths</option> argument, which removes any
+      folder from the name of the sprites.</para>
 
   </refsect1>
 
@@ -138,24 +172,25 @@ manpage.1: manpage.sgml
       <varlistentry>
         <term><option>--bleeding</option></term>
         <listitem>
-          <para>Duplicate the edges of the sprites generated from the
-            following files.</para>
+          <para>Tells to duplicate the edges of the sprites generated
+          from the following files.</para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term><option>--dump</option></term>
+        <term><option>--css</option></term>
         <listitem>
-          <para>Dump the spritedesc file used to build the sprite
-            sheet.</para>
+          <para>Enables the generation of the CSS file with the classes
+            corresponding to the sprites in the sprite sheet.</para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term><option>-f</option>, <option>--force</option></term>
+        <term><option>-g <replaceable>file</replaceable></option>, <option>--gimp-console <replaceable>file</replaceable></option></term>
         <listitem>
-          <para>Enables overwriting the output sprite sheet if it already exists
-            without asking the user.</para>
+          <para>The path to the <command>gimp-console</command> program. The
+            default is to run <command>gimp-console</command> and let
+            the shell finding it in the user's PATH.</para>
         </listitem>
       </varlistentry>
 
@@ -167,7 +202,7 @@ manpage.1: manpage.sgml
       </varlistentry>
 
       <varlistentry>
-        <term><option>-m=<replaceable>margin</replaceable></option>, <option>--margin=<replaceable>margin</replaceable></option></term>
+        <term><option>-m <replaceable>margin</replaceable></option>, <option>--margin <replaceable>margin</replaceable></option></term>
         <listitem>
           <para>Sets the width of the transparent space between the sprites
             in the output sprite sheet.</para>
@@ -175,9 +210,46 @@ manpage.1: manpage.sgml
       </varlistentry>
 
       <varlistentry>
-        <term><option>-o=<replaceable>file</replaceable></option>, <option>--output=<replaceable>file</replaceable></option></term>
+        <term><option>-o <replaceable>file</replaceable></option>, <option>--output <replaceable>file</replaceable></option></term>
         <listitem>
           <para>Sets the name of the output sprite sheet.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--plist</option></term>
+        <listitem>
+          <para>Enables the generation of the property list file
+          describing the position and the size of the sprites in the
+          sprite sheet. See <xref linkend="sect-plist"/> for details
+          about this format.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-r</option>, <option>--no-rotation</option></term>
+        <listitem>
+          <para>Disables the rotation of the sprites in the sprite
+            sheet.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-s <replaceable>directory</replaceable></option>, <option>--scheme-directory <replaceable>directory</replaceable></option></term>
+        <listitem>
+          <para>The directories where are searched the Scheme scripts used
+            in the scripts passed to GIMP. The default value is
+            install_prefix/share/&dhpackage;/script.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-z <replaceable>WxH</replaceable></option>, <option>--size <replaceable>WxH</replaceable></option></term>
+        <listitem>
+          <para>Sets the size limit of the resulting sprite sheet to a
+          width of <replaceable>W</replaceable> pixels and a height of
+          <replaceable>H</replaceable> pixels. The default size is
+          1024x1024.</para>
         </listitem>
       </varlistentry>
 
@@ -190,23 +262,27 @@ manpage.1: manpage.sgml
       </varlistentry>
 
       <varlistentry>
-        <term><option>-z=<replaceable>WxH</replaceable></option>, <option>--size=<replaceable>WxH</replaceable></option></term>
+        <term><option>--spritepos</option></term>
         <listitem>
-          <para>Sets the size limit of the resulting sprite sheet to a
-          width of <replaceable>W</replaceable> pixels and a height of
-          <replaceable>H</replaceable> pixels. The default size is
-          1024x1024.</para>
+          <para>Enables the generation of the file describing the
+            position and the size of the sprites in the sprite
+            sheet. See <xref linkend="sect-spritepos"/> for details
+            about this format.</para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term><option><replaceable>pms-arg</replaceable></option></term>
+        <term><option>--verbose</option></term>
         <listitem>
-          <para>A command line option to be passed to
-            <citerefentry>
-              <refentrytitle>pack-my-sprites</refentrytitle>
-              <manvolnum>1</manvolnum>
-          </citerefentry>.</para>
+          <para>Tells to display informative messages during the
+            processing.</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-v, --version</option></term>
+        <listitem>
+          <para>Print the version of the program and exit.</para>
         </listitem>
       </varlistentry>
 
@@ -214,6 +290,29 @@ manpage.1: manpage.sgml
 
   </refsect1>
 
+  <refsect1 id="sect-spritepos">
+    <title>PLAIN TEXT DESCRIPTION</title>
+    <para>The files generated when the
+      <option>--spritepos</option> argument describe each sprite of
+      the sprite sheet in an easy to parse format. Each sprite is
+      described on a line with its name and its position in the sprite
+      sheed. The position is made of four values which are the left
+      edge, top edge, width and height of the sprite.</para>
+  </refsect1>
+
+  <refsect1 id="sect-plist">
+    <title>PROPERTY LIST</title>
+    <para>Property list files in general are used to store serialized
+      objects in various frameworks. They are typically XML files but
+      may ocasionnaly be found as binary files.</para>
+
+    <para>The files generated when the <option>--plist</option> argument
+      is present contain an XML structure describing the content of a
+      sprite sheet following the format used by Zwoptex. The generated
+      file can be immediately imported in Cocos2D-X projects.</para>
+
+  </refsect1>
+  
   <refsect1>
     <title>EXAMPLE</title>
 
@@ -228,7 +327,7 @@ manpage.1: manpage.sgml
       directory from all the PNG files from another directory:</para>
 
     <programlisting>
-      auto-pack-my-sprites images/*.png --output=sprites.png
+      auto-pack-my-sprites images/*.png --output sprites.png
     </programlisting>
 
     <para>Creates a PNG file in the current directory from all the PNG
@@ -236,14 +335,14 @@ manpage.1: manpage.sgml
       where the names do not contain the path of the input files:</para>
 
     <programlisting>
-      auto-pack-my-sprites images/*.png --output=sprites.png --plist --strip-paths
+      auto-pack-my-sprites images/*.png --output sprites.png --plist --strip-paths
     </programlisting>
 
       <para>Creates a PNG file with two bleeding sprites and one that
         does not bleed.</para>
 
     <programlisting>
-      auto-pack-my-sprites --output=output/sprites.png img1.png --bleeding img2.png img3.png
+      auto-pack-my-sprites --output output/sprites.png img1.png --bleeding img2.png img3.png
     </programlisting>
 </refsect1>
 

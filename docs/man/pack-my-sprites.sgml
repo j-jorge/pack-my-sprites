@@ -20,7 +20,7 @@ manpage.1: manpage.sgml
   <!ENTITY dhfirstname "<firstname>Julien</firstname>">
   <!ENTITY dhsurname   "<surname>Jorge</surname>">
   <!-- Please adjust the date whenever revising the manpage. -->
-  <!ENTITY dhdate      "<date>january 29, 2013</date>">
+  <!ENTITY dhdate      "<date>may 26, 2016</date>">
   <!-- SECTION should be 1-8, maybe w/ subsection other parameters are
        allowed: see man(7), man(1). -->
   <!ENTITY dhsection   "<manvolnum>1</manvolnum>">
@@ -56,16 +56,13 @@ manpage.1: manpage.sgml
       <command>&dhpackage;</command>
 
       <arg><option>--css</option></arg>
-      <arg><option>-g=<replaceable>file</replaceable></option></arg>
+      <arg><option>-g <replaceable>file</replaceable></option></arg>
       <arg><option>-h</option></arg>
-      <arg><option>--log-concise</option></arg>
-      <arg><option>--log-file=<replaceable>file</replaceable></option></arg>
-      <arg><option>--log-level=<replaceable>string</replaceable></option></arg>
-      <arg><option>--log-uniq</option></arg>
-      <arg rep="repeat"><option>-s=<replaceable>directory</replaceable></option></arg>
       <arg><option>--plist</option></arg>
       <arg><option>-r</option></arg>
+      <arg rep="repeat"><option>-s <replaceable>directory</replaceable></option></arg>
       <arg><option>--spritepos</option></arg>
+      <arg><option>--verbose</option></arg>
       <arg><option>--version</option></arg>
       <arg rep="repeat"><option><replaceable>file</replaceable></option></arg>
    </cmdsynopsis>
@@ -75,47 +72,68 @@ manpage.1: manpage.sgml
     <title>DESCRIPTION</title>
 
     <para><command>&dhpackage;</command> is a program which generates
-      sprite sheets from a collection of images made with GIMP.</para>
+      sprites by picking specified layers from an XCF image made with
+      <citerefentry>
+        <refentrytitle>gimp</refentrytitle>
+        <manvolnum>1</manvolnum>
+      </citerefentry> and placing these sprites in a sprite
+      sheet.</para>
 
-    <para>The purpose of the software is to reduce the time required
-      to integrate graphic updates into the final product. In order to
+    <para>The purpose of the software is to reduce the time required to
+      integrate graphic updates into the final product. In order to
       achieve this goal, <command>&dhpackage;</command> automates the
-      generation of the sprites and helps its integration in the build
-      process of the product.</para>
+      generation of the sprites and the atlases in an way that can be
+      easily integrated in the build process of the product.</para>
 
-    <para>The default behavior of the program is to parse an input text
-      file to generate some sprite sheets. The input file must
-      describe each sprite with a unique name, the layers to show to
-      build them, and their final size in the sprite sheet. The output
-      is a PNG file containing each sprite. See
-      <xref linkend="sect-spritedesc"/> for details about the syntax
-      of the input file.</para>
+    <para>The tool supports the creation of sprite atlases in CSS and Zwoptex
+      formats.</para>
+
+    <para>The default behavior of <command>&dhpackage;</command> is to
+      generate the sprite sheets from an input text file describing how
+      to build the sprites. This file contains the name and the
+      maximum size of the sprite sheet, followed by a description of
+      each sprite with a unique name, the layers to use to build them,
+      and the size to scale them to in the the sheet.
+      See <xref linkend="sect-spritedesc"/> for details about the
+      syntax of the input file.</para>
+    
+    <para>The output is a PNG file containing each sprite. If all the
+      sprites cannot fit in the same sheet then a series of numbered
+      output files will be created by appending an index to the
+      provided sprite sheet name.</para>
+    
+    <para>The sprites may be rotated a quarter turn anticlockwise if
+      it helps to produce a better packing. This behavior can be
+      prevented with the <option>--no-rotation</option> argument, in
+      which case no rotation will occur.</para>
+    
+    <para>When invoked with the <option>--css</option> argument, a css
+      file with the same name than the sprite sheet will be created,
+      containing a class for each sprite.</para>
+
+    <para>When invoked with the <option>--plist</option> argument, a
+      property list XML file is generated for the sprite sheet. The
+      generated file follows the format used by Zwoptex and can be
+      immediately used in Cocos2d-X projects. See
+      <xref linkend="sect-plist"/> for details about this format.</para>
 
     <para>When invoked with the <option>--spritepos</option> argument,
-      a plain text file listing the position and the size of each
-      sprite associated with its name is also generated. See
+      a plain text file with the same name than the sprite sheet is
+      created, containing a listing of all the sprites. See
       <xref linkend="sect-spritepos"/> for details about this
       format.</para>
 
-    <para>When invoked with the <option>--plist</option> argument, an
-      XML file listing the position and the size of each sprite
-      associated with its name is also generated. See
-      <xref linkend="sect-plist"/> for details about this
-      format.</para>
-
-    <para>When invoked with the <option>--css</option> argument, a
-      CSS file declaring a class for each sprite is also generated.</para>
-
-    <para>The sprites may be rotated in the output image if such a
-      transformation helps to place more sprites. Pass
-      the <option>--no-rotation</option> argument to disable this
-      behavior.</para>
-
-    <para>The software relies upon the
+    <para>The software processes PNG, JPG, TGA, BMP, PCX, XBM and
+      non-animated GIF input files internally. For other input formats,
+      it relies upon the
       <citerefentry>
         <refentrytitle>gimp-console</refentrytitle>
         <manvolnum>1</manvolnum>
-      </citerefentry> program for the generation of the sprite sheets.</para>
+      </citerefentry> program for the generation of the sprite
+      sheets. The location of this program can be set with the
+      <option>--gimp-console <replaceable>path</replaceable></option>
+      argument.</para>
+    
   </refsect1>
 
   <refsect1>
@@ -143,11 +161,11 @@ manpage.1: manpage.sgml
       </varlistentry>
 
       <varlistentry>
-        <term><option>-g=<replaceable>file</replaceable></option>, <option>--gimp-console=<replaceable>file</replaceable></option></term>
+        <term><option>-g <replaceable>file</replaceable></option>, <option>--gimp-console <replaceable>file</replaceable></option></term>
         <listitem>
           <para>The path to the <command>gimp-console</command> program. The
             default is to run <command>gimp-console</command> and let
-            the shell find it in the user's PATH.</para>
+            the shell finding it in the user's PATH.</para>
         </listitem>
       </varlistentry>
 
@@ -155,40 +173,6 @@ manpage.1: manpage.sgml
         <term><option>-h, --help</option></term>
         <listitem>
           <para>Shows a summary of options.</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
-        <term><option>--log-concise</option></term>
-        <listitem>
-          <para>Enables a logger that does not output messages that have been
-            recently output.</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
-        <term><option>--log-file=<replaceable>file</replaceable></option></term>
-        <listitem>
-          <para>Redirects log output to <replaceable>file</replaceable>.</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
-        <term><option>--log-level=<replaceable>string</replaceable></option></term>
-        <listitem>
-          <para>Controls the level up to which the log messages are
-            displayed, among
-            <replaceable>error</replaceable>,
-            <replaceable>warning</replaceable> and
-            <replaceable>verbose</replaceable>.</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
-        <term><option>--log-uniq</option></term>
-        <listitem>
-          <para>Tells to use a logger that does not output successively the same
-            message.</para>
         </listitem>
       </varlistentry>
 
@@ -211,6 +195,15 @@ manpage.1: manpage.sgml
       </varlistentry>
 
       <varlistentry>
+        <term><option>-s <replaceable>directory</replaceable></option>, <option>--scheme-directory <replaceable>directory</replaceable></option></term>
+        <listitem>
+          <para>The directories where are searched the Scheme scripts used
+            in the scripts passed to GIMP. The default value is
+            install_prefix/share/&dhpackage;/script.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
         <term><option>--spritepos</option></term>
         <listitem>
           <para>Enables the generation of the file describing the
@@ -221,14 +214,13 @@ manpage.1: manpage.sgml
       </varlistentry>
 
       <varlistentry>
-        <term><option>-s=<replaceable>directory</replaceable></option>, <option>--scheme-directory=<replaceable>directory</replaceable></option></term>
+        <term><option>--verbose</option></term>
         <listitem>
-          <para>The directories where are searched the Scheme scripts used
-            in the scripts passed to GIMP. The default value is
-            install_prefix/share/&dhpackage;/script.</para>
+          <para>Tells to display informative messages during the
+            processing.</para>
         </listitem>
       </varlistentry>
-
+      
       <varlistentry>
         <term><option>-v, --version</option></term>
         <listitem>
@@ -242,12 +234,10 @@ manpage.1: manpage.sgml
 
   <refsect1 id="sect-spritedesc">
     <title>INPUT FORMAT</title>
-    <para>The input files can contain one or several sprite
-      sheets. Each one begins with
+    <para>The input files begin with
       the <emphasis>sprite_sheet</emphasis> keyword, followed by the
-      name of the sprite sheet and the
-      maximum size of the output image, according to the following
-      syntax:</para>
+      name of the sprite sheet and the maximum size of the output image,
+      according to the following syntax:</para>
 
     <programlisting>sprite_sheet "name" width x height [margin M]</programlisting>
 
@@ -274,9 +264,8 @@ manpage.1: manpage.sgml
       [mask "layer_name"]
       ;</programlisting>
 
-    <para>The sprite declaration can be prefixed by a list
-      of properties to change how the sprite is built in the
-      output. The current only property is <quote>bleed</quote>; it
+    <para>The current single property that can be applied to the whole
+      sprite is <quote>bleed</quote>; it
       tells the program to duplicate the edges of the resulting sprite
       outside its bounds (i.e. the topmost pixel row is duplicated above
       the sprite, the rightmost pixel column on its right and so
@@ -293,7 +282,7 @@ manpage.1: manpage.sgml
       <varlistentry>
         <term>autosize</term>
         <listitem><para>The box is the smallest one
-            that contains all the selected layers.</para></listitem>
+            containing all the selected layers.</para></listitem>
       </varlistentry>
         
       <varlistentry>
@@ -303,8 +292,8 @@ manpage.1: manpage.sgml
       </varlistentry>
     </variablelist>
 
-    <para>The scale factor is an optional positive value that
-      determines the size of the sprite in the output. For example, a
+    <para>The scale factor is an optional positive value
+      determining the size of the sprite in the output. For example, a
       value of 0.5 will produce a sprite half the size of the reference
       box.</para>
 
@@ -321,7 +310,7 @@ manpage.1: manpage.sgml
         <term>glob <quote>pattern</quote></term>
         <listitem><para>Selects all layers whose name match the given
             pattern. The pattern can contain the following
-            special charaters</para>
+            special characters</para>
 
           <variablelist>
             <varlistentry>
@@ -393,14 +382,14 @@ manpage.1: manpage.sgml
     <para>The files generated when the <option>--plist</option> argument
       is present contain an XML structure describing the content of a
       sprite sheet following the format used by Zwoptex. The generated
-      file can be immediately imported in Cocos2D projects.</para>
+      file can be immediately imported in Cocos2D-X projects.</para>
 
   </refsect1>
 
   <refsect1>
     <title>EXAMPLE</title>
 
-    <para>Here is an example of input file:</para>
+    <para>Here is a sample input file:</para>
 
     <programlisting>
       /* Comments are written like this.*/
@@ -424,7 +413,7 @@ manpage.1: manpage.sgml
       is cropped to the bounds of the merged layers, without
       considering the size of layer named "lights" nor the layers
       ending with "effect". Then the sprite is reduced to one third
-      of its size. The size of the 
+      of its size.
       */
       "wave" autosize * 0.3 with logo
       &nbsp; "wave"

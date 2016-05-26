@@ -99,7 +99,7 @@ the same name than the sprite sheet will be created, containing a
 listing of all the sprites.
 
 The software processes PNG, JPG, TGA, BMP, PCX, XBM and non-animated
-GIF files internally. On other input formats, it relies upon the
+GIF files internally. For other input formats, it relies upon the
 `gimp-console` program for the generation of the sprite sheets. The
 location of this program can be set with the `--gimp-console path` argument.
 
@@ -132,11 +132,12 @@ how they are considered in the sprite sheet:
       [mask "layer_name"]
       ;
 
-The sprite name can be prefixed by a list of properties to change how
-it appears in the generated sheet. The current only property is
-`bleed`; it tells the program to copy the edges of the sprite one
-pixel around it. The properties are optional and must be separated by
-spaces and put between brackets, according to the following syntax:
+The current single property that can be applied to the whole sprite is
+`bleed`; it tells the program to duplicate the edges of the resulting
+sprite outside its bounds (i.e. the topmost pixel row is duplicated
+above the sprite, the rightmost pixel column on its right and so
+on). The properties are optional and must be separated by spaces and
+put between brackets, according to the following syntax:
 
     [ property_1 property_2 ... ]
 
@@ -144,12 +145,12 @@ The reference box can be the name of a layer from the source image, or
 one of the following special values:
 
   - `autosize`
-      The box is the smallest one that contains all the selected layers.
+      The box is the smallest one containing all the selected layers.
 
   - `image_size`
       The box is the one of the canvas in the input image.
 
-The scale factor is a positive value that determine the size of the
+The scale factor is a positive value determining the size of the
 sprite in the output. For example, a value of 0.5 will produce a
 sprite half the size of the reference box.
 
@@ -160,7 +161,7 @@ The layer selection has different formats:
 
   - `glob "pattern"`
       Selects all layers whose name match the given pattern. The
-      pattern can contain the following special charaters:
+      pattern can contain the following special characters:
 
     - `*`  Matches any sequence of symbols, empty sequences included.
 
