@@ -88,7 +88,7 @@ bool pack_from_command_line( int argc, char** argv )
     ( program_options_parser().parse( argc, argv ) );
 
   if ( !arguments )
-    return false;
+    return true;
 
   pms::app::packer packer( arguments->packer_options );
   return packer.run( arguments->files );

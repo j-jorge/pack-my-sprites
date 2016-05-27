@@ -81,12 +81,28 @@ program_arguments::program_arguments()
 
 }
 
+class parsed_command_line
+{
+public:
+  explicit parsed_command_line( bool valid )
+    : valid( valid )
+  { }
+
+  explicit parsed_command_line( const program_arguments& arguments )
+    : valid( true ),
+      arguments( arguments )
+  { }
+
+  const bool valid;
+  const boost::optional< program_arguments > arguments;
+};
+
 class program_options_parser
 {
 public:
   program_options_parser();
 
-  boost::optional< program_arguments > parse( int argc, char** argv );
+  parsed_command_line parse( int argc, char** argv );
 
 private:
   static boost::program_options::options_description get_app_options();
@@ -148,8 +164,7 @@ program_options_parser::get_app_options()
   return result;
 }
 
-boost::optional< program_arguments >
-program_options_parser::parse( int argc, char** argv )
+parsed_command_line program_options_parser::parse( int argc, char** argv )
 {
   boost::program_options::variables_map arguments;
   boost::program_options::store
@@ -160,7 +175,7 @@ program_options_parser::parse( int argc, char** argv )
   if ( !pms::app::parse_general_program_options
        ( m_command_line_options, arguments, argv[ 0 ],
          "[ options ] file… [ --bleeding file… ]" ) )
-    return boost::none;
+    return parsed_command_line( true );
 
   program_arguments result;
 
@@ -187,16 +202,22 @@ program_options_parser::parse( int argc, char** argv )
   if ( result.margin >= result.canvas_size.width )
     {
       std::cerr << "The margin cannot be larger than the width.\n";
-      return boost::none;
+      return parsed_command_line( false );
     }
   
   if ( result.margin >= result.canvas_size.height )
     {
       std::cerr << "The margin cannot be larger than the height.\n";
-      return boost::none;
+      return parsed_command_line( false );
     }
   
-  return result;
+  if ( result.files_dry.empty() && result.files_bleeding.empty() )
+    {
+      std::cerr << "No file provided.\n";
+      return parsed_command_line( false );
+    }
+  
+  return parsed_command_line( result );
 }
 
 void configure_atlas
@@ -337,14 +358,14 @@ build_atlas( const program_arguments& arguments )
 
 bool pack_from_command_line( int argc, char** argv )
 {
-  const boost::optional< program_arguments > arguments
+  const parsed_command_line command_line
     ( program_options_parser().parse( argc, argv ) );
 
-  if ( !arguments )
-    return false;
+  if ( !command_line.arguments )
+    return command_line.valid;
 
-  pms::app::packer packer( arguments->packer_options );
-  return packer.run( "memory", build_atlas( *arguments ) );
+  pms::app::packer packer( command_line.arguments->packer_options );
+  return packer.run( "memory", build_atlas( *command_line.arguments ) );
 }
 
 int main( int argc, char** argv )
