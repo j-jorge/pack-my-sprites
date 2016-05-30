@@ -74,7 +74,7 @@ pms::serialization::spritedesc::grammar::definition<ScannerT>::definition
 
   m_atlas =
     boost::spirit::classic::no_node_d
-    [ boost::spirit::classic::strlit<>("atlas") ]
+    [ boost::spirit::classic::strlit<>("sprite_sheet") ]
     >> ( m_string | m_error_atlas )
     >> ( ( boost::spirit::classic::uint_p
            >> boost::spirit::classic::no_node_d
