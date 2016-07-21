@@ -10,7 +10,9 @@ add_library( pms_files STATIC
 
 target_include_directories(
   pms_files
-  PUBLIC include
+  PUBLIC
+  include
+  ${Boost_INCLUDE_DIRS}
   )
 
 target_link_libraries( pms_files PUBLIC ${Boost_LIBRARIES} )

@@ -10,7 +10,9 @@ add_library( pms_gimp STATIC
 
 target_include_directories(
   pms_gimp
-  PUBLIC include
+  PUBLIC
+  include
+  ${Boost_INCLUDE_DIRS}
   )
 
 target_link_libraries( pms_gimp PUBLIC ${Boost_LIBRARIES} )
