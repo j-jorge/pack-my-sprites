@@ -78,7 +78,7 @@ manpage.1: manpage.sgml
     <title>DESCRIPTION</title>
 
     <para><command>&dhpackage;</command> is a program which generates a
-      sprite sheet from a collection of images.
+      sprite sheet from a collection of images.</para>
 
     <para>The purpose of the software is to reduce the time required to
       integrate graphic updates into the final product. In order to
