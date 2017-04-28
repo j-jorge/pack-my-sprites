@@ -61,6 +61,7 @@ manpage.1: manpage.sgml
       <arg><option>--plist</option></arg>
       <arg><option>-r</option></arg>
       <arg rep="repeat"><option>-s <replaceable>directory</replaceable></option></arg>
+      <arg><option>--spine</option></arg>
       <arg><option>--spritepos</option></arg>
       <arg><option>--verbose</option></arg>
       <arg><option>--version</option></arg>
@@ -116,6 +117,9 @@ manpage.1: manpage.sgml
       generated file follows the format used by Zwoptex and can be
       immediately used in Cocos2d-X projects. See
       <xref linkend="sect-plist"/> for details about this format.</para>
+
+    <para>When invoked with the <option>--spine</option> argument an
+      atlas file is generated as if it was created with Spine.</para>
 
     <para>When invoked with the <option>--spritepos</option> argument,
       a plain text file with the same name than the sprite sheet is
@@ -200,6 +204,14 @@ manpage.1: manpage.sgml
           <para>The directories where are searched the Scheme scripts used
             in the scripts passed to GIMP. The default value is
             install_prefix/share/&dhpackage;/script.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--spine</option></term>
+        <listitem>
+          <para>Enables the generation of the sprite sheets in the
+            format used by Spine.</para>
         </listitem>
       </varlistentry>
 

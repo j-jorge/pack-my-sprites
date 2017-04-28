@@ -34,6 +34,7 @@ pms::app::get_packer_program_options()
       "Disable the rotation of the sprites in the sprite sheet." )
     ( "css", "Generate a CSS file for the sprite sheet." )
     ( "plist", "Generate a Zwoptex-like PList file for the sprite sheet." )
+    ( "spine", "Generate a Spine-like atlas file for the sprite sheet." )
     ( "spritepos", "Generate a spritepos file for the sprite sheet." )
     ;
 
@@ -48,6 +49,7 @@ pms::app::parse_packer_program_options
 
   result.generate_spritepos = ( values.count( "spritepos" ) != 0 );
   result.generate_plist = ( values.count( "plist" ) != 0 );
+  result.generate_spine = ( values.count( "spine" ) != 0 );
   result.generate_css = ( values.count( "css" ) != 0 );
 
   if ( values.count( "gimp-console" ) != 0 )

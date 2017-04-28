@@ -1,0 +1,152 @@
+
+multi-1.png
+size: 256,247
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+20x10.png
+  rotate: false
+  xy: 2, 2
+  size: 20, 10
+  orig: 2, 2
+  offset: 0, 0
+  index: -1
+11x21.png
+  rotate: true
+  xy: 25, 2
+  size: 11, 21
+  orig: 25, 2
+  offset: 0, 0
+  index: -1
+22x12.png
+  rotate: false
+  xy: 49, 2
+  size: 22, 12
+  orig: 49, 2
+  offset: 0, 0
+  index: -1
+13x23.png
+  rotate: true
+  xy: 74, 2
+  size: 13, 23
+  orig: 74, 2
+  offset: 0, 0
+  index: -1
+line.png
+  rotate: false
+  xy: 100, 2
+  size: 96, 16
+  orig: 100, 2
+  offset: 0, 0
+  index: -1
+checkboard.png
+  rotate: false
+  xy: 199, 2
+  size: 32, 32
+  orig: 199, 2
+  offset: 0, 0
+  index: -1
+stripes.png
+  rotate: false
+  xy: 2, 16
+  size: 32, 32
+  orig: 2, 16
+  offset: 0, 0
+  index: -1
+dialog-error.png
+  rotate: false
+  xy: 37, 18
+  size: 48, 48
+  orig: 37, 18
+  offset: 0, 0
+  index: -1
+dialog-warning.png
+  rotate: false
+  xy: 88, 21
+  size: 48, 48
+  orig: 88, 21
+  offset: 0, 0
+  index: -1
+non-starred.png
+  rotate: false
+  xy: 139, 21
+  size: 48, 48
+  orig: 139, 21
+  offset: 0, 0
+  index: -1
+starred.png
+  rotate: false
+  xy: 190, 37
+  size: 48, 48
+  orig: 190, 37
+  offset: 0, 0
+  index: -1
+bird-9.png
+  rotate: false
+  xy: 1, 71
+  size: 94, 69
+  orig: 1, 71
+  offset: 0, 0
+  index: -1
+bird-1.png
+  rotate: true
+  xy: 96, 71
+  size: 75, 83
+  orig: 96, 71
+  offset: 0, 0
+  index: -1
+bird-2.png
+  rotate: false
+  xy: 180, 87
+  size: 75, 83
+  orig: 180, 87
+  offset: 0, 0
+  index: -1
+bird-3.png
+  rotate: true
+  xy: 1, 141
+  size: 75, 83
+  orig: 1, 141
+  offset: 0, 0
+  index: -1
+bird-4.png
+  rotate: true
+  xy: 85, 147
+  size: 75, 83
+  orig: 85, 147
+  offset: 0, 0
+  index: -1
+bird-5.png
+  rotate: true
+  xy: 169, 171
+  size: 75, 83
+  orig: 169, 171
+  offset: 0, 0
+  index: -1
+
+multi-2.png
+size: 77,253
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bird-6.png
+  rotate: false
+  xy: 1, 1
+  size: 75, 83
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+bird-7.png
+  rotate: false
+  xy: 1, 85
+  size: 75, 83
+  orig: 1, 85
+  offset: 0, 0
+  index: -1
+bird-8.png
+  rotate: false
+  xy: 1, 169
+  size: 75, 83
+  orig: 1, 169
+  offset: 0, 0
+  index: -1

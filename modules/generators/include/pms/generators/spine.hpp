@@ -15,26 +15,35 @@
  */
 #pragma once
 
-#include <vector>
-#include <string>
+#include "pms/layout/atlas.hpp"
 
 namespace pms
 {
-  namespace app
+  namespace generators
   {
-    class packer_options
+    namespace detail
+    {
+      class working_directory;
+    }
+    
+    class spine
     {
     public:
-      packer_options();
+      void generate
+      ( const std::string& spritedesc_file_path,
+        const layout::atlas& atlas ) const;
 
-    public:
-      bool generate_spritepos;
-      bool generate_plist;
-      bool generate_spine;
-      bool generate_css;
-      std::vector< std::string > scheme_directory;
-      std::string gimp_console_program;
-      bool enable_sprite_rotation;
+    private:
+      void generate_file
+      ( const detail::working_directory& dir,
+        const layout::atlas& atlas ) const;
+
+      std::string get_page
+      ( const std::string& base_name, const layout::atlas_page& desc ) const;
+      std::string get_page_header
+      ( const std::string& base_name, const layout::atlas_page& desc ) const;
+      std::string
+      get_sprite_entry( const layout::atlas_page::sprite& sprite ) const;
     };
-  };
+  }
 }

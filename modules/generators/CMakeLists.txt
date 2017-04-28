@@ -6,6 +6,7 @@ add_library( pms_generators STATIC
   src/pms/generators/css.cpp
   src/pms/generators/plist.cpp
   src/pms/generators/png.cpp
+  src/pms/generators/spine.cpp
   src/pms/generators/spritepos.cpp
 
   src/pms/generators/detail/working_directory.cpp

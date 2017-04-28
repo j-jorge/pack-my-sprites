@@ -18,6 +18,7 @@
 #include "pms/generators/css.hpp"
 #include "pms/generators/plist.hpp"
 #include "pms/generators/png.hpp"
+#include "pms/generators/spine.hpp"
 #include "pms/generators/spritepos.hpp"
 #include "pms/layout/build.hpp"
 #include "pms/serialization/read_spritedesc.hpp"
@@ -117,6 +118,12 @@ void pms::app::packer::generate
   if ( m_options.generate_spritepos )
     {
       generators::spritepos generator;
+      generator.generate( source_file_path, atlas );
+    }
+
+  if ( m_options.generate_spine )
+    {
+      generators::spine generator;
       generator.generate( source_file_path, atlas );
     }
 

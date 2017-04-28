@@ -18,6 +18,7 @@
 pms::app::packer_options::packer_options()
   : generate_spritepos( false ),
     generate_plist( false ),
+    generate_spine( false ),
     generate_css( false ),
     gimp_console_program( "gimp-console" ),
     enable_sprite_rotation( true )

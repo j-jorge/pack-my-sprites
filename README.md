@@ -94,6 +94,9 @@ When invoked with the `--plist` argument, a property list XML file is
 generated for the sprite sheet. The generated file can be immediately
 used in [Cocos2d-X](http://www.cocos2d-x.org/) projects.
 
+When invoked with the `--spine` argument, an atlas is generated as if
+it was created with [Spine](http://esotericsoftware.com/).
+
 When invoked with the `--spritepos` argument, a plain text file with
 the same name than the sprite sheet will be created, containing a
 listing of all the sprites.
