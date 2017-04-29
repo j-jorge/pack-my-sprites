@@ -60,7 +60,8 @@ to `H` pixels.
 By default the name of the sprites in the generated atlas will be the
 name passed on the command line, path included. This behavior is
 modified by the `--strip-paths` argument, which removes any folder from
-the name of the sprites.
+the name of the sprites, and `--strip-extensions`, which removes the
+extension from the name of the sprite..
 
 All arguments of `pack-my-sprites` are supported by
 `auto-pack-my-sprites`. They are listed in the following section.

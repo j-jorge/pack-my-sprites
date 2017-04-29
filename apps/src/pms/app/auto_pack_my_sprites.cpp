@@ -68,6 +68,7 @@ public:
   std::string output;
   std::uint32_t margin;
   bool strip_paths;
+  bool strip_extensions;
   dimensions canvas_size;
   std::vector< std::string > files_bleeding;
   std::vector< std::string > files_dry;
@@ -150,6 +151,9 @@ program_options_parser::get_app_options()
     ( "output,o", boost::program_options::value< std::string >(),
       ( "The name of the output file. Default is " + defaults.output
         + "." ).c_str() )
+    ( "strip-extensions,e",
+      "Remove the extensions from the input file names when naming the"
+      " sprites." )
     ( "strip-paths,p",
       "Remove the directories from the input file names when naming the"
       " sprites." )
@@ -187,6 +191,7 @@ parsed_command_line program_options_parser::parse( int argc, char** argv )
   if ( arguments.count( "margin" ) != 0 )
       result.margin = arguments[ "margin" ].as< std::uint32_t >();
 
+  result.strip_extensions = ( arguments.count( "strip-extensions" ) != 0 );
   result.strip_paths = ( arguments.count( "strip-paths" ) != 0 );
   
   if ( arguments.count( "size" ) != 0 )
@@ -239,27 +244,28 @@ void configure_atlas
     ( result.output_name.begin() + dot, result.output_name.end() );
 }
 
-std::string stripped_name( const std::string& file )
+std::string extract_filename( const std::string& file )
 {
   return boost::filesystem::path( file ).filename().string();
 }
 
+std::string remove_extension( const std::string& file )
+{
+  return boost::filesystem::path( file ).replace_extension().string();
+}
+
 typedef std::unordered_map< std::string, std::string > file_to_name_mapping;
 
-file_to_name_mapping
-build_stripped_file_identifiers( const program_arguments& arguments )
+void strip_paths( file_to_name_mapping& files )
 {
-  file_to_name_mapping result;
-  result.reserve
-    ( arguments.files_dry.size() + arguments.files_bleeding.size() );
+  for ( auto& file : files )
+    file.second = extract_filename( file.second );
+}
 
-  for ( const auto& file : arguments.files_bleeding )
-    result[ file ] = stripped_name( file );
-
-  for ( const auto& file : arguments.files_dry )
-    result[ file ] = stripped_name( file );
-
-  return result;
+void strip_extensions( file_to_name_mapping& files )
+{
+  for ( auto& file : files )
+    file.second = remove_extension( file.second );
 }
 
 file_to_name_mapping
@@ -280,10 +286,15 @@ build_file_identifiers( const program_arguments& arguments )
 
 file_to_name_mapping identify_input_files( const program_arguments& arguments )
 {
+  file_to_name_mapping result( build_file_identifiers( arguments ) );
+
   if ( arguments.strip_paths )
-    return build_stripped_file_identifiers( arguments );
-  else
-    return build_file_identifiers( arguments );
+    strip_paths( result );
+
+  if ( arguments.strip_extensions )
+    strip_extensions( result );
+
+  return result;
 }
 
 void set_atlas_page_files

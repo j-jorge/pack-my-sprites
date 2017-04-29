@@ -56,6 +56,7 @@ manpage.1: manpage.sgml
       <command>&dhpackage;</command>
 
       <arg><option>--css</option></arg>
+      <arg><option>-e</option></arg>
       <arg><option>-g <replaceable>file</replaceable></option></arg>
       <arg><option>-h</option></arg>
       <arg><option>-m</option></arg>
@@ -156,7 +157,9 @@ manpage.1: manpage.sgml
       will be the name passed on the command line, path included. This
       behavior is modified by
       the <option>--strip-paths</option> argument, which removes any
-      folder from the name of the sprites.</para>
+      folder from the name of the sprites,
+      and <option>--strip-extensions</option>, which removes the extension
+      from the name of the sprite.</para>
 
   </refsect1>
 
@@ -186,6 +189,14 @@ manpage.1: manpage.sgml
         <listitem>
           <para>Enables the generation of the CSS file with the classes
             corresponding to the sprites in the sprite sheet.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-e</option>, <option>--strip-extensions</option></term>
+        <listitem>
+          <para>Removes the extensions from the input file names when
+            naming the sprites.</para>
         </listitem>
       </varlistentry>
 
