@@ -27,7 +27,7 @@ uninstall:
 	[ -d $(BUILD_DIR) ] && cd $(BUILD_DIR) && $(MAKE) uninstall
 
 test: target
-	cd $(BUILD_DIR) && CTEST_OUTPUT_ON_FAILURE=1 ctest
+	cd $(BUILD_DIR) && ctest --verbose
 
 target: .cmake
 	cd $(BUILD_DIR) && $(MAKE)
