@@ -95,7 +95,7 @@ std::string pms::layout::atlas_page::to_string() const
           << ", width=" << s.source_box.width
           << ", height=" << s.source_box.height
           << "), output box (left=" << s.result_box.position.x
-          << ", right=" << s.result_box.position.y
+          << ", top=" << s.result_box.position.y
           << ", width=" << s.result_box.width
           << ", height=" << s.result_box.height
           << ", rotate=" << s.rotated
