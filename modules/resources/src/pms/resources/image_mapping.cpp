@@ -26,6 +26,18 @@
 #include <utility>
 #include <tuple>
 
+namespace pms
+{
+  namespace resources
+  {
+    namespace detail
+    {
+      static claw::math::rectangle< int > get_content_box
+      ( const claw::graphic::image& image );
+    }
+  }
+}
+
 pms::resources::image_mapping::image_mapping()
   : m_image_directory( "." )
 {
@@ -91,6 +103,9 @@ bool pms::resources::image_mapping::load_with_internal_tool
   result.version = 0;
   result.width = image_data.width();
   result.height = image_data.height();
+
+  // TODO add flag to avoid cropping
+  result.content_box = detail::get_content_box( image_data );
   
   layer& layer( result.layers[ "Layer" ] );
   layer.index = 0;
@@ -122,6 +137,8 @@ void pms::resources::image_mapping::load_with_gimp
 
   while ( std::getline( info, line ) )
     parse_xcf_info_layer( result, line );
+
+  result.content_box.set( 0, 0, result.width, result.height );
 }
 
 boost::optional< const pms::resources::image& >
@@ -215,3 +232,62 @@ void pms::resources::image_mapping::parse_xcf_info_layer
 
   info.layers[ layer_name ] = result;
 }
+
+claw::math::rectangle< int > pms::resources::detail::get_content_box
+( const claw::graphic::image& image )
+{
+  const std::size_t width( image.width() );
+  const std::size_t height( image.height() );
+  
+  int left( 0 );
+  bool found( false );
+  
+  for ( std::size_t x( 0 ); ( x != width ) && !found; ++x )
+    for ( std::size_t y( 0 ); ( y != height ) && !found; ++y )
+      if ( image[ y ][ x ].components.alpha != 0 )
+        {
+          left = x;
+          found = true;
+        }
+
+  if ( !found )
+    return claw::math::rectangle< int >( 0, 0, 0, 0 );
+    
+  found = false;
+  int top( 0 );
+
+  for ( std::size_t y( 0 ); ( y != height ) && !found; ++y )
+    for ( std::size_t x( left ); ( x != width ) && !found; ++x )
+      if ( image[ y ][ x ].components.alpha != 0 )
+        {
+          top = y;
+          found = true;
+        }
+    
+  found = false;
+  int right( width );
+
+  for ( std::size_t x( width ); ( x != left ) && !found; --x )
+    for ( std::size_t y( top ); ( y != height ) && !found; ++y )
+      if ( image[ y ][ x - 1 ].components.alpha != 0 )
+        {
+          right = x - 1;
+          found = true;
+        }
+  
+  found = false;
+  int bottom( height );
+
+  for ( std::size_t y( height ); ( y != top ) && !found; --y )
+    for ( std::size_t x( left ); ( x != right ) && !found; ++x )
+      if ( image[ y - 1 ][ x ].components.alpha != 0 )
+        {
+          bottom = y - 1;
+          found = true;
+        }
+
+  return
+    claw::math::rectangle< int >
+    ( left, top, right - left + 1, bottom - top + 1 );
+}
+

@@ -72,6 +72,10 @@ void pms::generators::png::generate_output_with_internal_tool
   const layout::atlas& atlas ) const
 {
   const layout::atlas_page& desc( atlas.pages[ index ] );
+
+  if ( ( desc.width == 0 ) || ( desc.height == 0 ) )
+    return;
+  
   claw::graphic::image result( desc.width, desc.height );
 
   std::fill( result.begin(), result.end(), claw::graphic::transparent_pixel );
@@ -97,6 +101,15 @@ void pms::generators::png::copy_sprite
   std::ifstream f( file_path );
   claw::graphic::image image( f );
 
+  if ( ( sprite.display_offsets.width != sprite.result_box.width )
+       || ( sprite.display_offsets.height != sprite.result_box.height ) )
+    {
+      claw::graphic::image part
+        ( sprite.result_box.width, sprite.result_box.height );
+      part.partial_copy( image, -sprite.display_offsets.position );
+      image.swap( part );
+    }
+  
   if ( sprite.rotated )
     rotate( image );
 

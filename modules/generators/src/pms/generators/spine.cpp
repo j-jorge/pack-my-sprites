@@ -94,8 +94,10 @@ pms::generators::spine::get_sprite_entry
          << "  rotate: " << ( sprite.rotated ? "true" : "false" ) << '\n'
          << "  xy: " << x << ", " << y << '\n'
          << "  size: " << width << ", " << height << '\n'
-         << "  orig: " << width << ", " << height << '\n'
-         << "  offset: 0, 0\n"
+         << "  orig: " << sprite.display_offsets.width
+         << ", " << sprite.display_offsets.height << '\n'
+         << "  offset: " << sprite.display_offsets.position.x << ", "
+         << sprite.display_offsets.position.y << "\n"
          << "  index: -1\n";
 
   return result.str();

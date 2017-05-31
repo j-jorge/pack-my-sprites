@@ -35,6 +35,7 @@ namespace pms
         std::string name;
         claw::math::rectangle< int > source_box;
         claw::math::rectangle< int > result_box;
+        claw::math::rectangle< int > display_offsets;
         std::vector< resources::layer > layers;
         std::vector< resources::layer > mask;
         bool rotated;

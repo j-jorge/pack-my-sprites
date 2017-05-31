@@ -327,7 +327,10 @@ pms::layout::atlas_page::sprite create_sprite
   assert( image.layers.size() == 1 );
   result.layers.push_back( image.layers.begin()->second );
   result.source_box.set( 0, 0, image.width, image.height );
-  result.result_box = result.source_box;
+  result.display_offsets.position = image.content_box.position;
+  result.display_offsets.width = result.source_box.width;
+  result.display_offsets.height = result.source_box.height;
+  result.result_box = image.content_box;
 
   return result;
 }

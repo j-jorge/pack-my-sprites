@@ -17,6 +17,8 @@
 
 #include "pms/resources/layer.hpp"
 
+#include <claw/rectangle.hpp>
+
 #include <string>
 #include <unordered_map>
 
@@ -39,6 +41,7 @@ namespace pms
       unsigned int width;
       unsigned int height;
       std::unordered_map< std::string, layer > layers;
+      claw::math::rectangle< int > content_box;
     };
   }
 }
