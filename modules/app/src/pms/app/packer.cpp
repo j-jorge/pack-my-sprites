@@ -15,9 +15,11 @@
  */
 #include "pms/app/packer.hpp"
 
+#include "pms/app/atlas_format.hpp"
 #include "pms/generators/css.hpp"
 #include "pms/generators/plist.hpp"
 #include "pms/generators/png.hpp"
+#include "pms/generators/rotation_direction.hpp"
 #include "pms/generators/spine.hpp"
 #include "pms/generators/spritepos.hpp"
 #include "pms/layout/build.hpp"
@@ -29,7 +31,8 @@
 
 pms::app::packer::packer( const packer_options& options )
   : m_options( options ),
-    m_gimp( m_options.scheme_directory, m_options.gimp_console_program )
+    m_gimp
+    ( m_options.get_scheme_directory(), m_options.get_gimp_console_program() )
   
 {
   
@@ -73,8 +76,12 @@ bool pms::app::packer::run
 
   if ( !feasible( atlas ) )
     return false;
+
+  const bool allow_rotation
+    ( m_options.get_rotation_direction()
+      != generators::rotation_direction::none );
   
-  if ( !layout::build( m_options.enable_sprite_rotation, atlas ) )
+  if ( !layout::build( allow_rotation, atlas ) )
     return false;
   
   generate( source_file_path, atlas );
@@ -88,6 +95,10 @@ bool pms::app::packer::feasible( const layout::atlas& atlas ) const
   const std::size_t width( atlas.width );
   const std::size_t height( atlas.height );
   
+  const bool allow_rotation
+    ( m_options.get_rotation_direction()
+      != generators::rotation_direction::none );
+
   for ( const layout::atlas_page& p : atlas.pages )
     for ( layout::atlas_page::const_sprite_iterator it( p.sprite_begin() );
           it != p.sprite_end(); ++it )
@@ -96,8 +107,7 @@ bool pms::app::packer::feasible( const layout::atlas& atlas ) const
         const std::size_t h( it->result_box.height + 2 * margin + it->bleed );
         
         if ( ( ( w > width ) || ( h > height ) )
-             && ( m_options.enable_sprite_rotation
-                  && ( ( w > height ) || ( h > width ) ) ) )
+             && ( allow_rotation && ( ( w > height ) || ( h > width ) ) ) )
           {
             claw::logger << claw::log_error
                          << "Sprite '" << it->name
@@ -112,31 +122,37 @@ bool pms::app::packer::feasible( const layout::atlas& atlas ) const
 void pms::app::packer::generate
 ( const std::string& source_file_path, const layout::atlas& atlas ) const
 {
-  generators::png generator( m_gimp );
+  generators::png generator( m_gimp, m_options.get_rotation_direction() );
   generator.generate( source_file_path, atlas );
 
-  if ( m_options.generate_spritepos )
+  switch( m_options.get_atlas_format() )
     {
-      generators::spritepos generator;
-      generator.generate( source_file_path, atlas );
-    }
-
-  if ( m_options.generate_spine )
-    {
-      generators::spine generator;
-      generator.generate( source_file_path, atlas );
-    }
-
-  if ( m_options.generate_plist )
-    {
-      generators::plist generator;
-      generator.generate( source_file_path, atlas );
-    }
-
-  if ( m_options.generate_css )
-    {
-      generators::css generator;
-      generator.generate( source_file_path, atlas );
+    case atlas_format::spritepos:
+      {
+        generators::spritepos generator;
+        generator.generate( source_file_path, atlas );
+        break;
+      }
+    case atlas_format::spine:
+      {
+        generators::spine generator;
+        generator.generate( source_file_path, atlas );
+        break;
+      }
+    case atlas_format::plist:
+      {
+        generators::plist generator;
+        generator.generate( source_file_path, atlas );
+        break;
+      }
+    case atlas_format::css:
+      {
+        generators::css generator;
+        generator.generate( source_file_path, atlas );
+        break;
+      }
+    case atlas_format::none:
+      break;
     }
 }
 
@@ -164,7 +180,8 @@ pms::layout::atlas
 pms::app::packer::generate_atlas
 ( const std::string& directory, std::istream& in ) const
 {
-  const resources::image_mapping images( directory, m_gimp );
+  const resources::image_mapping images
+    ( directory, m_gimp, m_options.should_crop() );
 
   return layout::atlas
     ( serialization::read_spritedesc( images, in ) );

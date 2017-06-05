@@ -15,14 +15,92 @@
  */
 #include "pms/app/packer_options.hpp"
 
+#include "pms/app/atlas_format.hpp"
+#include "pms/generators/rotation_direction.hpp"
+
 pms::app::packer_options::packer_options()
-  : generate_spritepos( false ),
-    generate_plist( false ),
-    generate_spine( false ),
-    generate_css( false ),
-    gimp_console_program( "gimp-console" ),
-    enable_sprite_rotation( true )
+  : m_atlas_format( atlas_format::none ),
+    m_allow_rotation( true ),
+    m_allow_crop( true ),
+    m_gimp_console_program( "gimp-console" )
 {
 
+}
+
+pms::app::atlas_format pms::app::packer_options::get_atlas_format() const
+{
+  return m_atlas_format;
+}
+
+void pms::app::packer_options::set_atlas_format( atlas_format t )
+{
+  m_atlas_format = t;
+}
+      
+pms::generators::rotation_direction
+pms::app::packer_options::get_rotation_direction() const
+{
+  if ( !m_allow_rotation )
+    return generators::rotation_direction::none;
+
+  switch( m_atlas_format )
+    {
+    case atlas_format::css:
+    case atlas_format::plist:
+      return generators::rotation_direction::clockwise;
+    case atlas_format::spine:
+      return generators::rotation_direction::anticlockwise;
+    default:
+      return generators::rotation_direction::none;
+    }
+}
+
+void pms::app::packer_options::disable_rotation()
+{
+  m_allow_rotation = false;
+}
+      
+bool pms::app::packer_options::should_crop() const
+{
+  if ( !m_allow_crop )
+    return false;
+
+  switch( m_atlas_format )
+    {
+    case atlas_format::plist:
+    case atlas_format::spine:
+      return true;
+    default:
+      return false;
+    }
+}
+
+void pms::app::packer_options::disable_crop()
+{
+  m_allow_crop = false;
+}
+      
+const std::vector< std::string >&
+pms::app::packer_options::get_scheme_directory() const
+{
+  return m_scheme_directory;
+}
+
+void pms::app::packer_options::add_scheme_directories
+( const std::vector< std::string >& dirs )
+{
+  m_scheme_directory.insert
+    ( m_scheme_directory.end(), dirs.begin(), dirs.end() );
+}
+
+const std::string& pms::app::packer_options::get_gimp_console_program() const
+{
+  return m_gimp_console_program;
+}
+  
+void
+pms::app::packer_options::set_gimp_console_program( const std::string& gimp )
+{
+  m_gimp_console_program = gimp;
 }
 

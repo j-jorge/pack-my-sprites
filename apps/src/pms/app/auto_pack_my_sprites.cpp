@@ -341,8 +341,9 @@ build_atlas( const program_arguments& arguments )
   pms::resources::image_mapping images
     ( ".",
       pms::gimp::system_interface
-      ( arguments.packer_options.scheme_directory,
-        arguments.packer_options.gimp_console_program ) );
+      ( arguments.packer_options.get_scheme_directory(),
+        arguments.packer_options.get_gimp_console_program() ),
+      arguments.packer_options.should_crop() );
 
   load_images( images, arguments.files_dry );
   load_images( images, arguments.files_bleeding );

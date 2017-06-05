@@ -15,7 +15,19 @@
  */
 #include "pms/app/packer_program_options.hpp"
 
+#include "pms/app/atlas_format.hpp"
+
 #include <boost/preprocessor/stringize.hpp>
+
+namespace pms
+{
+  namespace app
+  {
+    static void validate
+    ( boost::any& v, const std::vector< std::string >& values,
+      atlas_format*, int );
+  }
+}
 
 boost::program_options::options_description
 pms::app::get_packer_program_options()
@@ -30,12 +42,21 @@ pms::app::get_packer_program_options()
     ( "gimp-console,g",
       boost::program_options::value< std::string >()->value_name( "file" ),
       "The path to the gimp-console executable." )
+    ( "no-crop,c",
+      "Disable cropping the sprites in the sprite sheet." )
     ( "no-rotation,r",
       "Disable the rotation of the sprites in the sprite sheet." )
-    ( "css", "Generate a CSS file for the sprite sheet." )
-    ( "plist", "Generate a Zwoptex-like PList file for the sprite sheet." )
-    ( "spine", "Generate a Spine-like atlas file for the sprite sheet." )
-    ( "spritepos", "Generate a spritepos file for the sprite sheet." )
+    ( "format,f", boost::program_options::value< atlas_format >(),
+      "The format of the atlas to generate. Valid values are:\n\n"
+      "css\n"
+      "  \tGenerate a CSS file for the sprite sheet.\n\n"
+      "plist\n"
+      "  \tGenerate a Zwoptex-like PList file for the sprite sheet.\n\n"
+      "spine\n"
+      "  \tGenerate a Spine-like atlas file for the sprite sheet.\n\n"
+      "spritepos\n"
+      "  \tGenerate a spritepos file for the sprite sheet. Implies"
+      " --no-rotation." )
     ;
 
   return result;
@@ -47,25 +68,49 @@ pms::app::parse_packer_program_options
 {
   packer_options result;
 
-  result.generate_spritepos = ( values.count( "spritepos" ) != 0 );
-  result.generate_plist = ( values.count( "plist" ) != 0 );
-  result.generate_spine = ( values.count( "spine" ) != 0 );
-  result.generate_css = ( values.count( "css" ) != 0 );
+  result.set_atlas_format( values[ "format" ].as< atlas_format >() );
 
   if ( values.count( "gimp-console" ) != 0 )
-    result.gimp_console_program = values[ "gimp-console" ].as< std::string >();
+    result.set_gimp_console_program
+      ( values[ "gimp-console" ].as< std::string >() );
 
-  result.enable_sprite_rotation = ( values.count( "no-rotation" ) == 0 );
+  if ( values.count( "no-rotation" ) != 0 )
+    result.disable_rotation();
+
+  if ( values.count( "no-crop" ) != 0 )
+    result.disable_crop();
 
   if ( values.count( "scheme-directory" ) != 0 )
-      result.scheme_directory =
-        values[ "scheme-directory" ].as< std::vector< std::string > >();
+      result.add_scheme_directories
+        ( values[ "scheme-directory" ].as< std::vector< std::string > >() );
   
 #ifdef PMS_DEFAULT_SCHEME_PATH
-  result.scheme_directory.push_back
-    ( BOOST_PP_STRINGIZE( PMS_DEFAULT_SCHEME_PATH ) );
+  result.add_scheme_directories
+    ( { BOOST_PP_STRINGIZE( PMS_DEFAULT_SCHEME_PATH ) } );
 #endif
   
   return result;
+}
+
+void pms::app::validate
+( boost::any& v, std::vector<std::string> const& values,
+  atlas_format*, int )
+{
+  boost::program_options::validators::check_first_occurrence( v );
+
+  const std::string& s
+    ( boost::program_options::validators::get_single_string( values ) );
+
+  if ( s == "spine" )
+    v = boost::any( atlas_format::spine );
+  else if ( s == "plist" )
+    v = boost::any( atlas_format::plist );
+  else if ( s == "spritepos" )
+    v = boost::any( atlas_format::spritepos );
+  else if ( s == "css" )
+    v = boost::any( atlas_format::css );
+  else
+    throw boost::program_options::validation_error
+      ( boost::program_options::validation_error::invalid_option_value );
 }
 

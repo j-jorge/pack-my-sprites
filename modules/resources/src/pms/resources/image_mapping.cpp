@@ -39,14 +39,17 @@ namespace pms
 }
 
 pms::resources::image_mapping::image_mapping()
-  : m_image_directory( "." )
+  : m_image_directory( "." ),
+    m_allow_crop( false )
 {
 
 }
 
 pms::resources::image_mapping::image_mapping
-( const std::string& image_directory, const gimp::system_interface& gimp )
-  : m_image_directory( image_directory ), m_gimp( gimp )
+( const std::string& image_directory, const gimp::system_interface& gimp,
+  bool allow_crop )
+  : m_image_directory( image_directory ), m_gimp( gimp ),
+    m_allow_crop( allow_crop )
 {
   if ( m_image_directory.empty() )
     m_image_directory = '.';
@@ -104,8 +107,10 @@ bool pms::resources::image_mapping::load_with_internal_tool
   result.width = image_data.width();
   result.height = image_data.height();
 
-  // TODO add flag to avoid cropping
-  result.content_box = detail::get_content_box( image_data );
+  if ( m_allow_crop )
+    result.content_box = detail::get_content_box( image_data );
+  else
+    result.content_box.set( 0, 0, result.width, result.height );
   
   layer& layer( result.layers[ "Layer" ] );
   layer.index = 0;
@@ -279,13 +284,16 @@ claw::math::rectangle< int > pms::resources::detail::get_content_box
   int bottom( height );
 
   for ( std::size_t y( height ); ( y != top ) && !found; --y )
-    for ( std::size_t x( left ); ( x != right ) && !found; ++x )
+    for ( std::size_t x( left ); ( x <= right ) && !found; ++x )
       if ( image[ y - 1 ][ x ].components.alpha != 0 )
         {
           bottom = y - 1;
           found = true;
         }
 
+  assert( right + 1 <= width );
+  assert( bottom + 1 <= height );
+  
   return
     claw::math::rectangle< int >
     ( left, top, right - left + 1, bottom - top + 1 );

@@ -15,6 +15,7 @@
  */
 #include "pms/generators/png.hpp"
 
+#include "pms/generators/rotation_direction.hpp"
 #include "pms/generators/detail/working_directory.hpp"
 
 #include <fstream>
@@ -25,8 +26,10 @@
 #include <claw/logger.hpp>
 #include <claw/png.hpp>
 
-pms::generators::png::png( const gimp::system_interface& gimp )
-  : m_gimp( gimp )
+pms::generators::png::png
+( const gimp::system_interface& gimp, rotation_direction rotation )
+  : m_rotation_direction( rotation ),
+    m_gimp( gimp )
 {
 
 }
@@ -131,9 +134,18 @@ void pms::generators::png::rotate( claw::graphic::image& image ) const
   
   claw::graphic::image result( dest_width, dest_height );
 
-  for ( unsigned int y( 0 ); y != dest_height; ++y )
+  if ( m_rotation_direction == rotation_direction::clockwise )
     for ( unsigned int x( 0 ); x != dest_width; ++x )
-      result[ y ][ x ] = image[ x ][ source_width - y - 1 ];
+      for ( unsigned int y( 0 ); y != dest_height; ++y )
+        result[ y ][ x ] = image[ source_height - x - 1 ][ y ];
+  else
+    {
+      assert( m_rotation_direction == rotation_direction::anticlockwise );
+      
+      for ( unsigned int y( 0 ); y != dest_height; ++y )
+        for ( unsigned int x( 0 ); x != dest_width; ++x )
+          result[ y ][ x ] = image[ x ][ source_width - y - 1 ];
+    }
 
   image.swap( result );
 }

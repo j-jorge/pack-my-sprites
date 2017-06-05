@@ -20,21 +20,42 @@
 
 namespace pms
 {
+  namespace generators
+  {
+    enum class rotation_direction;
+  }
+    
   namespace app
   {
+    enum class atlas_format;
+    
     class packer_options
     {
     public:
       packer_options();
 
-    public:
-      bool generate_spritepos;
-      bool generate_plist;
-      bool generate_spine;
-      bool generate_css;
-      std::vector< std::string > scheme_directory;
-      std::string gimp_console_program;
-      bool enable_sprite_rotation;
+      atlas_format get_atlas_format() const;
+      void set_atlas_format( atlas_format t );
+      
+      generators::rotation_direction get_rotation_direction() const;
+      void disable_rotation();
+      
+      bool should_crop() const;
+      void disable_crop();
+      
+      const std::vector< std::string >& get_scheme_directory() const;
+      void add_scheme_directories( const std::vector< std::string >& dirs );
+      
+      const std::string& get_gimp_console_program() const;
+      void set_gimp_console_program( const std::string& gimp );
+      
+    private:
+      atlas_format m_atlas_format;
+      bool m_allow_rotation;
+      bool m_allow_crop;
+      
+      std::vector< std::string > m_scheme_directory;
+      std::string m_gimp_console_program;
     };
   };
 }

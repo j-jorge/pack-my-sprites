@@ -108,32 +108,36 @@ pms::generators::plist::get_sprite_entry
 {
   const int x( sprite.result_box.position.x );
   const int y( sprite.result_box.position.y );
-  const int width( sprite.result_box.width );
-  const int height( sprite.result_box.height );
+  const int cropped_width( sprite.result_box.width );
+  const int cropped_height( sprite.result_box.height );
+  const int original_width( sprite.display_offsets.width );
+  const int original_height( sprite.display_offsets.height );
+  const int crop_offset_x( sprite.display_offsets.position.x );
+  const int crop_offset_y( sprite.display_offsets.position.y );
 
+  const int center_offset_x
+    ( ( crop_offset_x + cropped_width / 2 ) - original_width / 2 );
+  const int center_offset_y
+    ( ( crop_offset_y + cropped_height / 2 ) - original_height / 2 );
+  
   std::ostringstream result;
 
   result << "<key>" << sprite.name << "</key>\n"
     "<dict>\n"
     "<key>aliases</key>\n"
     "<array/>\n"
-    "<key>spriteColorRect</key>\n"
-    "<string>{{0, 0}, {" << width << ", " << height << "}}</string>\n"
     "<key>spriteOffset</key>\n"
-    "<string>{" << sprite.display_offsets.position.x << ", "
-         << sprite.display_offsets.position.y << "}</string>\n"
+    "<string>{" << center_offset_x << ", "
+         << -center_offset_y << "}</string>\n"
     "<key>spriteSize</key>\n"
-    "<string>{" << width << ", " << height << "}</string>\n"
+    "<string>{" << cropped_width << ", " << cropped_height << "}</string>\n"
     "<key>spriteSourceSize</key>\n"
-    "<string>{" << sprite.display_offsets.width << ", "
-         << sprite.display_offsets.height << "}</string>\n"
-    "<key>spriteTrimmed</key>\n"
-    "<true/>\n"
+    "<string>{" << original_width << ", " << original_height << "}</string>\n"
     "<key>textureRect</key>\n"
     "<string>{{" << x << ", " << y
-         << "}, {" << width << ", " << height << "}}</string>\n"
+         << "}, {" << cropped_width << ", " << cropped_height << "}}</string>\n"
     "<key>textureRotated</key>\n"
-         << ( sprite.rotated ? "<true/>" : "<false/>\n" )
+         << ( sprite.rotated ? "<true/>\n" : "<false/>\n" )
          << "</dict>\n";
 
   return result.str();

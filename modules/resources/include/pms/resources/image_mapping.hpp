@@ -33,7 +33,8 @@ namespace pms
       image_mapping();
       image_mapping
       ( const std::string& image_directory,
-        const gimp::system_interface& gimp );
+        const gimp::system_interface& gimp,
+        bool allow_crop );
 
       void load( const std::string& name );
 
@@ -59,6 +60,7 @@ namespace pms
       std::unordered_map< std::string, image > m_images;
       std::string m_image_directory;
       gimp::system_interface m_gimp;
+      bool m_allow_crop;
     };
   }
 }

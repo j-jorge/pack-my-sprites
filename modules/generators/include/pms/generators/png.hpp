@@ -28,11 +28,13 @@ namespace pms
     {
       class working_directory;
     }
+
+    enum class rotation_direction;
     
     class png
     {
     public:
-      explicit png( const gimp::system_interface& gimp );
+      png( const gimp::system_interface& gimp, rotation_direction rotation );
 
       void generate
       ( const std::string& source, const layout::atlas& atlas ) const;
@@ -73,6 +75,7 @@ namespace pms
       std::string make_image_varname( const std::string& id ) const;
 
     private:
+      const rotation_direction m_rotation_direction;
       gimp::system_interface m_gimp;
     };
   }
