@@ -28,7 +28,7 @@ namespace pms
     namespace detail
     {
       typedef
-      std::pair< const char*, rbp::MaxRectsBinPack::FreeRectChoiceHeuristic >
+      std::pair<const char*, rbp::MaxRectsBinPack::FreeRectChoiceHeuristic>
       named_heuristic;
 
       static const named_heuristic g_heuristics[] =
@@ -46,56 +46,26 @@ namespace pms
           named_heuristic( nullptr, rbp::MaxRectsBinPack::RectContactPointRule )
         };
 
-      struct packing
-      {
-        bool complete;
-        std::vector< atlas_page > pages;
-      };
-        
-      class packing_value
-      {
-      public:
-        packing_value( bool c, std::size_t s, std::size_t p );
-
-        bool is_better_than( const packing_value& that ) const;
-        bool is_complete() const;
-        
-      private:
-        bool complete;
-        std::size_t size;
-        std::size_t page_count;
-      };
+      static atlas_page build
+      ( bool allow_rotate, const atlas& atlas, atlas_page& desc );
       
-      static std::size_t packing_score
-      ( const std::vector< atlas_page >& pages );
-      
-      static packing
-      create_pages
-      ( bool allow_rotate, const atlas& atlas,
-        rbp::MaxRectsBinPack::FreeRectChoiceHeuristic heuristic );
-      
-      static atlas_page
-      create_page
-      ( bool allow_rotate, std::vector< rbp::RectSize >& source,
-        atlas_page& all_sprites, const atlas& atlas,
-        rbp::MaxRectsBinPack::FreeRectChoiceHeuristic heuristic );
+      static atlas_page try_all_heuristics
+      ( bool allow_rotate, const atlas& atlas, atlas_page& desc );
 
-      static atlas_page
-      apply_heuristic
-      ( bool allow_rotate, std::vector< rbp::RectSize >& source,
-        atlas_page& all_sprites, const atlas& atlas,
+      static atlas_page try_heuristic
+      ( bool allow_rotate, const std::vector<rbp::RectSize>& source,
+        const atlas& atlas, atlas_page& desc,
         rbp::MaxRectsBinPack::FreeRectChoiceHeuristic heuristic );
-
       static std::vector<rbp::Rect> try_heuristic
-      ( bool allow_rotate, std::vector< rbp::RectSize > &source, int width,
+      ( bool allow_rotate, std::vector<rbp::RectSize> source, int width,
         int height, rbp::MaxRectsBinPack::FreeRectChoiceHeuristic heuristic );
 
       static atlas_page apply_positions
-      ( atlas_page& desc, const std::vector< rbp::Rect >& packing,
+      ( atlas_page& desc, const std::vector<rbp::Rect>& packing,
         std::size_t margin );
       static void place_sprite_from_packing
-      ( std::vector< atlas_page::sprite >& result,
-        claw::math::coordinate_2d< int >& final_size, atlas_page& desc,
+      ( std::vector<atlas_page::sprite>& result,
+        claw::math::coordinate_2d<int>& final_size, atlas_page& desc,
         const rbp::Rect& packing, std::size_t margin );
 
       static std::vector<rbp::RectSize>
@@ -107,112 +77,44 @@ namespace pms
   }
 }
 
-pms::layout::detail::packing_value::packing_value
-( bool c, std::size_t s, std::size_t p )
-  : complete( c ),
-    size( s ),
-    page_count( p )
-{
-
-}
-
-bool pms::layout::detail::packing_value::is_better_than
-( const packing_value& that ) const
-{
-  return std::make_tuple( !complete, page_count, size )
-    < std::make_tuple( !that.complete, that.page_count, that.size );
-}
-
-bool pms::layout::detail::packing_value::is_complete() const
-{
-  return complete;
-}
-
 bool pms::layout::build( bool allow_rotate, atlas& atlas )
 {
   assert( atlas.pages.size() == 1 );
+  
+  if ( atlas.pages[ 0 ].sprite_count() == 0 )
+    return true;
 
   std::vector< atlas_page > result;
-  detail::packing_value best_value
-    ( false, std::numeric_limits< std::size_t >::max(), 0 );
+  atlas_page remaining( atlas.pages[ 0 ] );
+  atlas.pages.clear();
   
-  for ( const detail::named_heuristic* h( detail::g_heuristics );
-        h->first != nullptr;
-        ++h )
+  while( remaining.sprite_count() != 0 )
     {
-      claw::logger << claw::log_verbose << "Packing with heuristic \""
-                   << h->first << "\".\n";
+      atlas_page packed( detail::build( allow_rotate, atlas, remaining ) );
 
-      const detail::packing packing
-        ( detail::create_pages( allow_rotate, atlas, h->second ) );
+      if ( packed.sprite_count() == 0 )
+        return false;
 
-      const detail::packing_value value
-        ( packing.complete, detail::packing_score( packing.pages ),
-          packing.pages.size() );
-
-      if ( value.is_better_than( best_value ) )
-        {
-          best_value = value;
-          result = packing.pages;
-        }
+      result.push_back( packed );
     }
 
   atlas.pages = result;
-
-  return best_value.is_complete();
-}
-
-std::size_t pms::layout::detail::packing_score
-( const std::vector< atlas_page >& pages )
-{
-  std::size_t result( 0 );
-
-  for ( const atlas_page& page : pages )
-    result += page.width * page.height;
-
-  return result;
-}
-
-pms::layout::detail::packing
-pms::layout::detail::create_pages
-( bool allow_rotate, const atlas& atlas,
-  rbp::MaxRectsBinPack::FreeRectChoiceHeuristic heuristic )
-{
-  atlas_page all_sprites( atlas.pages[ 0 ] );
-  std::vector< rbp::RectSize > regions
-    ( build_sprite_sizes( all_sprites, atlas.margin ) );
-  packing result;
-
-  std::size_t initial_count;
-
-  do
-    {
-      initial_count = regions.size();
-      result.pages.push_back
-        ( create_page( allow_rotate, regions, all_sprites, atlas, heuristic ) );
-    }
-  while( !regions.empty() && ( regions.size() < initial_count ) );
-
-  result.complete = regions.empty();
-  
-  return result;
+  return true;
 }
 
 pms::layout::atlas_page
-pms::layout::detail::create_page
-( bool allow_rotate, std::vector< rbp::RectSize >& source,
-  atlas_page& all_sprites, const atlas& atlas,
-  rbp::MaxRectsBinPack::FreeRectChoiceHeuristic heuristic )
+pms::layout::detail::build
+( bool allow_rotate, const atlas& atlas, atlas_page& desc )
 {
   claw::logger << claw::log_verbose
                << "Setting sprite positions in sprite sheet '"
-               << atlas.output_name << "', with "
-               << all_sprites.sprite_count() << " sprites:\n"
-               << all_sprites.to_string()
+               << atlas.output_name << "', with " << desc.sprite_count()
+               << " sprites:\n"
+               << desc.to_string()
                << std::endl;
 
   const atlas_page result
-    ( apply_heuristic( allow_rotate, source, all_sprites, atlas, heuristic ) );
+    ( detail::try_all_heuristics( allow_rotate, atlas, desc ) );
 
   claw::logger << claw::log_verbose
                << "Final sprite sheet is:\n"
@@ -221,10 +123,51 @@ pms::layout::detail::create_page
   return result;
 }
 
+pms::layout::atlas_page pms::layout::detail::try_all_heuristics
+( bool allow_rotate, const atlas& atlas, atlas_page& desc )
+{
+  const atlas_page reference( desc );
+  const std::vector< rbp::RectSize > regions
+    ( build_sprite_sizes( desc, atlas.margin ) );
+  const std::size_t reference_count( regions.size() );
+  
+  std::size_t best_count( 0 );
+  atlas_page best_result;
+  atlas_page best_remaining;
+  
+  for ( const named_heuristic* h = g_heuristics; h->first != nullptr; ++h )
+    {
+      claw::logger << claw::log_verbose << "Packing with heuristic \""
+                   << h->first << "\".\n";
+      
+      atlas_page base( reference );
+      const atlas_page packed
+        ( try_heuristic( allow_rotate, regions, atlas, base, h->second ) );
+      const std::size_t sprite_count( packed.sprite_count() );
+      
+      if ( sprite_count == reference_count )
+        {
+          desc = base;
+          return packed;
+        }
+      else if ( sprite_count > best_count )
+        {
+          best_count = sprite_count;
+          best_result = packed;
+          best_remaining = base;
+        }
+    }
+
+  claw::logger << claw::log_verbose << "Could not place all sprites.\n";
+
+  desc = best_remaining;
+  return best_result;
+}
+
 pms::layout::atlas_page
-pms::layout::detail::apply_heuristic
-( bool allow_rotate, std::vector< rbp::RectSize >& source,
-  atlas_page& all_sprites, const atlas& atlas,
+pms::layout::detail::try_heuristic
+( bool allow_rotate, const std::vector< rbp::RectSize >& source,
+  const atlas& atlas, atlas_page& desc,
   rbp::MaxRectsBinPack::FreeRectChoiceHeuristic heuristic )
 {
   const std::size_t m( atlas.margin );
@@ -233,12 +176,12 @@ pms::layout::detail::apply_heuristic
     ( try_heuristic
       ( allow_rotate, source, atlas.width - m, atlas.height - m, heuristic ) );
 
-  return apply_positions( all_sprites, packing, m );
+  return apply_positions( desc, packing, m );
 }
 
 std::vector<rbp::Rect> pms::layout::detail::try_heuristic
-( bool allow_rotate, std::vector< rbp::RectSize >& source, int width,
-  int height, rbp::MaxRectsBinPack::FreeRectChoiceHeuristic heuristic )
+( bool allow_rotate, std::vector< rbp::RectSize > source, int width, int height,
+  rbp::MaxRectsBinPack::FreeRectChoiceHeuristic heuristic )
 {
   std::vector< rbp::Rect > packing;
   packing.reserve( source.size() );
