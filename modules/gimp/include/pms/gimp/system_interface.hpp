@@ -18,6 +18,8 @@
 #include <string>
 #include <vector>
 
+#include <sys/types.h>
+
 namespace pms
 {
   namespace gimp
