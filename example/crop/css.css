@@ -1,0 +1,63 @@
+.images/1 {
+  background-image: url('./css.png');
+  background-position: -1px -1px;
+  width: 100px;
+  height: 200px;
+}
+
+.images/4::before {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 200px;
+  top: 100px;
+  left: 0;
+  z-index: -1;
+  background-image: url('./css.png');
+  background-position: -102px -1px;
+  transform: rotate(-90deg);
+  transform-origin: 0 0;
+}
+
+.images/4 {
+  position: relative;
+  width: 200px;
+  height: 100px;
+  z-index: 1;
+}
+
+.images/5::before {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 200px;
+  top: 100px;
+  left: 0;
+  z-index: -1;
+  background-image: url('./css.png');
+  background-position: -203px -1px;
+  transform: rotate(-90deg);
+  transform-origin: 0 0;
+}
+
+.images/5 {
+  position: relative;
+  width: 200px;
+  height: 100px;
+  z-index: 1;
+}
+
+.images/3 {
+  background-image: url('./css.png');
+  background-position: -304px -1px;
+  width: 179px;
+  height: 59px;
+}
+
+.images/2 {
+  background-image: url('./css.png');
+  background-position: -484px -1px;
+  width: 59px;
+  height: 179px;
+}
+

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+<key>frames</key>
+<dict>
+<key>images/1.png</key>
+<dict>
+<key>aliases</key>
+<array/>
+<key>spriteColorRect</key>
+<string>{{22, 8}, {59, 179}}</string>
+<key>spriteOffset</key>
+<string>{1, -3}</string>
+<key>spriteSize</key>
+<string>{59, 179}</string>
+<key>spriteSourceSize</key>
+<string>{100, 200}</string>
+<key>spriteTrimmed</key>
+<true/>
+<key>textureRect</key>
+<string>{{1, 1}, {59, 179}}</string>
+<key>textureRotated</key>
+<false/>
+</dict>
+<key>images/3.png</key>
+<dict>
+<key>aliases</key>
+<array/>
+<key>spriteColorRect</key>
+<string>{{0, 0}, {179, 59}}</string>
+<key>spriteOffset</key>
+<string>{0, 0}</string>
+<key>spriteSize</key>
+<string>{179, 59}</string>
+<key>spriteSourceSize</key>
+<string>{179, 59}</string>
+<key>spriteTrimmed</key>
+<true/>
+<key>textureRect</key>
+<string>{{1, 181}, {179, 59}}</string>
+<key>textureRotated</key>
+<false/>
+</dict>
+<key>images/2.png</key>
+<dict>
+<key>aliases</key>
+<array/>
+<key>spriteColorRect</key>
+<string>{{0, 0}, {59, 179}}</string>
+<key>spriteOffset</key>
+<string>{0, 0}</string>
+<key>spriteSize</key>
+<string>{59, 179}</string>
+<key>spriteSourceSize</key>
+<string>{59, 179}</string>
+<key>spriteTrimmed</key>
+<true/>
+<key>textureRect</key>
+<string>{{61, 1}, {59, 179}}</string>
+<key>textureRotated</key>
+<false/>
+</dict>
+<key>images/4.png</key>
+<dict>
+<key>aliases</key>
+<array/>
+<key>spriteColorRect</key>
+<string>{{13, 19}, {179, 59}}</string>
+<key>spriteOffset</key>
+<string>{2, -2}</string>
+<key>spriteSize</key>
+<string>{179, 59}</string>
+<key>spriteSourceSize</key>
+<string>{200, 100}</string>
+<key>spriteTrimmed</key>
+<true/>
+<key>textureRect</key>
+<string>{{121, 1}, {179, 59}}</string>
+<key>textureRotated</key>
+<true/></dict>
+<key>images/5.png</key>
+<dict>
+<key>aliases</key>
+<array/>
+<key>spriteColorRect</key>
+<string>{{0, 0}, {0, 0}}</string>
+<key>spriteOffset</key>
+<string>{-100, -50}</string>
+<key>spriteSize</key>
+<string>{0, 0}</string>
+<key>spriteSourceSize</key>
+<string>{200, 100}</string>
+<key>spriteTrimmed</key>
+<true/>
+<key>textureRect</key>
+<string>{{1, 241}, {0, 0}}</string>
+<key>textureRotated</key>
+<false/>
+</dict>
+</dict>
+<key>metadata</key>
+<dict>
+<key>version</key>
+<string>1.6.0</string>
+<key>format</key>
+<integer>3</integer>
+<key>size</key>
+<string>{181, 242}</string>
+<key>name</key>
+<string>plist</string>
+<key>textureFileName</key>
+<string>plist.png</string>
+<key>premultipliedAlpha</key>
+<false/>
+</dict>
+</dict>
+</plist>
