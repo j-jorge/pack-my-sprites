@@ -55,14 +55,12 @@ manpage.1: manpage.sgml
     <cmdsynopsis>
       <command>&dhpackage;</command>
 
-      <arg><option>--css</option></arg>
+      <arg><option>-c</option></arg>
+      <arg><option>-f</option></arg>
       <arg><option>-g <replaceable>file</replaceable></option></arg>
       <arg><option>-h</option></arg>
-      <arg><option>--plist</option></arg>
       <arg><option>-r</option></arg>
       <arg rep="repeat"><option>-s <replaceable>directory</replaceable></option></arg>
-      <arg><option>--spine</option></arg>
-      <arg><option>--spritepos</option></arg>
       <arg><option>--verbose</option></arg>
       <arg><option>--version</option></arg>
       <arg rep="repeat"><option><replaceable>file</replaceable></option></arg>
@@ -72,7 +70,7 @@ manpage.1: manpage.sgml
   <refsect1>
     <title>DESCRIPTION</title>
 
-    <para><command>&dhpackage;</command> is a program which generates
+    <para><command>&dhpackage;</command> is a program that generates
       sprites by picking specified layers from an XCF image made with
       <citerefentry>
         <refentrytitle>gimp</refentrytitle>
@@ -87,7 +85,7 @@ manpage.1: manpage.sgml
       easily integrated in the build process of the product.</para>
 
     <para>The tool supports the creation of sprite atlases in CSS and Zwoptex
-      formats.</para>
+      formats, as well as Esoteric's Spine software.</para>
 
     <para>The default behavior of <command>&dhpackage;</command> is to
       generate the sprite sheets from an input text file describing how
@@ -103,30 +101,58 @@ manpage.1: manpage.sgml
       output files will be created by appending an index to the
       provided sprite sheet name.</para>
     
+    <para>When invoked with the <option>--format</option> argument, an
+      atlas of the selected type is also generated to describe the
+      position and the size of the sprites in the image. Valid values
+      are:</para>
+    
+    <variablelist>
+      <varlistentry>
+        <term><option>css</option></term>
+        <listitem>
+          <para>Produces a css files containing a class for each sprite.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>plist</option></term>
+        <listitem>
+          <para>A property list XML file is generated for the sprite sheet. The
+            generated file follows the format used by Zwoptex and can be
+            immediately used in Cocos2d-X projects. See
+            <xref linkend="sect-plist"/> for details about this format.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>spine</option></term>
+        <listitem>
+          <para>An atlas file is generated as if it was created with
+            Esoteric's Spine software.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>spritepos</option></term>
+        <listitem>
+          <para>A plain text file with the same name than the sprite sheet is
+            created, containing a listing of all the sprites. See
+            <xref linkend="sect-spritepos"/> for details about this
+            format.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
     <para>The sprites may be rotated a quarter turn anticlockwise if
       it helps to produce a better packing. This behavior can be
       prevented with the <option>--no-rotation</option> argument, in
       which case no rotation will occur.</para>
     
-    <para>When invoked with the <option>--css</option> argument, a css
-      file with the same name than the sprite sheet will be created,
-      containing a class for each sprite.</para>
-
-    <para>When invoked with the <option>--plist</option> argument, a
-      property list XML file is generated for the sprite sheet. The
-      generated file follows the format used by Zwoptex and can be
-      immediately used in Cocos2d-X projects. See
-      <xref linkend="sect-plist"/> for details about this format.</para>
-
-    <para>When invoked with the <option>--spine</option> argument an
-      atlas file is generated as if it was created with Spine.</para>
-
-    <para>When invoked with the <option>--spritepos</option> argument,
-      a plain text file with the same name than the sprite sheet is
-      created, containing a listing of all the sprites. See
-      <xref linkend="sect-spritepos"/> for details about this
-      format.</para>
-
+    <para>Transparent borders are automatically cropped out of the sprites
+      if the selected atlas format support it. This behavior can be
+      prevented with the <option>--no-crop</option> argument, in
+      which case no cropping will occur.</para>
+    
     <para>The software processes PNG, JPG, TGA, BMP, PCX, XBM and
       non-animated GIF input files internally. For other input formats,
       it relies upon the
@@ -157,10 +183,18 @@ manpage.1: manpage.sgml
       </varlistentry>
 
       <varlistentry>
-        <term><option>--css</option></term>
+        <term><option>-c</option>, <option>--no-crop</option></term>
         <listitem>
-          <para>Enables the generation of the CSS file with the classes
-            corresponding to the sprites in the sprite sheet.</para>
+          <para>Disable the cropping of the sprites in the sprite sheet.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-f</option>, <option>--format</option></term>
+        <listitem>
+          <para>Sets the format of the atlas. Valid values are
+            <option>css</option>, <option>plist</option>,
+            <option>spine</option>, <option>spritepos</option>.</para>
         </listitem>
       </varlistentry>
 
@@ -181,16 +215,6 @@ manpage.1: manpage.sgml
       </varlistentry>
 
       <varlistentry>
-        <term><option>--plist</option></term>
-        <listitem>
-          <para>Enables the generation of the property list file
-          describing the position and the size of the sprites in the
-          sprite sheet. See <xref linkend="sect-plist"/> for details
-          about this format.</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
         <term><option>-r</option>, <option>--no-rotation</option></term>
         <listitem>
           <para>Disables the rotation of the sprites in the sprite
@@ -204,24 +228,6 @@ manpage.1: manpage.sgml
           <para>The directories where are searched the Scheme scripts used
             in the scripts passed to GIMP. The default value is
             install_prefix/share/&dhpackage;/script.</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
-        <term><option>--spine</option></term>
-        <listitem>
-          <para>Enables the generation of the sprite sheets in the
-            format used by Spine.</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
-        <term><option>--spritepos</option></term>
-        <listitem>
-          <para>Enables the generation of the file describing the
-            position and the size of the sprites in the sprite
-            sheet. See <xref linkend="sect-spritepos"/> for details
-            about this format.</para>
         </listitem>
       </varlistentry>
 

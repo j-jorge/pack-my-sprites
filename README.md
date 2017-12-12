@@ -87,25 +87,32 @@ The sprites may be rotated a quarter turn anticlockwise if it helps to
 produce a better packing. This behavior can be prevented with the
 `--no-rotation` argument, in which case no rotation will occur.
 
-When invoked with the `--css` argument, a css file with the same name
-than the sprite sheet will be created, containing a class for each
-sprite.
+Transparent borders are automatically cropped out of the sprites if
+the selected atlas format support it. This behavior can be prevented
+with the `--no-crop` argument, in which case no cropping will occur.
 
-When invoked with the `--plist` argument, a property list XML file is
-generated for the sprite sheet. The generated file can be immediately
-used in [Cocos2d-X](http://www.cocos2d-x.org/) projects.
+When invoked with the `--format` argument, an atlas of the selected
+type is also generated to describe the position and the size of the
+sprites in the image. Valid values are:
 
-When invoked with the `--spine` argument, an atlas is generated as if
-it was created with [Spine](http://esotericsoftware.com/).
+* `css`, a css file with the same name than the sprite sheet will be
+  created, containing a class for each sprite.
 
-When invoked with the `--spritepos` argument, a plain text file with
-the same name than the sprite sheet will be created, containing a
-listing of all the sprites.
+* `plist`, a property list XML file is generated for the sprite
+  sheet. The generated file can be immediately used in
+  [Cocos2d-X](http://www.cocos2d-x.org/) projects.
+
+* `spine`, an atlas is generated as if it was created with
+  [Spine](http://esotericsoftware.com/).
+  
+* `spritepos`, a plain text file with the same name than the sprite
+  sheet will be created, containing a listing of all the sprites.
 
 The software processes PNG, JPG, TGA, BMP, PCX, XBM and non-animated
 GIF files internally. For other input formats, it relies upon the
 `gimp-console` program for the generation of the sprite sheets. The
-location of this program can be set with the `--gimp-console path` argument.
+location of this program can be set with the `--gimp-console path`
+argument.
 
 ## Input Format
 
