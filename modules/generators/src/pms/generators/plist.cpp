@@ -15,11 +15,18 @@
  */
 #include "pms/generators/plist.hpp"
 
+#include "pms/generators/color_mode.hpp"
 #include "pms/generators/detail/working_directory.hpp"
 
 #include <fstream>
 
 #include <claw/logger.hpp>
+
+pms::generators::plist::plist( color_mode color )
+  : m_color_mode( color )
+{
+
+}
 
 void pms::generators::plist::generate
 ( const std::string& spritedesc_file_path,
@@ -162,8 +169,10 @@ pms::generators::plist::get_metadata_entry
     "<key>textureFileName</key>\n"
     "<string>" << base_name << ".png</string>\n"
     "<key>premultipliedAlpha</key>\n"
-    "<false/>\n"
-    "</dict>\n";
+         << ( ( m_color_mode == color_mode::multiply_alpha )
+              ? "<true/>\n"
+              : "<false/>\n" )
+         << "</dict>\n";
 
   return result.str();
 }

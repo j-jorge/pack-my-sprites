@@ -16,12 +16,14 @@
 #include "pms/app/packer_options.hpp"
 
 #include "pms/app/atlas_format.hpp"
+#include "pms/generators/color_mode.hpp"
 #include "pms/generators/rotation_direction.hpp"
 
 pms::app::packer_options::packer_options()
   : m_atlas_format( atlas_format::none ),
     m_allow_rotation( true ),
     m_allow_crop( true ),
+    m_premultiply_alpha( true ),
     m_gimp_console_program( "gimp-console" )
 {
 
@@ -58,6 +60,20 @@ pms::app::packer_options::get_rotation_direction() const
 void pms::app::packer_options::disable_rotation()
 {
   m_allow_rotation = false;
+}
+      
+pms::generators::color_mode
+pms::app::packer_options::get_color_mode() const
+{
+  if ( m_premultiply_alpha )
+    return generators::color_mode::multiply_alpha;
+  
+  return generators::color_mode::copy;
+}
+
+void pms::app::packer_options::disable_premultiplied_alpha()
+{
+  m_premultiply_alpha = false;
 }
       
 bool pms::app::packer_options::should_crop() const

@@ -25,10 +25,14 @@ namespace pms
     {
       class working_directory;
     }
+
+    enum class color_mode;
     
     class plist
     {
     public:
+      explicit plist( color_mode color );
+      
       void generate
       ( const std::string& spritedesc_file_path,
         const layout::atlas& atlas ) const;
@@ -49,6 +53,9 @@ namespace pms
       get_sprite_entry( const layout::atlas_page::sprite& sprite ) const;
       std::string get_metadata_entry
       ( const std::string& base_name, const layout::atlas_page& desc ) const;
+
+    private:
+      const color_mode m_color_mode;
     };
   }
 }

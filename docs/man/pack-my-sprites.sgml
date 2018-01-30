@@ -55,6 +55,7 @@ manpage.1: manpage.sgml
     <cmdsynopsis>
       <command>&dhpackage;</command>
 
+      <arg><option>-a</option></arg>
       <arg><option>-c</option></arg>
       <arg><option>-f</option></arg>
       <arg><option>-g <replaceable>file</replaceable></option></arg>
@@ -100,7 +101,12 @@ manpage.1: manpage.sgml
       sprites cannot fit in the same sheet then a series of numbered
       output files will be created by appending an index to the
       provided sprite sheet name.</para>
-    
+
+    <para>The color components of the pixels in the resulting PNG file are
+      multiplied by their alpha components, a process known as
+      "premultiplied alpha". This behavior can be prevented with
+      the <option>--no-premultiplied-alpha</option> argument.</para>
+      
     <para>When invoked with the <option>--format</option> argument, an
       atlas of the selected type is also generated to describe the
       position and the size of the sprites in the image. Valid values
@@ -179,6 +185,14 @@ manpage.1: manpage.sgml
             the sprite sheet. If no file is provided then the standard
             input is read. See <xref linkend="sect-spritedesc"/> for details
             about the syntax of the file.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-a</option>, <option>--no-premultiplied-alpha</option></term>
+        <listitem>
+          <para>Disable the multiplication of the sprite sheet pixel
+            colors by their alpha component.</para>
         </listitem>
       </varlistentry>
 

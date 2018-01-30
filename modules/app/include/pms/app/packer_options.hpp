@@ -22,6 +22,7 @@ namespace pms
 {
   namespace generators
   {
+    enum class color_mode;
     enum class rotation_direction;
   }
     
@@ -39,7 +40,10 @@ namespace pms
       
       generators::rotation_direction get_rotation_direction() const;
       void disable_rotation();
-      
+
+      generators::color_mode get_color_mode() const;
+      void disable_premultiplied_alpha();
+
       bool should_crop() const;
       void disable_crop();
       
@@ -53,6 +57,7 @@ namespace pms
       atlas_format m_atlas_format;
       bool m_allow_rotation;
       bool m_allow_crop;
+      bool m_premultiply_alpha;
       
       std::vector< std::string > m_scheme_directory;
       std::string m_gimp_console_program;

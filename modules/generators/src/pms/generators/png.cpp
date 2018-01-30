@@ -15,6 +15,7 @@
  */
 #include "pms/generators/png.hpp"
 
+#include "pms/generators/color_mode.hpp"
 #include "pms/generators/rotation_direction.hpp"
 #include "pms/generators/detail/working_directory.hpp"
 
@@ -27,8 +28,10 @@
 #include <claw/png.hpp>
 
 pms::generators::png::png
-( const gimp::system_interface& gimp, rotation_direction rotation )
+( const gimp::system_interface& gimp, rotation_direction rotation,
+  color_mode color )
   : m_rotation_direction( rotation ),
+    m_color_mode( color ),
     m_gimp( gimp )
 {
 
@@ -89,6 +92,9 @@ void pms::generators::png::generate_output_with_internal_tool
       ( result,
         dir.get_image_path( desc.images.find( it->image_id )->second ),
         *it );
+
+  if ( m_color_mode == color_mode::multiply_alpha )
+    multiply_alpha( result );
   
   claw::graphic::png::writer writer( result );
   std::ofstream output
@@ -148,6 +154,21 @@ void pms::generators::png::rotate( claw::graphic::image& image ) const
     }
 
   image.swap( result );
+}
+
+void pms::generators::png::multiply_alpha( claw::graphic::image& image ) const
+{
+  static constexpr std::uint32_t range
+    ( std::numeric_limits< claw::graphic::rgba_pixel::component_type >::max() );
+
+  for ( claw::graphic::rgba_pixel& p : image )
+    {
+      const std::uint32_t alpha( p.components.alpha );
+      
+      p.components.red = p.components.red * alpha / range;
+      p.components.green = p.components.green * alpha / range;
+      p.components.blue = p.components.blue * alpha / range;
+    }
 }
 
 void pms::generators::png::bleed

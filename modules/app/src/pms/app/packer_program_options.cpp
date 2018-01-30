@@ -37,6 +37,9 @@ pms::app::get_packer_program_options()
   boost::program_options::options_description result( "Packer options" );
 
   result.add_options()
+    ( "no-premultiplied-alpha,a",
+      "Disable the multiplication of the sprite sheet pixel colors by their"
+      " alpha component." )
     ( "scheme-directory,s",
       boost::program_options::value< std::vector< std::string > >()
       ->value_name( "directory" ),
@@ -107,6 +110,9 @@ pms::app::parse_packer_program_options
 
   if ( values.count( "no-crop" ) != 0 )
     result.disable_crop();
+
+  if ( values.count( "no-premultiplied-alpha" ) != 0 )
+    result.disable_premultiplied_alpha();
 
   if ( values.count( "scheme-directory" ) != 0 )
       result.add_scheme_directories

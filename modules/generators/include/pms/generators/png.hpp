@@ -29,12 +29,15 @@ namespace pms
       class working_directory;
     }
 
+    enum class color_mode;
     enum class rotation_direction;
     
     class png
     {
     public:
-      png( const gimp::system_interface& gimp, rotation_direction rotation );
+      png
+      ( const gimp::system_interface& gimp, rotation_direction rotation,
+        color_mode color );
 
       void generate
       ( const std::string& source, const layout::atlas& atlas ) const;
@@ -52,6 +55,7 @@ namespace pms
         const layout::atlas_page::sprite& sprite ) const;
 
       void rotate( claw::graphic::image& image ) const;
+      void multiply_alpha( claw::graphic::image& image ) const;
       void bleed
       ( claw::graphic::image& result, const claw::graphic::image& image,
         const claw::math::coordinate_2d< int >& position ) const;
@@ -76,6 +80,7 @@ namespace pms
 
     private:
       const rotation_direction m_rotation_direction;
+      const color_mode m_color_mode;
       gimp::system_interface m_gimp;
     };
   }

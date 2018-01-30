@@ -83,6 +83,11 @@ will be created by appending the string `-N` to the provided output
 name, where `N` ranges from 1 to the number of files required to pack
 all the sprites.
 
+The color components of the pixels in the resulting PNG file are
+multiplied by their alpha components, a process known as
+"premultiplied alpha". This behavior can be prevented with the
+`--no-premultiplied-alpha` argument.
+
 The sprites may be rotated a quarter turn anticlockwise if it helps to
 produce a better packing. This behavior can be prevented with the
 `--no-rotation` argument, in which case no rotation will occur.

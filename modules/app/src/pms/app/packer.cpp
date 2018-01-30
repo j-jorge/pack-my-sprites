@@ -122,7 +122,8 @@ bool pms::app::packer::feasible( const layout::atlas& atlas ) const
 void pms::app::packer::generate
 ( const std::string& source_file_path, const layout::atlas& atlas ) const
 {
-  generators::png generator( m_gimp, m_options.get_rotation_direction() );
+  generators::png generator
+    ( m_gimp, m_options.get_rotation_direction(), m_options.get_color_mode() );
   generator.generate( source_file_path, atlas );
 
   switch( m_options.get_atlas_format() )
@@ -141,7 +142,7 @@ void pms::app::packer::generate
       }
     case atlas_format::plist:
       {
-        generators::plist generator;
+        generators::plist generator( m_options.get_color_mode() );
         generator.generate( source_file_path, atlas );
         break;
       }
