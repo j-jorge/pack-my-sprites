@@ -19,6 +19,8 @@
 
 #include <claw/logger.hpp>
 
+#include <iostream>
+
 boost::program_options::options_description
 pms::app::get_general_program_options()
 {
