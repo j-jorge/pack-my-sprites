@@ -134,21 +134,31 @@ pms::layout::atlas_page pms::layout::detail::try_all_heuristics
   std::size_t best_count( 0 );
   atlas_page best_result;
   atlas_page best_remaining;
+
+  std::size_t best_size( atlas.width * atlas.height + 1 );
   
   for ( const named_heuristic* h = g_heuristics; h->first != nullptr; ++h )
     {
       claw::logger << claw::log_verbose << "Packing with heuristic \""
                    << h->first << "\".\n";
-      
+
       atlas_page base( reference );
       const atlas_page packed
         ( try_heuristic( allow_rotate, regions, atlas, base, h->second ) );
       const std::size_t sprite_count( packed.sprite_count() );
-      
+
       if ( sprite_count == reference_count )
         {
-          desc = base;
-          return packed;
+          const std::size_t size( packed.width * packed.height );
+
+          best_count = sprite_count;
+
+          if ( size < best_size )
+            {
+              best_size = size;
+              best_result = packed;
+              best_remaining = base;
+            }
         }
       else if ( sprite_count > best_count )
         {
@@ -158,7 +168,8 @@ pms::layout::atlas_page pms::layout::detail::try_all_heuristics
         }
     }
 
-  claw::logger << claw::log_verbose << "Could not place all sprites.\n";
+  if ( best_count != reference_count )
+    claw::logger << claw::log_verbose << "Could not place all sprites.\n";
 
   desc = best_remaining;
   return best_result;
@@ -242,6 +253,7 @@ void pms::layout::detail::place_sprite_from_packing
   const std::size_t offset( ( it->bleed ? 1 : 0 ) + margin );
 
   it->result_box.position.set( packing.x + offset, packing.y + offset );
+
   final_size.x =
     std::max< int >( final_size.x, packing.x + packing.width + margin );
   final_size.y =
