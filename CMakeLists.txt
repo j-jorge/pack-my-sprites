@@ -1,4 +1,6 @@
-cmake_minimum_required( VERSION 2.8 )
+cmake_minimum_required( VERSION 3.14 )
+
+project(pack-my-sprites)
 
 enable_testing()
 
@@ -9,7 +11,7 @@ function( declare_test SOURCE NAME )
   foreach( LIB ${ARGN} )
     target_link_libraries( ${NAME}-test ${LIB} )
   endforeach()
-    
+
   target_link_libraries( ${NAME}-test utest )
 endfunction()
 

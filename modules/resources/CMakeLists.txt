@@ -3,7 +3,7 @@ project( libpms_resources )
 install_script( scripts/info.scm )
 
 find_package( Boost 1.42 REQUIRED )
-find_package( libclaw 1.7.4 )
+find_package( claw 1.8.0 REQUIRED )
 
 add_library( pms_resources STATIC
   src/pms/resources/image.cpp
@@ -18,8 +18,8 @@ target_include_directories(
 target_link_libraries(
   pms_resources
   PUBLIC
-  ${CLAW_GRAPHIC_LIBRARIES}
-  ${CLAW_LOGGER_LIBRARIES}
+  claw_graphic
+  claw_logger
   pms_files
   pms_gimp
 )

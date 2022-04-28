@@ -9,7 +9,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU Affero General Public License for more details.
-  
+
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -18,9 +18,9 @@
 #include "pms/generators/color_mode.hpp"
 #include "pms/generators/detail/working_directory.hpp"
 
-#include <fstream>
+#include <claw/logger/logger.hpp>
 
-#include <claw/logger.hpp>
+#include <fstream>
 
 pms::generators::plist::plist( color_mode color )
   : m_color_mode( color )
@@ -126,7 +126,7 @@ pms::generators::plist::get_sprite_entry
     ( ( crop_offset_x + cropped_width / 2 ) - original_width / 2 );
   const int center_offset_y
     ( ( crop_offset_y + cropped_height / 2 ) - original_height / 2 );
-  
+
   std::ostringstream result;
 
   result << "<key>" << sprite.name << "</key>\n"
@@ -155,7 +155,7 @@ pms::generators::plist::get_metadata_entry
 ( const std::string& base_name, const layout::atlas_page& desc ) const
 {
   std::ostringstream result;
-  
+
   result << "<key>metadata</key>\n"
     "<dict>\n"
     "<key>version</key>\n"

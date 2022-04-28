@@ -9,7 +9,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU Affero General Public License for more details.
-  
+
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -19,13 +19,13 @@
 #include "pms/generators/rotation_direction.hpp"
 #include "pms/generators/detail/working_directory.hpp"
 
+#include <claw/logger/logger.hpp>
+#include <claw/graphic/png.hpp>
+
 #include <fstream>
 #include <iostream>
 
 #include <limits>
-
-#include <claw/logger.hpp>
-#include <claw/png.hpp>
 
 pms::generators::png::png
 ( const gimp::system_interface& gimp, rotation_direction rotation,
@@ -81,11 +81,11 @@ void pms::generators::png::generate_output_with_internal_tool
 
   if ( ( desc.width == 0 ) || ( desc.height == 0 ) )
     return;
-  
+
   claw::graphic::image result( desc.width, desc.height );
 
   std::fill( result.begin(), result.end(), claw::graphic::transparent_pixel );
-  
+
   for ( layout::atlas_page::const_sprite_iterator it( desc.sprite_begin() );
         it != desc.sprite_end(); ++it )
     copy_sprite
@@ -95,7 +95,7 @@ void pms::generators::png::generate_output_with_internal_tool
 
   if ( m_color_mode == color_mode::multiply_alpha )
     multiply_alpha( result );
-  
+
   claw::graphic::png::writer writer( result );
   std::ofstream output
     ( dir.get_output_file_path
@@ -118,7 +118,7 @@ void pms::generators::png::copy_sprite
       part.partial_copy( image, -sprite.display_offsets.position );
       image.swap( part );
     }
-  
+
   if ( sprite.rotated )
     rotate( image );
 
@@ -137,7 +137,7 @@ void pms::generators::png::rotate( claw::graphic::image& image ) const
 
   const unsigned int dest_width( source_height );
   const unsigned int dest_height( source_width );
-  
+
   claw::graphic::image result( dest_width, dest_height );
 
   if ( m_rotation_direction == rotation_direction::clockwise )
@@ -147,7 +147,7 @@ void pms::generators::png::rotate( claw::graphic::image& image ) const
   else
     {
       assert( m_rotation_direction == rotation_direction::anticlockwise );
-      
+
       for ( unsigned int y( 0 ); y != dest_height; ++y )
         for ( unsigned int x( 0 ); x != dest_width; ++x )
           result[ y ][ x ] = image[ x ][ source_width - y - 1 ];
@@ -164,7 +164,7 @@ void pms::generators::png::multiply_alpha( claw::graphic::image& image ) const
   for ( claw::graphic::rgba_pixel& p : image )
     {
       const std::uint32_t alpha( p.components.alpha );
-      
+
       p.components.red = p.components.red * alpha / range;
       p.components.green = p.components.green * alpha / range;
       p.components.blue = p.components.blue * alpha / range;
@@ -177,7 +177,7 @@ void pms::generators::png::bleed
 {
   const unsigned int width( image.width() );
   const unsigned int height( image.height() );
-  
+
   for ( unsigned int y( 0 ); y != height; ++y )
     {
       result[ position.y + y ][ position.x - 1 ] = image[ y ][ 0 ];
@@ -236,7 +236,7 @@ void pms::generators::png::generate_scm
   const layout::atlas& atlas ) const
 {
   const layout::atlas_page& desc( atlas.pages[ index ] );
-  
+
   os << "(let ( ";
 
   for ( auto it( desc.images.begin() ); it != desc.images.end(); ++it )

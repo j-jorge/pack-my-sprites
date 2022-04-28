@@ -9,7 +9,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU Affero General Public License for more details.
-  
+
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -18,7 +18,7 @@
 #include "pms/gimp/system_interface.hpp"
 #include "pms/layout/atlas.hpp"
 
-#include <claw/image.hpp>
+#include <claw/graphic/image.hpp>
 
 namespace pms
 {
@@ -31,7 +31,7 @@ namespace pms
 
     enum class color_mode;
     enum class rotation_direction;
-    
+
     class png
     {
     public:
@@ -41,7 +41,7 @@ namespace pms
 
       void generate
       ( const std::string& source, const layout::atlas& atlas ) const;
-      
+
     private:
       void generate_output_with_internal_tool
       ( const detail::working_directory& dir,
@@ -49,7 +49,7 @@ namespace pms
       void generate_output_with_internal_tool
       ( const detail::working_directory& dir, std::size_t index,
         const layout::atlas& atlas ) const;
-    
+
       void copy_sprite
       ( claw::graphic::image& result, const std::string& file_path,
         const layout::atlas_page::sprite& sprite ) const;
@@ -70,12 +70,12 @@ namespace pms
       void generate_scm
       ( std::ostream& os, const detail::working_directory& dir,
         std::size_t index, const layout::atlas& atlas ) const;
-      
+
       void generate_scm
       ( std::ostream& os, const resources::image& image,
         const layout::atlas_page::sprite& s,
         const std::string& target_id ) const;
-      
+
       std::string make_image_varname( const std::string& id ) const;
 
     private:

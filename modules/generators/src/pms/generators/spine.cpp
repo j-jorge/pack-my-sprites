@@ -9,7 +9,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU Affero General Public License for more details.
-  
+
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -17,9 +17,9 @@
 
 #include "pms/generators/detail/working_directory.hpp"
 
-#include <fstream>
+#include <claw/logger/logger.hpp>
 
-#include <claw/logger.hpp>
+#include <fstream>
 
 void pms::generators::spine::generate
 ( const std::string& spritedesc_file_path,
@@ -44,7 +44,7 @@ void pms::generators::spine::generate_file
 
   std::ofstream f( filename );
   const std::size_t page_count( atlas.pages.size() );
-  
+
   for ( std::size_t i( 0 ); i != page_count; ++i )
     f << get_page
       ( dir.get_output_file_name( atlas.output_name, i, page_count, "" ),

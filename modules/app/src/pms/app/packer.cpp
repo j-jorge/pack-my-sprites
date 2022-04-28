@@ -9,7 +9,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU Affero General Public License for more details.
-  
+
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -25,7 +25,7 @@
 #include "pms/layout/build.hpp"
 #include "pms/serialization/read_spritedesc.hpp"
 
-#include <claw/logger.hpp>
+#include <claw/logger/logger.hpp>
 
 #include <boost/filesystem/convenience.hpp>
 
@@ -33,15 +33,15 @@ pms::app::packer::packer( const packer_options& options )
   : m_options( options ),
     m_gimp
     ( m_options.get_scheme_directory(), m_options.get_gimp_console_program() )
-  
+
 {
-  
+
 }
 
 bool pms::app::packer::run( const std::vector< std::string >& files ) const
 {
   bool result( true );
-  
+
   for ( const std::string& file : files )
     if ( !run( file ) )
       result = false;
@@ -56,7 +56,7 @@ bool pms::app::packer::run( const std::string& file ) const
 
   if ( !atlas )
     return false;
-  
+
   if ( !run( file, *atlas ) )
     {
       std::cerr << "Failed to build sprite sheet '" << file << "'.\n";
@@ -80,12 +80,12 @@ bool pms::app::packer::run
   const bool allow_rotation
     ( m_options.get_rotation_direction()
       != generators::rotation_direction::none );
-  
+
   if ( !layout::build( allow_rotation, atlas ) )
     return false;
-  
+
   generate( source_file_path, atlas );
-  
+
   return true;
 }
 
@@ -94,7 +94,7 @@ bool pms::app::packer::feasible( const layout::atlas& atlas ) const
   const std::size_t margin( atlas.margin );
   const std::size_t width( atlas.width );
   const std::size_t height( atlas.height );
-  
+
   const bool allow_rotation
     ( m_options.get_rotation_direction()
       != generators::rotation_direction::none );
@@ -105,7 +105,7 @@ bool pms::app::packer::feasible( const layout::atlas& atlas ) const
       {
         const std::size_t w( it->result_box.width + 2 * margin + it->bleed );
         const std::size_t h( it->result_box.height + 2 * margin + it->bleed );
-        
+
         if ( ( ( w > width ) || ( h > height ) )
              && ( allow_rotation && ( ( w > height ) || ( h > width ) ) ) )
           {
@@ -162,7 +162,7 @@ pms::app::packer::generate_atlas( const std::string& file_name ) const
 {
   if ( file_name == "-" )
     return generate_atlas( ".", std::cin );
-  
+
   std::ifstream f( file_name );
 
   if ( !f )

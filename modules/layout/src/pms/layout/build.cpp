@@ -9,7 +9,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU Affero General Public License for more details.
-  
+
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -17,9 +17,9 @@
 
 #include "rbp/MaxRectsBinPack.h"
 
-#include <limits>
+#include <claw/logger/logger.hpp>
 
-#include <claw/logger.hpp>
+#include <limits>
 
 namespace pms
 {
@@ -48,7 +48,7 @@ namespace pms
 
       static atlas_page build
       ( bool allow_rotate, const atlas& atlas, atlas_page& desc );
-      
+
       static atlas_page try_all_heuristics
       ( bool allow_rotate, const atlas& atlas, atlas_page& desc );
 
@@ -70,7 +70,7 @@ namespace pms
 
       static std::vector<rbp::RectSize>
       build_sprite_sizes( const atlas_page& desc, std::size_t margin );
-    
+
       static atlas_page::sprite_iterator
       find_sprite_by_size( atlas_page& desc, int width, int height );
     }
@@ -80,14 +80,14 @@ namespace pms
 bool pms::layout::build( bool allow_rotate, atlas& atlas )
 {
   assert( atlas.pages.size() == 1 );
-  
+
   if ( atlas.pages[ 0 ].sprite_count() == 0 )
     return true;
 
   std::vector< atlas_page > result;
   atlas_page remaining( atlas.pages[ 0 ] );
   atlas.pages.clear();
-  
+
   while( remaining.sprite_count() != 0 )
     {
       atlas_page packed( detail::build( allow_rotate, atlas, remaining ) );
@@ -130,13 +130,13 @@ pms::layout::atlas_page pms::layout::detail::try_all_heuristics
   const std::vector< rbp::RectSize > regions
     ( build_sprite_sizes( desc, atlas.margin ) );
   const std::size_t reference_count( regions.size() );
-  
+
   std::size_t best_count( 0 );
   atlas_page best_result;
   atlas_page best_remaining;
 
   std::size_t best_size( atlas.width * atlas.height + 1 );
-  
+
   for ( const named_heuristic* h = g_heuristics; h->first != nullptr; ++h )
     {
       claw::logger << claw::log_verbose << "Packing with heuristic \""
@@ -218,7 +218,7 @@ pms::layout::detail::apply_positions
       ( sprites, final_size, desc, packing[ i ], margin );
 
   atlas_page result;
-  
+
   for( const auto& s : sprites )
     {
       result.images[ s.image_id ] = desc.images[ s.image_id ];
@@ -258,7 +258,7 @@ void pms::layout::detail::place_sprite_from_packing
     std::max< int >( final_size.x, packing.x + packing.width + margin );
   final_size.y =
     std::max< int >( final_size.y, packing.y + packing.height + margin );
-      
+
   result.push_back( *it );
   desc.erase_sprite( it );
 }
@@ -278,7 +278,7 @@ pms::layout::detail::build_sprite_sizes
         {
           int( it->result_box.width + padding ),
           int( it->result_box.height + padding )
-        }; 
+        };
       result.push_back( rect );
     }
 
@@ -293,7 +293,7 @@ pms::layout::detail::find_sprite_by_size
         it != desc.sprite_end(); ++it )
     {
       const std::size_t padding( it->bleed ? 2 : 0 );
-      
+
       if ( ( it->result_box.width == width - padding )
            && ( it->result_box.height == height - padding ) )
         return it;

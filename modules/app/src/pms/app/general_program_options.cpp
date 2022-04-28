@@ -9,7 +9,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU Affero General Public License for more details.
-  
+
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -17,7 +17,7 @@
 
 #include "pms/app/version.hpp"
 
-#include <claw/logger.hpp>
+#include <claw/logger/logger.hpp>
 
 #include <iostream>
 
@@ -52,12 +52,12 @@ bool pms::app::parse_general_program_options
     }
 
   claw::logger.set( new claw::console_logger() );
-  
+
   if ( values.count( "verbose" ) != 0 )
     claw::logger.set_level( claw::log_verbose );
   else
     claw::logger.set_level( claw::log_warning );
-      
+
   return true;
 }
 

@@ -9,7 +9,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU Affero General Public License for more details.
-  
+
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -18,8 +18,8 @@
 #include "pms/files/is_fully_qualified.hpp"
 
 #include <claw/exception.hpp>
-#include <claw/image.hpp>
-#include <claw/logger.hpp>
+#include <claw/graphic/image.hpp>
+#include <claw/logger/logger.hpp>
 
 #include <fstream>
 #include <sstream>
@@ -85,7 +85,7 @@ bool pms::resources::image_mapping::load_with_internal_tool
 
   if ( !f )
     return false;
-  
+
   claw::graphic::image image_data;
 
   try
@@ -102,7 +102,7 @@ bool pms::resources::image_mapping::load_with_internal_tool
       ( std::piecewise_construct,
         std::forward_as_tuple( name ),
         std::forward_as_tuple( "Internal", true ) ).first->second );
-  
+
   result.version = 0;
   result.width = image_data.width();
   result.height = image_data.height();
@@ -111,7 +111,7 @@ bool pms::resources::image_mapping::load_with_internal_tool
     result.content_box = detail::get_content_box( image_data );
   else
     result.content_box.set( 0, 0, result.width, result.height );
-  
+
   layer& layer( result.layers[ "Layer" ] );
   layer.index = 0;
   layer.x = 0;
@@ -126,7 +126,7 @@ void pms::resources::image_mapping::load_with_gimp
 ( const std::string& name, const std::string& file_path )
 {
   claw::logger << claw::log_verbose << "Using gimp…\n";
-  
+
   std::istringstream info( execute_xcfinfo_process( file_path ) );
 
   image& result
@@ -136,7 +136,7 @@ void pms::resources::image_mapping::load_with_gimp
         std::forward_as_tuple( "XCF", false ) ).first->second );
 
   std::string line;
-  
+
   std::getline( info, line );
   parse_xcf_info_header( result, line );
 
@@ -225,7 +225,7 @@ void pms::resources::image_mapping::parse_xcf_info_layer
       >> result.y
     ;
 
-  /* skip the space that separates the offset and the layer name. */ 
+  /* skip the space that separates the offset and the layer name. */
   iss.ignore();
 
   if ( !iss )
@@ -243,10 +243,10 @@ claw::math::rectangle< int > pms::resources::detail::get_content_box
 {
   const std::size_t width( image.width() );
   const std::size_t height( image.height() );
-  
+
   int left( 0 );
   bool found( false );
-  
+
   for ( std::size_t x( 0 ); ( x != width ) && !found; ++x )
     for ( std::size_t y( 0 ); ( y != height ) && !found; ++y )
       if ( image[ y ][ x ].components.alpha != 0 )
@@ -257,7 +257,7 @@ claw::math::rectangle< int > pms::resources::detail::get_content_box
 
   if ( !found )
     return claw::math::rectangle< int >( 0, 0, 0, 0 );
-    
+
   found = false;
   int top( 0 );
 
@@ -268,7 +268,7 @@ claw::math::rectangle< int > pms::resources::detail::get_content_box
           top = y;
           found = true;
         }
-    
+
   found = false;
   int right( width );
 
@@ -279,7 +279,7 @@ claw::math::rectangle< int > pms::resources::detail::get_content_box
           right = x - 1;
           found = true;
         }
-  
+
   found = false;
   int bottom( height );
 
@@ -293,7 +293,7 @@ claw::math::rectangle< int > pms::resources::detail::get_content_box
 
   assert( right + 1 <= width );
   assert( bottom + 1 <= height );
-  
+
   return
     claw::math::rectangle< int >
     ( left, top, right - left + 1, bottom - top + 1 );
