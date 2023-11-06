@@ -19,6 +19,7 @@
 #include <iostream>
 #include <cstdio>
 #include <csignal>
+#include <cstring>
 
 #include <filesystem>
 
