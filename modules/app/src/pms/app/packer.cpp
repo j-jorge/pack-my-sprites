@@ -27,7 +27,7 @@
 
 #include <claw/logger/logger.hpp>
 
-#include <boost/filesystem/convenience.hpp>
+#include <filesystem>
 
 pms::app::packer::packer( const packer_options& options )
   : m_options( options ),
@@ -171,8 +171,8 @@ pms::app::packer::generate_atlas( const std::string& file_name ) const
       return boost::none;
     }
 
-  const boost::filesystem::path file_path( file_name );
-  const boost::filesystem::path file_directory( file_path.parent_path() );
+  const std::filesystem::path file_path( file_name );
+  const std::filesystem::path file_directory( file_path.parent_path() );
 
   return generate_atlas( file_directory.string(), f );
 }

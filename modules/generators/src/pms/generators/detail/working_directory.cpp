@@ -9,7 +9,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU Affero General Public License for more details.
-  
+
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -18,14 +18,15 @@
 #include "pms/files/is_fully_qualified.hpp"
 
 #include <boost/lexical_cast.hpp>
-#include <boost/filesystem/convenience.hpp>
+
+#include <filesystem>
 
 pms::generators::detail::working_directory::working_directory
 ( const std::string& input_file_name )
   : m_input_file_name( input_file_name )
 {
-  const boost::filesystem::path input_path( m_input_file_name );
-  const boost::filesystem::path input_directory( input_path.parent_path() );
+  const std::filesystem::path input_path( m_input_file_name );
+  const std::filesystem::path input_directory( input_path.parent_path() );
 
   m_directory = input_directory.string();
 
@@ -72,7 +73,7 @@ pms::generators::detail::working_directory::get_output_file_name
   const std::string& extension ) const
 {
   assert( index <= range );
-  
+
   std::string result( atlas_name );
 
   if ( range != 1 )

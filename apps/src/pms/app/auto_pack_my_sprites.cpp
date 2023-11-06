@@ -9,7 +9,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU Affero General Public License for more details.
-  
+
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -19,8 +19,8 @@
 
 #include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>
-#include <boost/filesystem/path.hpp>
 
+#include <filesystem>
 #include <iostream>
 #include <regex>
 
@@ -31,7 +31,7 @@ public:
     : width( w ),
       height( h )
   { }
-  
+
 public:
   std::uint32_t width;
   std::uint32_t height;
@@ -62,7 +62,7 @@ class program_arguments
 {
 public:
   program_arguments();
-  
+
 public:
   pms::app::packer_options packer_options;
   std::string output;
@@ -137,7 +137,7 @@ program_options_parser::get_app_options()
   boost::program_options::options_description result( "Sprite sheet options" );
 
   static const program_arguments defaults;
-  
+
   result.add_options()
     ( "bleeding",
       boost::program_options::value< std::vector< std::string > >()
@@ -187,13 +187,13 @@ parsed_command_line program_options_parser::parse( int argc, char** argv )
 
   if ( arguments.count( "output" ) != 0 )
     result.output = arguments[ "output" ].as< std::string >();
-  
+
   if ( arguments.count( "margin" ) != 0 )
       result.margin = arguments[ "margin" ].as< std::uint32_t >();
 
   result.strip_extensions = ( arguments.count( "strip-extensions" ) != 0 );
   result.strip_paths = ( arguments.count( "strip-paths" ) != 0 );
-  
+
   if ( arguments.count( "size" ) != 0 )
     result.canvas_size = arguments[ "size" ].as< dimensions >();
 
@@ -209,19 +209,19 @@ parsed_command_line program_options_parser::parse( int argc, char** argv )
       std::cerr << "The margin cannot be larger than the width.\n";
       return parsed_command_line( false );
     }
-  
+
   if ( result.margin >= result.canvas_size.height )
     {
       std::cerr << "The margin cannot be larger than the height.\n";
       return parsed_command_line( false );
     }
-  
+
   if ( result.files_dry.empty() && result.files_bleeding.empty() )
     {
       std::cerr << "No file provided.\n";
       return parsed_command_line( false );
     }
-  
+
   return parsed_command_line( result );
 }
 
@@ -246,12 +246,12 @@ void configure_atlas
 
 std::string extract_filename( const std::string& file )
 {
-  return boost::filesystem::path( file ).filename().string();
+  return std::filesystem::path( file ).filename().string();
 }
 
 std::string remove_extension( const std::string& file )
 {
-  return boost::filesystem::path( file ).replace_extension().string();
+  return std::filesystem::path( file ).replace_extension().string();
 }
 
 typedef std::unordered_map< std::string, std::string > file_to_name_mapping;
@@ -347,7 +347,7 @@ build_atlas( const program_arguments& arguments )
 
   load_images( images, arguments.files_dry );
   load_images( images, arguments.files_bleeding );
-  
+
   pms::layout::atlas result( images );
   configure_atlas( result, arguments );
 
@@ -355,19 +355,19 @@ build_atlas( const program_arguments& arguments )
 
   const file_to_name_mapping file_to_name( identify_input_files( arguments ) );
   set_atlas_page_files( atlas_page, file_to_name );
-  
+
   for ( const std::string& file : arguments.files_dry )
     atlas_page.add_sprite
       ( create_sprite
         ( file_to_name.find( file )->second, file, images, false ) );
-  
+
   for ( const std::string& file : arguments.files_bleeding )
     atlas_page.add_sprite
       ( create_sprite
         ( file_to_name.find( file )->second, file, images, true ) );
 
   result.pages.push_back( atlas_page );
-  
+
   return result;
 }
 

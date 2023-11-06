@@ -9,7 +9,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU Affero General Public License for more details.
-  
+
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -20,7 +20,7 @@
 #include <cstdio>
 #include <csignal>
 
-#include <boost/filesystem/convenience.hpp>
+#include <filesystem>
 
 pms::gimp::system_interface::system_interface()
 {
@@ -129,7 +129,7 @@ pms::gimp::system_interface::open_gimp_process( int& in_fd, int& out_fd ) const
       dup2( pipe_in[ pipe_read ], STDIN_FILENO );
       close( pipe_out[ pipe_read ] );
       dup2( pipe_out[ pipe_write ], STDOUT_FILENO );
-      
+
       const int e =
         execlp
         ( m_gimp_console_program.c_str(), m_gimp_console_program.c_str(),
@@ -160,10 +160,10 @@ pms::gimp::system_interface::get_scheme_path
         it!=m_scheme_directory.end();
         ++it )
     {
-      boost::filesystem::path p( *it );
+      std::filesystem::path p( *it );
       p /= filename;
 
-      if ( boost::filesystem::exists( p ) )
+      if ( std::filesystem::exists( p ) )
         return p.string();
     }
 

@@ -9,15 +9,15 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU Affero General Public License for more details.
-  
+
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "pms/files/is_fully_qualified.hpp"
 
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 
 bool pms::files::is_fully_qualified( const std::string& filename )
 {
-  return boost::filesystem::path( filename ).has_root_directory();
+  return std::filesystem::path( filename ).has_root_directory();
 }
