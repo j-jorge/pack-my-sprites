@@ -1,3 +1,9 @@
+option(PMS_BUILD_MAN_PAGES "Whether to build the man pages or not." TRUE)
+
+if (NOT PMS_BUILD_MAN_PAGES)
+  return()
+endif()
+
 find_program(DOCBOOK_TO_MAN docbook-to-man ENV)
 
 #-------------------------------------------------------------------------------
@@ -19,7 +25,7 @@ macro(DOCBOOK_CREATE_MAN _targetName _volume _first_sgml_file)
       FILES ${_man_file}
       DESTINATION share/man/man${_volume}
       )
-      
+
     set(_man_files ${_man_files} ${_man_file})
   endforeach()
 
