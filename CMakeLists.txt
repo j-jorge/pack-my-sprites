@@ -43,6 +43,12 @@ function( install_script SOURCE )
 endfunction()
 
 add_subdirectory( modules )
+
+include(CheckIPOSupported)
+check_ipo_supported(RESULT ipo_supported OUTPUT ipo_output LANGUAGES C CXX)
+message("IPO supported: ${ipo_supported}")
+message("IPO output: ${ipo_output}")
+
 add_subdirectory( apps )
 add_subdirectory( docs )
 
