@@ -3,7 +3,7 @@ project( libpms_resources )
 install_script( scripts/info.scm )
 
 find_package( Boost 1.42 REQUIRED )
-find_package( claw 1.8.0 REQUIRED )
+find_package( claw 1.9.0 REQUIRED )
 
 add_library( pms_resources STATIC
   src/pms/resources/image.cpp
