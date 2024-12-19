@@ -20,6 +20,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include <filesystem>
+#include <cassert>
 
 pms::generators::detail::working_directory::working_directory
 ( const std::string& input_file_name )
