@@ -1,6 +1,5 @@
 project( libpms_app )
 
-include(FindBoost)
 find_package( Boost 1.42 REQUIRED COMPONENTS program_options )
 
 if( PMS_DEFAULT_SCHEME_PATH )

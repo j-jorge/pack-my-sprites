@@ -4,6 +4,12 @@ project(pack-my-sprites)
 
 set(CMAKE_CXX_STANDARD 17)
 
+# Use the CMake config provided by Boost instead of the deprecated one
+# provided by CMake.
+if(POLICY CMP0167)
+  cmake_policy(SET CMP0167 NEW)
+endif()
+
 enable_testing()
 
 function( declare_test SOURCE NAME )
