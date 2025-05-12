@@ -60,10 +60,6 @@ pms::app::get_packer_program_options()
       "spritepos\n"
       "  \tGenerate a spritepos file for the sprite sheet. Implies"
       " --no-rotation." )
-    ( "css", "Deprecated. Same as --format css." )
-    ( "plist", "Deprecated. Same as --format plist." )
-    ( "spine", "Deprecated. Same as --format spine." )
-    ( "spritepos", "Deprecated. Same as --format spritepos." )
     ;
 
   return result;
@@ -77,27 +73,6 @@ pms::app::parse_packer_program_options
 
   if ( values.count( "format" ) != 0 )
     result.set_atlas_format( values[ "format" ].as< atlas_format >() );
-  else if ( values.count( "css" ) != 0 )
-    {
-      std::clog << "--css is deprecated. Use --format css instead.\n";
-      result.set_atlas_format( atlas_format::css );
-    }
-  else if ( values.count( "plist" ) != 0 )
-    {
-      std::clog << "--plist is deprecated. Use --format plist instead.\n";
-      result.set_atlas_format( atlas_format::plist );
-    }
-  else if ( values.count( "spine" ) != 0 )
-    {
-      std::clog << "--spine is deprecated. Use --format spine instead.\n";
-      result.set_atlas_format( atlas_format::spine );
-    }
-  else if ( values.count( "spritepos" ) != 0 )
-    {
-      std::clog << "--spritepos is deprecated. Use --format spritepos"
-        " instead.\n";
-      result.set_atlas_format( atlas_format::spritepos );
-    }
 
   if ( values.count( "gimp-console" ) != 0 )
     result.set_gimp_console_program
