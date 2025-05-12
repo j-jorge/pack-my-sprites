@@ -9,7 +9,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU Affero General Public License for more details.
-  
+
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -28,8 +28,8 @@ void pms::serialization::spritedesc::node_parser_image_entry::parse_node
     ( node.children[0].value.begin(), node.children[0].value.end() );
   const std::string name
     ( node.children[1].value.begin(), node.children[1].value.end() );
-  
-  images.load( name );
+
+  images.load( name, false );
 
   desc.images[ id ] = name;
 }

@@ -182,7 +182,7 @@ pms::app::packer::generate_atlas
 ( const std::string& directory, std::istream& in ) const
 {
   const resources::image_mapping images
-    ( directory, m_gimp, m_options.should_crop() );
+    ( directory, m_gimp );
 
   return layout::atlas
     ( serialization::read_spritedesc( images, in ) );

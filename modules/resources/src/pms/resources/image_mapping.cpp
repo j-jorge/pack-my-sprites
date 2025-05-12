@@ -39,23 +39,20 @@ namespace pms
 }
 
 pms::resources::image_mapping::image_mapping()
-  : m_image_directory( "." ),
-    m_allow_crop( false )
+  : m_image_directory( "." )
 {
 
 }
 
 pms::resources::image_mapping::image_mapping
-( const std::string& image_directory, const gimp::system_interface& gimp,
-  bool allow_crop )
-  : m_image_directory( image_directory ), m_gimp( gimp ),
-    m_allow_crop( allow_crop )
+( const std::string& image_directory, const gimp::system_interface& gimp )
+  : m_image_directory( image_directory ), m_gimp( gimp )
 {
   if ( m_image_directory.empty() )
     m_image_directory = '.';
 }
 
-void pms::resources::image_mapping::load( const std::string& name )
+void pms::resources::image_mapping::load( const std::string& name, bool crop )
 {
   if ( get_image(name) )
     return;
@@ -70,14 +67,14 @@ void pms::resources::image_mapping::load( const std::string& name )
   claw::logger << claw::log_verbose << "Loading '" << name << "' from '"
                << file_path << "'…" << std::endl;
 
-  if ( load_with_internal_tool( name, file_path ) )
+  if ( load_with_internal_tool( name, file_path, crop ) )
     return;
 
   load_with_gimp( name, file_path );
 }
 
 bool pms::resources::image_mapping::load_with_internal_tool
-( const std::string& name, const std::string& file_path )
+( const std::string& name, const std::string& file_path, bool crop )
 {
   claw::logger << claw::log_verbose << "Using internal tool…\n";
 
@@ -107,7 +104,7 @@ bool pms::resources::image_mapping::load_with_internal_tool
   result.width = image_data.width();
   result.height = image_data.height();
 
-  if ( m_allow_crop )
+  if ( crop )
     result.content_box = detail::get_content_box( image_data );
   else
     result.content_box.set( 0, 0, result.width, result.height );

@@ -71,6 +71,7 @@ public:
   bool strip_extensions;
   dimensions canvas_size;
   std::vector< std::string > files_bleeding;
+  std::vector< std::string > files_crop;
   std::vector< std::string > files_dry;
 };
 
@@ -144,6 +145,11 @@ program_options_parser::get_app_options()
       ->value_name( "file…" )
       ->multitoken(),
       "Enable the bleeding for the next file arguments" )
+    ( "crop",
+      boost::program_options::value< std::vector< std::string > >()
+      ->value_name( "file…" )
+      ->multitoken(),
+      "Enable cropping for the next file arguments" )
     ( "margin,m", boost::program_options::value< std::uint32_t >(),
       ( "The padding between the sprites. Default is "
       + boost::lexical_cast< std::string >( defaults.margin )
@@ -201,6 +207,10 @@ parsed_command_line program_options_parser::parse( int argc, char** argv )
     result.files_bleeding =
       arguments[ "bleeding" ].as< std::vector< std::string > >();
 
+  if ( arguments.count( "crop" ) != 0 )
+    result.files_crop =
+      arguments[ "crop" ].as< std::vector< std::string > >();
+
   if ( arguments.count( "dry" ) != 0 )
     result.files_dry = arguments[ "dry" ].as< std::vector< std::string > >();
 
@@ -216,7 +226,9 @@ parsed_command_line program_options_parser::parse( int argc, char** argv )
       return parsed_command_line( false );
     }
 
-  if ( result.files_dry.empty() && result.files_bleeding.empty() )
+  if ( result.files_dry.empty()
+       && result.files_bleeding.empty()
+       && result.files_crop.empty() )
     {
       std::cerr << "No file provided.\n";
       return parsed_command_line( false );
@@ -273,9 +285,13 @@ build_file_identifiers( const program_arguments& arguments )
 {
   file_to_name_mapping result;
   result.reserve
-    ( arguments.files_dry.size() + arguments.files_bleeding.size() );
+    ( arguments.files_dry.size() + arguments.files_bleeding.size()
+      + arguments.files_crop.size() );
 
   for ( const auto& file : arguments.files_bleeding )
+    result[ file ] = file;
+
+  for ( const auto& file : arguments.files_crop )
     result[ file ] = file;
 
   for ( const auto& file : arguments.files_dry )
@@ -306,10 +322,10 @@ void set_atlas_page_files
 
 void load_images
 ( pms::resources::image_mapping& images,
-  const std::vector< std::string >& files )
+  const std::vector< std::string >& files, bool crop )
 {
   for ( const std::string& s : files )
-    images.load( s );
+    images.load( s, crop );
 }
 
 pms::layout::atlas_page::sprite create_sprite
@@ -342,11 +358,11 @@ build_atlas( const program_arguments& arguments )
     ( ".",
       pms::gimp::system_interface
       ( arguments.packer_options.get_scheme_directory(),
-        arguments.packer_options.get_gimp_console_program() ),
-      arguments.packer_options.should_crop() );
+        arguments.packer_options.get_gimp_console_program() ) );
 
-  load_images( images, arguments.files_dry );
-  load_images( images, arguments.files_bleeding );
+  load_images( images, arguments.files_dry, false );
+  load_images( images, arguments.files_crop, true );
+  load_images( images, arguments.files_bleeding, false );
 
   pms::layout::atlas result( images );
   configure_atlas( result, arguments );
@@ -357,6 +373,11 @@ build_atlas( const program_arguments& arguments )
   set_atlas_page_files( atlas_page, file_to_name );
 
   for ( const std::string& file : arguments.files_dry )
+    atlas_page.add_sprite
+      ( create_sprite
+        ( file_to_name.find( file )->second, file, images, false ) );
+
+  for ( const std::string& file : arguments.files_crop )
     atlas_page.add_sprite
       ( create_sprite
         ( file_to_name.find( file )->second, file, images, false ) );

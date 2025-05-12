@@ -9,7 +9,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU Affero General Public License for more details.
-  
+
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -33,10 +33,9 @@ namespace pms
       image_mapping();
       image_mapping
       ( const std::string& image_directory,
-        const gimp::system_interface& gimp,
-        bool allow_crop );
+        const gimp::system_interface& gimp );
 
-      void load( const std::string& name );
+      void load( const std::string& name, bool crop );
 
       boost::optional< const image& > get_image
       ( const std::string& name ) const;
@@ -45,7 +44,7 @@ namespace pms
 
     private:
       bool load_with_internal_tool
-      ( const std::string& name, const std::string& file_path );
+      ( const std::string& name, const std::string& file_path, bool crop );
       void load_with_gimp
       ( const std::string& name, const std::string& file_path );
 
@@ -60,7 +59,6 @@ namespace pms
       std::unordered_map< std::string, image > m_images;
       std::string m_image_directory;
       gimp::system_interface m_gimp;
-      bool m_allow_crop;
     };
   }
 }

@@ -9,7 +9,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU Affero General Public License for more details.
-  
+
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -47,8 +47,6 @@ pms::app::get_packer_program_options()
     ( "gimp-console,g",
       boost::program_options::value< std::string >()->value_name( "file" ),
       "The path to the gimp-console executable." )
-    ( "no-crop,c",
-      "Disable cropping the sprites in the sprite sheet." )
     ( "no-rotation,r",
       "Disable the rotation of the sprites in the sprite sheet." )
     ( "format,f", boost::program_options::value< atlas_format >(),
@@ -100,7 +98,7 @@ pms::app::parse_packer_program_options
         " instead.\n";
       result.set_atlas_format( atlas_format::spritepos );
     }
-  
+
   if ( values.count( "gimp-console" ) != 0 )
     result.set_gimp_console_program
       ( values[ "gimp-console" ].as< std::string >() );
@@ -117,12 +115,12 @@ pms::app::parse_packer_program_options
   if ( values.count( "scheme-directory" ) != 0 )
       result.add_scheme_directories
         ( values[ "scheme-directory" ].as< std::vector< std::string > >() );
-  
+
 #ifdef PMS_DEFAULT_SCHEME_PATH
   result.add_scheme_directories
     ( { BOOST_PP_STRINGIZE( PMS_DEFAULT_SCHEME_PATH ) } );
 #endif
-  
+
   return result;
 }
 
