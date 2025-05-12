@@ -88,10 +88,21 @@ void pms::generators::png::generate_output_with_internal_tool
 
   for ( layout::atlas_page::const_sprite_iterator it( desc.sprite_begin() );
         it != desc.sprite_end(); ++it )
-    copy_sprite
-      ( result,
-        dir.get_image_path( desc.images.find( it->image_id )->second ),
-        *it );
+    {
+      const claw::graphic::image* const source_image =
+        atlas.image.get_image(it->image_id)->bitmap.get();
+
+      if (source_image)
+        copy_sprite( result, *source_image, *it );
+      else
+        {
+          std::ifstream f
+            ( dir.get_image_path( desc.images.find( it->image_id )->second ) );
+          claw::graphic::image image( f );
+
+          copy_sprite( result, image, *it );
+        }
+    }
 
   if ( m_color_mode == color_mode::multiply_alpha )
     multiply_alpha( result );
@@ -104,30 +115,43 @@ void pms::generators::png::generate_output_with_internal_tool
 }
 
 void pms::generators::png::copy_sprite
-( claw::graphic::image& result, const std::string& file_path,
+( claw::graphic::image& result,
+  const claw::graphic::image& source_image,
   const layout::atlas_page::sprite& sprite ) const
 {
-  std::ifstream f( file_path );
-  claw::graphic::image image( f );
+  const bool cropped =
+    ( sprite.display_offsets.width != sprite.result_box.width )
+    || ( sprite.display_offsets.height != sprite.result_box.height );
 
-  if ( ( sprite.display_offsets.width != sprite.result_box.width )
-       || ( sprite.display_offsets.height != sprite.result_box.height ) )
+  claw::graphic::image tmp;
+  const claw::graphic::image* image;
+
+  if ( !sprite.rotated && !cropped )
+    image = &source_image;
+  else
     {
-      claw::graphic::image part
-        ( sprite.result_box.width, sprite.result_box.height );
-      part.partial_copy( image, -sprite.display_offsets.position );
-      image.swap( part );
-    }
+      if ( cropped )
+        {
+          claw::graphic::image part
+            ( sprite.result_box.width, sprite.result_box.height );
+          part.partial_copy( source_image, -sprite.display_offsets.position );
+          tmp.swap( part );
+        }
+      else
+        tmp = source_image;
 
-  if ( sprite.rotated )
-    rotate( image );
+      if ( sprite.rotated )
+        rotate( tmp );
+
+      image = &tmp;
+    }
 
   const claw::math::coordinate_2d< int > position( sprite.result_box.position );
 
-  result.partial_copy( image, position );
+  result.partial_copy( *image, position );
 
   if ( sprite.bleed )
-    bleed( result, image, position );
+    bleed( result, image->width(), image->height(), position );
 }
 
 void pms::generators::png::rotate( claw::graphic::image& image ) const
@@ -172,30 +196,33 @@ void pms::generators::png::multiply_alpha( claw::graphic::image& image ) const
 }
 
 void pms::generators::png::bleed
-( claw::graphic::image& result, const claw::graphic::image& image,
+( claw::graphic::image& result, unsigned int width, unsigned int height,
   const claw::math::coordinate_2d< int >& position ) const
 {
-  const unsigned int width( image.width() );
-  const unsigned int height( image.height() );
-
   for ( unsigned int y( 0 ); y != height; ++y )
     {
-      result[ position.y + y ][ position.x - 1 ] = image[ y ][ 0 ];
-      result[ position.y + y ][ position.x + width ] = image[ y ][ width - 1 ];
+      result[ position.y + y ][ position.x - 1 ] =
+        result[ position.y + y ][ position.x ];
+      result[ position.y + y ][ position.x + width ] =
+        result[ position.y + y ][ position.x + width - 1 ];
     }
 
   for ( unsigned int x( 0 ); x != width; ++x )
     {
-      result[ position.y - 1 ][ position.x + x ] = image[ 0 ][ x ];
+      result[ position.y - 1 ][ position.x + x ] =
+        result[ position.y ][ position.x + x ];
       result[ position.y + height ][ position.x + x ] =
-        image[ height - 1 ][ x ];
+        result[ position.y + height - 1 ][ position.x + x ];
     }
 
-  result[ position.y - 1 ][ position.x - 1 ] = image[ 0 ][ 0 ];
-  result[ position.y - 1 ][ position.x + width ] = image[ 0 ][ width - 1 ];
-  result[ position.y + height ][ position.x - 1 ] = image[ height - 1 ][ 0 ];
+  result[ position.y - 1 ][ position.x - 1 ] =
+    result[ position.y ][ position.x ];
+  result[ position.y - 1 ][ position.x + width ] =
+    result[ position.y ][ position.x + width - 1 ];
+  result[ position.y + height ][ position.x - 1 ] =
+    result[ position.y + height - 1 ][ position.x ];
   result[ position.y + height ][ position.x + width ] =
-    image[ height - 1 ][ width - 1 ];
+    result[ position.y + height - 1 ][ position.x + width - 1 ];
 }
 
 void pms::generators::png::generate_output_with_gimp

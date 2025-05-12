@@ -364,7 +364,7 @@ build_atlas( const program_arguments& arguments )
   load_images( images, arguments.files_crop, true );
   load_images( images, arguments.files_bleeding, false );
 
-  pms::layout::atlas result( images );
+  pms::layout::atlas result( std::move(images) );
   configure_atlas( result, arguments );
 
   pms::layout::atlas_page atlas_page;
@@ -375,17 +375,17 @@ build_atlas( const program_arguments& arguments )
   for ( const std::string& file : arguments.files_dry )
     atlas_page.add_sprite
       ( create_sprite
-        ( file_to_name.find( file )->second, file, images, false ) );
+        ( file_to_name.find( file )->second, file, result.image, false ) );
 
   for ( const std::string& file : arguments.files_crop )
     atlas_page.add_sprite
       ( create_sprite
-        ( file_to_name.find( file )->second, file, images, false ) );
+        ( file_to_name.find( file )->second, file, result.image, false ) );
 
   for ( const std::string& file : arguments.files_bleeding )
     atlas_page.add_sprite
       ( create_sprite
-        ( file_to_name.find( file )->second, file, images, true ) );
+        ( file_to_name.find( file )->second, file, result.image, true ) );
 
   result.pages.push_back( atlas_page );
 

@@ -52,6 +52,9 @@ pms::resources::image_mapping::image_mapping
     m_image_directory = '.';
 }
 
+pms::resources::image_mapping::image_mapping(image_mapping&&) = default;
+pms::resources::image_mapping::~image_mapping() = default;
+
 void pms::resources::image_mapping::load( const std::string& name, bool crop )
 {
   if ( get_image(name) )
@@ -83,11 +86,11 @@ bool pms::resources::image_mapping::load_with_internal_tool
   if ( !f )
     return false;
 
-  claw::graphic::image image_data;
+  std::unique_ptr<claw::graphic::image> image_data(new claw::graphic::image());
 
   try
     {
-      claw::graphic::image( f ).swap( image_data );
+      claw::graphic::image( f ).swap( *image_data );
     }
   catch( const claw::bad_format& f )
     {
@@ -101,13 +104,15 @@ bool pms::resources::image_mapping::load_with_internal_tool
         std::forward_as_tuple( "Internal", true ) ).first->second );
 
   result.version = 0;
-  result.width = image_data.width();
-  result.height = image_data.height();
+  result.width = image_data->width();
+  result.height = image_data->height();
 
   if ( crop )
-    result.content_box = detail::get_content_box( image_data );
+    result.content_box = detail::get_content_box( *image_data );
   else
     result.content_box.set( 0, 0, result.width, result.height );
+
+  result.bitmap = std::move(image_data);
 
   layer& layer( result.layers[ "Layer" ] );
   layer.index = 0;

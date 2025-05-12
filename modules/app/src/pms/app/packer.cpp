@@ -51,13 +51,13 @@ bool pms::app::packer::run( const std::vector< std::string >& files ) const
 
 bool pms::app::packer::run( const std::string& file ) const
 {
-  const boost::optional< layout::atlas > atlas
+  boost::optional< layout::atlas > atlas
     ( generate_atlas( file ) );
 
   if ( !atlas )
     return false;
 
-  if ( !run( file, *atlas ) )
+  if ( !run( file, std::move(*atlas) ) )
     {
       std::cerr << "Failed to build sprite sheet '" << file << "'.\n";
       return false;
@@ -181,9 +181,9 @@ pms::layout::atlas
 pms::app::packer::generate_atlas
 ( const std::string& directory, std::istream& in ) const
 {
-  const resources::image_mapping images
+ resources::image_mapping images
     ( directory, m_gimp );
 
   return layout::atlas
-    ( serialization::read_spritedesc( images, in ) );
+    ( serialization::read_spritedesc( std::move(images), in ) );
 }

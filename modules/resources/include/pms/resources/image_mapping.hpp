@@ -34,6 +34,8 @@ namespace pms
       image_mapping
       ( const std::string& image_directory,
         const gimp::system_interface& gimp );
+      image_mapping(image_mapping&&);
+      ~image_mapping();
 
       void load( const std::string& name, bool crop );
 

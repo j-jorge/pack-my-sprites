@@ -51,13 +51,14 @@ namespace pms
         const layout::atlas& atlas ) const;
 
       void copy_sprite
-      ( claw::graphic::image& result, const std::string& file_path,
+      ( claw::graphic::image& result,
+        const claw::graphic::image& source_image,
         const layout::atlas_page::sprite& sprite ) const;
 
       void rotate( claw::graphic::image& image ) const;
       void multiply_alpha( claw::graphic::image& image ) const;
       void bleed
-      ( claw::graphic::image& result, const claw::graphic::image& image,
+      ( claw::graphic::image& result, unsigned int width, unsigned int height,
         const claw::math::coordinate_2d< int >& position ) const;
 
       void generate_output_with_gimp
